@@ -34,8 +34,6 @@ printConstraints = removeLastComma . foldr consConstraint ""
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 3) str
 
--- just a test
-
 printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
                     -> String
 printInferResult infRes = case infRes of
