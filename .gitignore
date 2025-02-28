@@ -36,6 +36,8 @@ cabal.project.local~
 # Ignore macOS system files
 *.DS_Store
 
+*.vscode
+
 # Ignore files without extensions (i.e., any file that doesn't have a dot)
-/*.*  # Ignore files with extensions
-*  # Ignore files without extensions
+/*.*
+* 
