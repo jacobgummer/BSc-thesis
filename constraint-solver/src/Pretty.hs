@@ -21,12 +21,10 @@ printConstraint :: Constraint -> String
 printConstraint (t1, t2) = maybeParenthesis t1 ++ " ~ " ++ maybeParenthesis t2
 
 printConstraints :: [Constraint] -> String
-printConstraints [] = ""
-printConstraints csts = 
-  removeLastComma $ foldr consConstraint "" csts
+printConstraints = removeLastComma . foldr consConstraint ""
   where
     consConstraint :: Constraint -> String -> String
-    consConstraint (t1, t2) acc = 
+    consConstraint (t1, t2) acc =
       maybeParenthesis t1
       ++ " ~ "
       ++ maybeParenthesis t2
@@ -41,7 +39,7 @@ printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
 printInferResult infRes = case infRes of
   -- TODO: make function for handling different kinds of type errors. 
   Left err -> show err
-  
+
   Right (csts, s, t, sch) ->
     "Constraints: \n\t" ++ printConstraints csts ++ "\n"
 
