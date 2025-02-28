@@ -9,9 +9,9 @@ module Infer (
   constraintsExp
 ) where
 
-import Env
-import Type
-import Syntax
+import Env ( Env(TypeEnv), emptyEnv, extend, remove )
+import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
+import Syntax ( Binop(..), Lit(LBool, LInt), Exp(..), Name )
 
 import Control.Monad.Except
     ( runExcept,
@@ -22,7 +22,8 @@ import Control.Monad.Except
 import Control.Monad.State
     ( evalStateT, MonadState(put, get), StateT )
 import Control.Monad.Reader
-import Control.Monad.Identity
+    ( replicateM, MonadReader(local, ask), ReaderT(runReaderT) )
+import Control.Monad.Identity ( Identity(runIdentity) )
 
 import Data.List (nub)
 import qualified Data.Map as Map

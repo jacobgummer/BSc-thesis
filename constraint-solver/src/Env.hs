@@ -15,10 +15,10 @@ module Env (
 
 import Prelude hiding (lookup)
 
-import Syntax
-import Type
+import Syntax ( Name )
+import Type ( Scheme )
 
-import Data.Foldable hiding (toList)
+import Data.Foldable ( Foldable(foldl') )
 import qualified Data.Map as Map
 
 -------------------------------------------------------------------------------
