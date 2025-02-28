@@ -20,7 +20,7 @@ printType t = case t of
     TArr t1 t2  -> maybeParenthesis t1 ++ " -> " ++ maybeParenthesis t2
 
 printConstraint :: Constraint -> String
-printConstraint (t1, t2) = maybeParenthesis t1 ++ "~" ++ maybeParenthesis t2
+printConstraint (t1, t2) = maybeParenthesis t1 ++ " ~ " ++ maybeParenthesis t2
 
 printConstraints :: [Constraint] -> String
 printConstraints [] = ""
