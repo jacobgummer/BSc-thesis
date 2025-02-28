@@ -36,8 +36,8 @@ printConstraints csts =
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 4) str
 
-printInferResult :: 
-    Either TypeError ([Constraint], Subst, Type, Scheme) -> String
+printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme) 
+                    -> String
 printInferResult infRes = case infRes of
   Left err -> show err
   Right (csts, s, t, sch) ->
