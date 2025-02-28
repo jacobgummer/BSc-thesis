@@ -5,8 +5,6 @@ import Infer
 import Syntax
 import Type
 
-import Data.List (isSuffixOf)
-
 maybeParenthesis :: Type -> String
 maybeParenthesis t' = case t' of
     TVar (TV v) -> v
@@ -36,11 +34,7 @@ printConstraints csts =
             ++ acc
 
         removeLastComma :: String -> String
-        removeLastComma [] = []
-        removeLastComma str = 
-            if ",\n\t" `isSuffixOf` str
-            then take (length str - 4) str
-            else str        
+        removeLastComma str = take (length str - 4) str    
 
 printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme) -> String
 printInferResult infRes = case infRes of
