@@ -1,12 +1,5 @@
 dist
 dist-*
 
-*.o
-*.hi
-
 *.DS_Store
 *.vscode
-
-# Ignore files without extensions (i.e., any file that doesn't have a dot)
-/*.*
-* 
