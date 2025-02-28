@@ -27,16 +27,16 @@ printConstraints csts =
   where
     consConstraint :: Constraint -> String -> String
     consConstraint (t1, t2) acc = 
-      maybeParenthesis t1 
-      ++ " ~ " 
+      maybeParenthesis t1
+      ++ " ~ "
       ++ maybeParenthesis t2
-      ++ ",\n\t" 
+      ++ ",\n\t"
       ++ acc
 
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 4) str
 
-printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme) 
+printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
                     -> String
 printInferResult infRes = case infRes of
   Left err -> show err
