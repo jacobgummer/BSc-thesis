@@ -39,7 +39,9 @@ printConstraints csts =
 printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
                     -> String
 printInferResult infRes = case infRes of
+  -- TODO: make function for handling different kinds of type errors. 
   Left err -> show err
+  
   Right (csts, s, t, sch) ->
     "Constraints: \n\t" ++ printConstraints csts ++ "\n"
 
