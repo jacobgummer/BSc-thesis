@@ -1,43 +1,5 @@
-# Ignore dist directories
 dist
 dist-*
 
-# Ignore cabal-dev directories
-cabal-dev
-
-# Ignore object and interface files
-*.o
-*.hi
-*.hie
-*.chi
-*.chs.h
-*.dyn_o
-*.dyn_hi
-
-# Ignore Haskell coverage, environment, and sandbox files
-.hpc
-.hsenv
-.cabal-sandbox/
-cabal.sandbox.config
-*.prof
-*.aux
-*.hp
-*.eventlog
-.stack-work/
-cabal.project.local
-cabal.project.local~
-
-# Ignore HTF related files
-.HTF/
-
-# Ignore GHC environment files
-.ghc.environment.*
-
-# Ignore macOS system files
 *.DS_Store
-
 *.vscode
-
-# Ignore files without extensions (i.e., any file that doesn't have a dot)
-/*.*
-* 
