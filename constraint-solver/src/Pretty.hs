@@ -34,9 +34,8 @@ printConstraints = removeLastComma . foldr consConstraint ""
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 3) str
 
-printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
-                    -> String
-printInferResult infRes = case infRes of
+printInferResult :: Exp -> String
+printInferResult infRes = case constraintsExp emptyEnv infRes of
   -- TODO: make function for handling different kinds of type errors. 
   Left err -> show err
 
