@@ -128,24 +128,24 @@ union' :: Point s a -> Point s a -> (a -> a -> ST s a) -> ST s ()
 union' p1 p2 update = do
   point1@(Pt link_ref1) <- repr p1
   point2@(Pt link_ref2) <- repr p2
-  -- The precondition ensures that we don't create cyclic structures.
   when (point1 /= point2) $ do
-    Info info_ref1 <- readSTRef link_ref1
-    Info info_ref2 <- readSTRef link_ref2
-    MkInfo w1 d1 <- readSTRef info_ref1 -- d1 is discarded
-    MkInfo w2 d2 <- readSTRef info_ref2
-    d2' <- update d1 d2
-    -- Make the smaller tree a a subtree of the bigger one.  The idea
-    -- is this: We increase the path length of one set by one.
-    -- Assuming all elements are accessed equally often, this means
-    -- the penalty is smaller if we do it for the smaller set of the
-    -- two.
-    if w1 >= w2 then do
-      writeSTRef link_ref2 (Link point1)
-      writeSTRef info_ref1 (MkInfo (w1 + w2) d2')
-     else do
-      writeSTRef link_ref1 (Link point2)
-      writeSTRef info_ref2 (MkInfo (w1 + w2) d2')
+    info1 <- readSTRef link_ref1
+    info2 <- readSTRef link_ref2
+    case (info1, info2) of
+      (Info info_ref1, Info info_ref2) -> do
+        infoVal1 <- readSTRef info_ref1
+        infoVal2 <- readSTRef info_ref2
+        case (infoVal1, infoVal2) of
+          (MkInfo w1 d1, MkInfo w2 d2) -> do
+            d2' <- update d1 d2
+            if w1 >= w2 then do
+              writeSTRef link_ref2 (Link point1)
+              writeSTRef info_ref1 (MkInfo (w1 + w2) d2')
+            else do
+              writeSTRef link_ref1 (Link point2)
+              writeSTRef info_ref2 (MkInfo (w1 + w2) d2')
+          _ -> error "Unexpected value in info_ref"
+      _ -> error "Unexpected value in link_ref"
 
 -- | /O(1)/. Return @True@ if both points belong to the same
 -- | equivalence class.
