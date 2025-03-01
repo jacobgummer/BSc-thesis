@@ -27,7 +27,7 @@
 --
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 module Data.UnionFind.ST
-  ( Point, fresh, repr, union, union', equivalent, redundant,
+  ( Point, makeSet, repr, union, union', equivalent, redundant,
     descriptor, setDescriptor, modifyDescriptor )
 where
 
@@ -55,8 +55,8 @@ data Info a = MkInfo
 
 -- | /O(1)/. Create a fresh point and return it.  A fresh point is in
 -- the equivalence class that contains only itself.
-fresh :: a -> ST s (Point s a)
-fresh desc = do
+makeSet :: a -> ST s (Point s a)
+makeSet desc = do
   info <- newSTRef (MkInfo { weight = 1, descr = desc })
   l <- newSTRef (Info info)
   return (Pt l)
