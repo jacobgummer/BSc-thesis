@@ -41,7 +41,7 @@ import Data.STRef
 newtype Point s a = Pt (STRef s (Link s a)) deriving Eq
 
 data Link s a
-    = Info {-# UNPACK #-} !(STRef s (Info a))
+    = Repr {-# UNPACK #-} !(STRef s (Info a))
       -- ^ This is the descriptive element of the equivalence class.
     | Link {-# UNPACK #-} !(Point s a)
       -- ^ Pointer to some other element of the equivalence class.
@@ -58,7 +58,7 @@ data Info a = MkInfo
 makeSet :: a -> ST s (Point s a)
 makeSet desc = do
   info <- newSTRef (MkInfo { weight = 1, descr = desc })
-  l <- newSTRef (Info info)
+  l <- newSTRef (Repr info)
   return (Pt l)
 
 -- | /O(1)/. @find point@ returns the representative point of
@@ -69,7 +69,7 @@ find :: Point s a -> ST s (Point s a)
 find point@(Pt l) = do
   link <- readSTRef l
   case link of
-    Info _ -> return point
+    Repr _ -> return point
     Link pt'@(Pt l') -> do
       pt'' <- find pt'
       when (pt'' /= pt') $ do
@@ -88,11 +88,11 @@ descrRef :: Point s a -> ST s (STRef s (Info a))
 descrRef point@(Pt link_ref) = do
   link <- readSTRef link_ref
   case link of
-    Info info -> return info
+    Repr info -> return info
     Link (Pt link'_ref) -> do
       link' <- readSTRef link'_ref
       case link' of
-        Info info -> return info
+        Repr info -> return info
         _ -> descrRef =<< find point
 
 -- | /O(1)/. Return the descriptor associated with argument point's
@@ -132,7 +132,7 @@ union' p1 p2 update = do
     info1 <- readSTRef link_ref1
     info2 <- readSTRef link_ref2
     case (info1, info2) of
-      (Info info_ref1, Info info_ref2) -> do
+      (Repr info_ref1, Repr info_ref2) -> do
         infoVal1 <- readSTRef info_ref1
         infoVal2 <- readSTRef info_ref2
         case (infoVal1, infoVal2) of
@@ -165,5 +165,5 @@ redundant :: Point s a -> ST s Bool
 redundant (Pt link_r) = do
   link <- readSTRef link_r
   case link of
-    Info _ -> return False
+    Repr _ -> return False
     Link _ -> return True
