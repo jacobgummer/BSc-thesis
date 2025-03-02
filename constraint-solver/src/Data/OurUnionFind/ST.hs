@@ -111,9 +111,9 @@ union' p1 p2 update = do
   point1@(Node link_ref1) <- find p1
   point2@(Node link_ref2) <- find p2
   when (point1 /= point2) $ do
-    info1 <- readSTRef link_ref1
-    info2 <- readSTRef link_ref2
-    case (info1, info2) of
+    repr1 <- readSTRef link_ref1
+    repr2 <- readSTRef link_ref2
+    case (repr1, repr2) of
       (Repr info_ref1, Repr info_ref2) -> do
         (MkInfo w1 d1) <- readSTRef info_ref1
         (MkInfo w2 d2) <- readSTRef info_ref2
