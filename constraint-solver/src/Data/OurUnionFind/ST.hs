@@ -88,7 +88,7 @@ modifyDescriptor node f = do
 -- will be the node that doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
 union n1 n2 = do
-  (node1@(Node link_ref1), node2@(Node link_ref2)) <- preProcess n1 n2
+  (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
   -- Ensure that nodes aren't in the same equivalence class. 
   when (node1 /= node2) $ do
     repr1 <- readSTRef link_ref1
@@ -107,8 +107,8 @@ union n1 n2 = do
           writeSTRef info_ref2 (MkInfo (w1 + w2) d2)
       _ -> error "'find' somehow didn't return a Repr"
     where
-      preProcess :: TypeNode s -> TypeNode s -> ST s (TypeNode s, TypeNode s) 
-      preProcess n1' n2' = do
+      preprocess :: TypeNode s -> TypeNode s -> ST s (TypeNode s, TypeNode s) 
+      preprocess n1' n2' = do
         -- Find representatives of each node's equivalence class.
         r1 <- find n1'
         r2 <- find n2'
