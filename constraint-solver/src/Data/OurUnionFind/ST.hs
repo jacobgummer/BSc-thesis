@@ -64,13 +64,13 @@ descrRef node@(Node link_ref) = do
         Repr info -> return info
         _ -> descrRef =<< find node
 
--- | /O(1)/. Return the getDescriptor associated with argument node's
+-- | /O(1)/. Return the decriptor associated with argument node's
 -- equivalence class.
 getDescriptor :: TypeNode s -> ST s Type
 getDescriptor node = do
   descr <$> (readSTRef =<< descrRef node)
 
--- | /O(1)/. Replace the getDescriptor of the node's equivalence class
+-- | /O(1)/. Replace the descriptor of the node's equivalence class
 -- with the second argument.
 setDescriptor :: TypeNode s -> Type -> ST s ()
 setDescriptor node new_descr = do
@@ -84,7 +84,7 @@ modifyDescriptor node f = do
 
 -- | /O(1)/. Join the equivalence classes of the nodes. If both or none
 -- of the nodes represent type variables, the resulting equivalence class
--- will get the getDescriptor of the second argument; otherwise, the getDescriptor
+-- will get the descriptor of the second argument; otherwise, the descriptor
 -- will be the node that doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
 union n1 n2 = do
