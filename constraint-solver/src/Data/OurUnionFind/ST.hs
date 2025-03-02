@@ -7,7 +7,7 @@ import Control.Monad ( when )
 import Control.Monad.ST
 import Data.STRef
 
-newtype TypeNode s = Pt (STRef s (Link s)) deriving Eq
+newtype TypeNode s = Node (STRef s (Link s)) deriving Eq
 
 data Link s
     = Repr {-# UNPACK #-} !(STRef s TypeInfo)
@@ -28,18 +28,18 @@ makeSet :: Type -> ST s (TypeNode s)
 makeSet t = do
   info <- newSTRef (MkInfo { weight = 1, descr = t })
   l <- newSTRef (Repr info)
-  return (Pt l)
+  return (Node l)
 
 -- | /O(1)/. @find point@ returns the representative point of
 -- @point@'s equivalence class.
 --
 -- This method performs the path compresssion.
 find :: TypeNode s -> ST s (TypeNode s)
-find point@(Pt l) = do
+find point@(Node l) = do
   link <- readSTRef l
   case link of
     Repr _ -> return point
-    Link pt'@(Pt l') -> do
+    Link pt'@(Node l') -> do
       pt'' <- find pt'
       when (pt'' /= pt') $ do
         -- At this point we know that @pt'@ is not the representative
@@ -54,11 +54,11 @@ find point@(Pt l) = do
 -- | Return the reference to the point's equivalence class's
 -- descriptor.
 descrRef :: TypeNode s -> ST s (STRef s TypeInfo) 
-descrRef point@(Pt link_ref) = do
+descrRef point@(Node link_ref) = do
   link <- readSTRef link_ref
   case link of
     Repr info -> return info
-    Link (Pt link'_ref) -> do
+    Link (Node link'_ref) -> do
       link' <- readSTRef link'_ref
       case link' of
         Repr info -> return info
@@ -108,8 +108,8 @@ union p1 p2 = do
 -- descriptor or perform side effects.
 union' :: TypeNode s -> TypeNode s -> (Type -> Type -> ST s Type) -> ST s ()
 union' p1 p2 update = do
-  point1@(Pt link_ref1) <- find p1
-  point2@(Pt link_ref2) <- find p2
+  point1@(Node link_ref1) <- find p1
+  point2@(Node link_ref2) <- find p2
   when (point1 /= point2) $ do
     info1 <- readSTRef link_ref1
     info2 <- readSTRef link_ref2
