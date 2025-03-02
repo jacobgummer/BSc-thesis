@@ -27,7 +27,7 @@
 --
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 module Data.UnionFind.ST
-  ( Point, makeSet, repr, union, union', equivalent, redundant,
+  ( Point, makeSet, find, union, union', equivalent, redundant,
     descriptor, setDescriptor, modifyDescriptor )
 where
 
@@ -61,17 +61,17 @@ makeSet desc = do
   l <- newSTRef (Info info)
   return (Pt l)
 
--- | /O(1)/. @repr point@ returns the representative point of
+-- | /O(1)/. @find point@ returns the representative point of
 -- @point@'s equivalence class.
 --
 -- This method performs the path compresssion.
-repr :: Point s a -> ST s (Point s a)
-repr point@(Pt l) = do
+find :: Point s a -> ST s (Point s a)
+find point@(Pt l) = do
   link <- readSTRef l
   case link of
     Info _ -> return point
     Link pt'@(Pt l') -> do
-      pt'' <- repr pt'
+      pt'' <- find pt'
       when (pt'' /= pt') $ do
         -- At this point we know that @pt'@ is not the representative
         -- element of @point@'s equivalent class.  Therefore @pt'@'s
@@ -93,7 +93,7 @@ descrRef point@(Pt link_ref) = do
       link' <- readSTRef link'_ref
       case link' of
         Info info -> return info
-        _ -> descrRef =<< repr point
+        _ -> descrRef =<< find point
 
 -- | /O(1)/. Return the descriptor associated with argument point's
 -- equivalence class.
@@ -126,8 +126,8 @@ union p1 p2 = union' p1 p2 (\_ d2 -> return d2)
 -- descriptor or perform side effects.
 union' :: Point s a -> Point s a -> (a -> a -> ST s a) -> ST s ()
 union' p1 p2 update = do
-  point1@(Pt link_ref1) <- repr p1
-  point2@(Pt link_ref2) <- repr p2
+  point1@(Pt link_ref1) <- find p1
+  point2@(Pt link_ref2) <- find p2
   when (point1 /= point2) $ do
     info1 <- readSTRef link_ref1
     info2 <- readSTRef link_ref2
@@ -150,7 +150,7 @@ union' p1 p2 update = do
 -- | /O(1)/. Return @True@ if both points belong to the same
 -- | equivalence class.
 equivalent :: Point s a -> Point s a -> ST s Bool
-equivalent p1 p2 = (==) <$> repr p1 <*> repr p2
+equivalent p1 p2 = (==) <$> find p1 <*> find p2
 
 -- | /O(1)/. Returns @True@ for all but one element of an equivalence
 -- class.  That is, if @ps = [p1, .., pn]@ are all in the same
