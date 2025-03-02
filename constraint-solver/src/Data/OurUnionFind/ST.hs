@@ -52,7 +52,7 @@ find node@(Node l) = do
       return node''
 
 -- | Return the reference to the node's equivalence class's
--- getDescriptor.
+-- descriptor.
 descrRef :: TypeNode s -> ST s (STRef s Info) 
 descrRef node@(Node link_ref) = do
   link <- readSTRef link_ref
