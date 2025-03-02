@@ -1,30 +1,3 @@
--- | An implementation of Tarjan's UNION-FIND algorithm.  (Robert E
--- Tarjan. \"Efficiency of a Good But Not Linear Set Union Algorithm\", JACM
--- 22(2), 1975)
---
--- The algorithm implements three operations efficiently (all amortised
--- @O(1)@):
---
---  1. Check whether two elements are in the same equivalence class.
---
---  2. Create a union of two equivalence classes.
---
---  3. Look up the descriptor of the equivalence class.
--- 
--- The implementation is based on mutable references.  Each
--- equivalence class has exactly one member that serves as its
--- representative element.  Every element either is the representative
--- element of its equivalence class or points to another element in
--- the same equivalence class.  Equivalence testing thus consists of
--- following the pointers to the representative elements and then
--- comparing these for identity.
---
--- The algorithm performs lazy path compression.  That is, whenever we
--- walk along a path greater than length 1 we automatically update the
--- pointers along the path to directly point to the representative
--- element.  Consequently future lookups will be have a path length of
--- at most 1.
---
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 module Data.OurUnionFind.ST where
 
