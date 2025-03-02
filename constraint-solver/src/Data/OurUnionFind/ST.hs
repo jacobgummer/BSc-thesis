@@ -11,7 +11,7 @@ newtype TypeNode s = Node (STRef s (Link s)) deriving Eq
 
 data Link s
     = Repr {-# UNPACK #-} !(STRef s TypeInfo)
-      -- ^ This is the descriptive element of the equivalence class.
+      -- ^ This is the representative of the equivalence class.
     | Link {-# UNPACK #-} !(TypeNode s)
       -- ^ Pointer to some other element of the equivalence class.
      deriving Eq
