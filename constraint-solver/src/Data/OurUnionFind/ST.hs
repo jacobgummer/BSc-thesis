@@ -106,7 +106,10 @@ union n1 n2 = do
           -- Make n2('s parent) the parent of n1.
           writeSTRef link_ref1 (Link node2)
           writeSTRef info_ref2 (MkInfo (w1 + w2) d2)
-      _ -> error "'find' somehow didn't return a Repr"
+
+      -- This shouldn't be possible.       
+      _ -> error "'find' somehow didn't return a Repr" 
+
     where
       preprocess :: TypeNode s -> TypeNode s -> ST s (TypeNode s, TypeNode s) 
       preprocess n1' n2' = do
