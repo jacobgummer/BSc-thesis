@@ -22,7 +22,7 @@ data Info = MkInfo
   , descr  :: Type
   } deriving Eq
 
--- | /O(1)/. Create a fresh point and return it.  A fresh point is in
+-- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
 makeSet :: Type -> ST s (TypeNode s)
 makeSet t = do
@@ -30,31 +30,31 @@ makeSet t = do
   l <- newSTRef (Repr info)
   return (Node l)
 
--- | /O(1)/. @find point@ returns the representative point of
--- @point@'s equivalence class.
+-- | /O(1)/. @find node@ returns the representative node of
+-- @node@'s equivalence class.
 --
 -- This method performs the path compresssion.
 find :: TypeNode s -> ST s (TypeNode s)
-find point@(Node l) = do
+find node@(Node l) = do
   link <- readSTRef l
   case link of
-    Repr _ -> return point
-    Link pt'@(Node l') -> do
-      pt'' <- find pt'
-      when (pt'' /= pt') $ do
-        -- At this point we know that @pt'@ is not the representative
-        -- element of @point@'s equivalent class.  Therefore @pt'@'s
+    Repr _ -> return node
+    Link node'@(Node l') -> do
+      node'' <- find node'
+      when (node' /= node'') $ do
+        -- At this node we know that @node'@ is not the representative
+        -- element of @node@'s equivalent class.  Therefore @node'@'s
         -- link must be of the form @Link r@.  We write this same
-        -- value into @point@'s link reference and thereby perform
+        -- value into @node@'s link reference and thereby perform
         -- path compression.
         link' <- readSTRef l'
         writeSTRef l link'
-      return pt''
+      return node''
 
--- | Return the reference to the point's equivalence class's
+-- | Return the reference to the node's equivalence class's
 -- descriptor.
 descrRef :: TypeNode s -> ST s (STRef s Info) 
-descrRef point@(Node link_ref) = do
+descrRef node@(Node link_ref) = do
   link <- readSTRef link_ref
   case link of
     Repr info -> return info
@@ -62,41 +62,41 @@ descrRef point@(Node link_ref) = do
       link' <- readSTRef link'_ref
       case link' of
         Repr info -> return info
-        _ -> descrRef =<< find point
+        _ -> descrRef =<< find node
 
--- | /O(1)/. Return the descriptor associated with argument point's
+-- | /O(1)/. Return the descriptor associated with argument node's
 -- equivalence class.
 descriptor :: TypeNode s -> ST s Type
-descriptor point = do
-  descr <$> (readSTRef =<< descrRef point)
+descriptor node = do
+  descr <$> (readSTRef =<< descrRef node)
 
--- | /O(1)/. Replace the descriptor of the point's equivalence class
+-- | /O(1)/. Replace the descriptor of the node's equivalence class
 -- with the second argument.
 setDescriptor :: TypeNode s -> Type -> ST s ()
-setDescriptor point new_descr = do
-  r <- descrRef point
+setDescriptor node new_descr = do
+  r <- descrRef node
   modifySTRef r $ \i -> i { descr = new_descr }
 
 modifyDescriptor :: TypeNode s -> (Type -> Type) -> ST s ()
-modifyDescriptor point f = do
-  r <- descrRef point
+modifyDescriptor node f = do
+  r <- descrRef node
   modifySTRef r $ \i -> i { descr = f (descr i) }
 
--- | /O(1)/. Join the equivalence classes of the points. If both or none
--- of the points represent type variables, the resulting equivalence class
+-- | /O(1)/. Join the equivalence classes of the nodes. If both or none
+-- of the nodes represent type variables, the resulting equivalence class
 -- will get the descriptor of the second argument; otherwise, the descriptor
--- will be the point that doesn't represent a type variable.
+-- will be the node that doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
-union p1 p2 = do
-  p1IsTVar <- isTVar p1
-  p2IsTVar <- isTVar p2
+union n1 n2 = do
+  p1IsTVar <- isTVar n1
+  p2IsTVar <- isTVar n2
   case (p1IsTVar, p2IsTVar) of 
-    (False, True) -> union p2 p1
-    _             -> union' p1 p2 (\_ d2 -> return d2)
+    (False, True) -> union n2 n1
+    _             -> union' n1 n2 (\_ d2 -> return d2)
   where
     isTVar :: TypeNode s -> ST s Bool
-    isTVar p = do
-      t <- descriptor p
+    isTVar node = do
+      t <- descriptor node
       case t of
         TVar _ -> return True
         _      -> return False
@@ -107,10 +107,12 @@ union p1 p2 = do
 -- the callback, but the callback might adjust the information of the
 -- descriptor or perform side effects.
 union' :: TypeNode s -> TypeNode s -> (Type -> Type -> ST s Type) -> ST s ()
-union' p1 p2 update = do
-  point1@(Node link_ref1) <- find p1
-  point2@(Node link_ref2) <- find p2
-  when (point1 /= point2) $ do
+union' n1 n2 update = do
+  -- Find representatives of both nodes' equivalence classes.
+  node1@(Node link_ref1) <- find n1
+  node2@(Node link_ref2) <- find n2
+  -- Ensure that nodes aren't in the same equivalence class. 
+  when (node1 /= node2) $ do
     repr1 <- readSTRef link_ref1
     repr2 <- readSTRef link_ref2
     case (repr1, repr2) of
@@ -119,14 +121,16 @@ union' p1 p2 update = do
         (MkInfo w2 d2) <- readSTRef info_ref2
         d2' <- update d1 d2
         if w1 >= w2 then do
-          writeSTRef link_ref2 (Link point1)
+          -- Make n1 parent of n2.
+          writeSTRef link_ref2 (Link node1)
           writeSTRef info_ref1 (MkInfo (w1 + w2) d2')
         else do
-          writeSTRef link_ref1 (Link point2)
+          -- Make n2 parent of n1.
+          writeSTRef link_ref1 (Link node2)
           writeSTRef info_ref2 (MkInfo (w1 + w2) d2')
       _ -> error "'find' somehow didn't return a Repr"
 
--- | /O(1)/. Return @True@ if both points belong to the same
+-- | /O(1)/. Return @True@ if both nodes belong to the same
 -- | equivalence class.
 equivalent :: TypeNode s -> TypeNode s -> ST s Bool
-equivalent p1 p2 = (==) <$> find p1 <*> find p2
+equivalent n1 n2 = (==) <$> find n1 <*> find n2
