@@ -125,7 +125,7 @@ union' p1 p2 update = do
         else do
           writeSTRef link_ref1 (Link point2)
           writeSTRef info_ref2 (MkInfo (w1 + w2) d2')
-      _ -> error "Unexpected value in link_ref"
+      _ -> error "Something went wrong ('find' somehow didn't return a Repr)"
 
 -- | /O(1)/. Return @True@ if both points belong to the same
 -- | equivalence class.
