@@ -92,9 +92,9 @@ union n1 n2 = do
   (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
   -- Ensure that nodes aren't in the same equivalence class. 
   when (node1 /= node2) $ do
-    repr1 <- readSTRef link_ref1
-    repr2 <- readSTRef link_ref2
-    case (repr1, repr2) of
+    link1 <- readSTRef link_ref1
+    link2 <- readSTRef link_ref2
+    case (link1, link2) of
       (Repr info_ref1, Repr info_ref2) -> do
         (MkInfo w1 _) <- readSTRef info_ref1
         (MkInfo w2 d2) <- readSTRef info_ref2
