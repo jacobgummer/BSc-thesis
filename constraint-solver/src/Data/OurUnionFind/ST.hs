@@ -88,47 +88,43 @@ modifyDescriptor node f = do
 -- will be the node that doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
 union n1 n2 = do
-  p1IsTVar <- isTVar n1
-  p2IsTVar <- isTVar n2
-  case (p1IsTVar, p2IsTVar) of 
-    (False, True) -> union n2 n1
-    _             -> union' n1 n2 (\_ d2 -> return d2)
-  where
-    isTVar :: TypeNode s -> ST s Bool
-    isTVar node = do
-      t <- descriptor node
-      case t of
-        TVar _ -> return True
-        _      -> return False
-
--- | Like 'union', but sets the descriptor returned from the callback.
--- 
--- The intention is to keep the descriptor of the second argument to
--- the callback, but the callback might adjust the information of the
--- descriptor or perform side effects.
-union' :: TypeNode s -> TypeNode s -> (Type -> Type -> ST s Type) -> ST s ()
-union' n1 n2 update = do
-  -- Find representatives of both nodes' equivalence classes.
-  node1@(Node link_ref1) <- find n1
-  node2@(Node link_ref2) <- find n2
+  (node1@(Node link_ref1), node2@(Node link_ref2)) <- preProcess n1 n2
   -- Ensure that nodes aren't in the same equivalence class. 
   when (node1 /= node2) $ do
     repr1 <- readSTRef link_ref1
     repr2 <- readSTRef link_ref2
     case (repr1, repr2) of
       (Repr info_ref1, Repr info_ref2) -> do
-        (MkInfo w1 d1) <- readSTRef info_ref1
+        (MkInfo w1 _) <- readSTRef info_ref1
         (MkInfo w2 d2) <- readSTRef info_ref2
-        d2' <- update d1 d2
         if w1 >= w2 then do
           -- Make n1 parent of n2.
-          writeSTRef link_ref2 (Link node1)
-          writeSTRef info_ref1 (MkInfo (w1 + w2) d2')
+          writeSTRef link_ref2 (Link n1)
+          writeSTRef info_ref1 (MkInfo (w1 + w2) d2)
         else do
-          -- Make n2 parent of n1.
+          -- Make n2 parent of node1.
           writeSTRef link_ref1 (Link node2)
-          writeSTRef info_ref2 (MkInfo (w1 + w2) d2')
+          writeSTRef info_ref2 (MkInfo (w1 + w2) d2)
       _ -> error "'find' somehow didn't return a Repr"
+    where
+      preProcess :: TypeNode s -> TypeNode s -> ST s (TypeNode s, TypeNode s) 
+      preProcess n1' n2' = do
+        -- Find representatives of each node's equivalence class.
+        r1 <- find n1'
+        r2 <- find n2'
+        -- Check if representatives represent type variables.
+        r1IsTVar <- isTVar r1
+        r2IsTVar <- isTVar r2
+        case (r1IsTVar, r2IsTVar) of 
+          (False, True) -> return (r2, r1)
+          _             -> return (r1, r2)
+
+      isTVar :: TypeNode s -> ST s Bool
+      isTVar node = do
+        t <- descriptor node
+        case t of
+          TVar _ -> return True
+          _      -> return False      
 
 -- | /O(1)/. Return @True@ if both nodes belong to the same
 -- | equivalence class.
