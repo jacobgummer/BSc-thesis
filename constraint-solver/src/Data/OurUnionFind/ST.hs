@@ -82,11 +82,10 @@ modifyDescriptor point f = do
   r <- descrRef point
   modifySTRef r $ \i -> i { descr = f (descr i) }
 
--- | /O(1)/. Join the equivalence classes of the points (which must be
--- distinct). The resulting equivalence class will get the descriptor
--- of the node that isn't a type variable; if both or none are type
--- variables, the resulting equivalence class will get the descriptor
--- of the second argument.
+-- | /O(1)/. Join the equivalence classes of the points. If both or none
+-- of the points represent type variables, the resulting equivalence class
+-- will get the descriptor of the second argument; otherwise, the descriptor
+-- will be the point that doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
 union p1 p2 = do
   p1IsTVar <- isTVar p1
