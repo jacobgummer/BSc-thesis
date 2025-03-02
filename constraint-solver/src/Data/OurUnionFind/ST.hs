@@ -83,9 +83,10 @@ modifyDescriptor node f = do
   modifySTRef r $ \i -> i { descr = f (descr i) }
 
 -- | /O(1)/. Join the equivalence classes of the nodes. If both or none
--- of the nodes represent type variables, the resulting equivalence class
--- will get the descriptor of the second argument; otherwise, the descriptor
--- will be the node that doesn't represent a type variable.
+-- of the nodes are in equivalence classes with a type variable as a
+-- representative, the resulting equivalence class will get the descriptor
+-- of the second argument; otherwise, the descriptor will be the node that
+-- doesn't represent a type variable.
 union :: TypeNode s -> TypeNode s -> ST s ()
 union n1 n2 = do
   (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
