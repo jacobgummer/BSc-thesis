@@ -52,8 +52,8 @@ data TypeInfo = MkInfo
 -- | /O(1)/. Create a fresh point and return it.  A fresh point is in
 -- the equivalence class that contains only itself.
 makeSet :: Type -> ST s (TypeNode s)
-makeSet desc = do
-  info <- newSTRef (MkInfo { weight = 1, descr = desc })
+makeSet t = do
+  info <- newSTRef (MkInfo { weight = 1, descr = t })
   l <- newSTRef (Repr info)
   return (Pt l)
 
