@@ -31,7 +31,6 @@ module Data.UnionFind.ST
     descriptor, setDescriptor, modifyDescriptor )
 where
 
-import Control.Applicative
 import Control.Monad ( when )
 import Control.Monad.ST
 import Data.STRef
