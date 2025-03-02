@@ -99,11 +99,11 @@ union n1 n2 = do
         (MkInfo w1 _) <- readSTRef info_ref1
         (MkInfo w2 d2) <- readSTRef info_ref2
         if w1 >= w2 then do
-          -- Make n1 parent of n2.
+          -- Make n1('s parent) the parent of n2.
           writeSTRef link_ref2 (Link n1)
           writeSTRef info_ref1 (MkInfo (w1 + w2) d2)
         else do
-          -- Make n2 parent of node1.
+          -- Make n2('s parent) the parent of n1.
           writeSTRef link_ref1 (Link node2)
           writeSTRef info_ref2 (MkInfo (w1 + w2) d2)
       _ -> error "'find' somehow didn't return a Repr"
