@@ -110,10 +110,24 @@ modifyDescriptor point f = do
   modifySTRef r $ \i -> i { descr = f (descr i) }
 
 -- | /O(1)/. Join the equivalence classes of the points (which must be
--- distinct).  The resulting equivalence class will get the descriptor
+-- distinct). The resulting equivalence class will get the descriptor
+-- of the node that isn't a type variable; if both or none are type
+-- variables, the resulting equivalence class will get the descriptor
 -- of the second argument.
 union :: TypeNode s -> TypeNode s -> ST s ()
-union p1 p2 = union' p1 p2 (\_ d2 -> return d2)
+union p1 p2 = do
+  p1IsTVar <- isTVar p1
+  p2IsTVar <- isTVar p2
+  case (p1IsTVar, p2IsTVar) of 
+    (False, True) -> union p2 p1
+    _             -> union' p1 p2 (\_ d2 -> return d2)
+  where
+    isTVar :: TypeNode s -> ST s Bool
+    isTVar p = do
+      t <- descriptor p
+      case t of
+        TVar _ -> return True
+        _      -> return False
 
 -- | Like 'union', but sets the descriptor returned from the callback.
 -- 
