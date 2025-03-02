@@ -38,15 +38,15 @@ find :: TypeNode s -> ST s (TypeNode s)
 find node@(Node l) = do
   link <- readSTRef l
   case link of
+    -- Input node is representative.
     Repr _ -> return node
+
+    -- Input node's parent is another node.
     Link node'@(Node l') -> do
       node'' <- find node'
       when (node' /= node'') $ do
-        -- At this node we know that @node'@ is not the representative
-        -- element of @node@'s equivalent class.  Therefore @node'@'s
-        -- link must be of the form @Link r@.  We write this same
-        -- value into @node@'s link reference and thereby perform
-        -- path compression.
+        -- Input node's parent isn't representative;
+        -- performing path compression.
         link' <- readSTRef l'
         writeSTRef l link'
       return node''
