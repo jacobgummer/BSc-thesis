@@ -10,13 +10,13 @@ import Data.STRef
 newtype TypeNode s = Node (STRef s (Link s)) deriving Eq
 
 data Link s
-    = Repr {-# UNPACK #-} !(STRef s TypeInfo)
+    = Repr {-# UNPACK #-} !(STRef s Info)
       -- ^ This is the representative of the equivalence class.
     | Link {-# UNPACK #-} !(TypeNode s)
       -- ^ Pointer to some other element of the equivalence class.
      deriving Eq
 
-data TypeInfo = MkInfo
+data Info = MkInfo
   { weight :: {-# UNPACK #-} !Int
     -- ^ The size of the equivalence class, used by 'union'.
   , descr  :: Type
@@ -53,7 +53,7 @@ find point@(Node l) = do
 
 -- | Return the reference to the point's equivalence class's
 -- descriptor.
-descrRef :: TypeNode s -> ST s (STRef s TypeInfo) 
+descrRef :: TypeNode s -> ST s (STRef s Info) 
 descrRef point@(Node link_ref) = do
   link <- readSTRef link_ref
   case link of
