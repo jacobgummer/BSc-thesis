@@ -95,7 +95,7 @@ printExp expr =
   case expr of
     Var n -> n
     App e1 e2 -> "(" ++ printExp e1 ++ "(" ++ printExp e2 ++ "))" 
-    Lam n e -> "λ" ++ n ++ " => " ++ printExp e
+    Lam n e -> "(" ++ "λ" ++ n ++ " => " ++ printExp e ++ ")"
     Let n e1 e2 -> "let" ++ n ++ printExp e1 ++ printExp e2
     If e1 e2 e3 -> "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
     Fix e -> "rec " ++ printExp e
