@@ -51,8 +51,6 @@ printSubstitutions substs =
             [(TV t1, t2)] -> t1 ++ " |-> " ++ printType t2
             ((TV t1, t2) : ts) -> t1 ++ " |-> " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
 
-
-
 -- TODO: Implement this.
 printScheme :: Scheme -> String
 printScheme sch =
@@ -67,8 +65,6 @@ printScheme sch =
           [] -> ""
           [TV v] -> v
           ((TV v) : tvs) -> v ++ "," ++ printTVars tvs
-
-
 
 -- TODO: Implement this.
 printTypeError :: TypeError -> String
@@ -87,7 +83,6 @@ printTypeError typeError =
               [] -> ""
               [t] -> printType t
               (t:ts') -> printType t ++ ", " ++ printTypes ts'
-
 
 -- TODO: Implement this.
 printExp :: Exp -> String
