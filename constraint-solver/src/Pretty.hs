@@ -34,18 +34,27 @@ printConstraints = removeLastComma . foldr consConstraint ""
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 3) str
 
+-- TODO: Implement this.
+printSubstitution :: Subst -> String
+printSubstitution = show
+
+-- TODO: Implement this.
+printScheme :: Scheme -> String
+printScheme = show
+
+-- TODO: Implement this.
+printTypeError :: TypeError -> String
+printTypeError = show
+
 printInferResult :: Exp -> String
 printInferResult infRes = case constraintsExp emptyEnv infRes of
-  -- TODO: make function for handling different kinds of type errors. 
-  Left err -> show err
+  Left err -> printTypeError err
 
-  Right (csts, s, t, sch) ->
+  Right (csts, subst, t, sch) ->
     "Constraints: \n\t" ++ printConstraints csts ++ "\n"
 
-    -- TODO: make function for printing substitution.
-    ++ "Substitution: \n\t" ++ show s ++ "\n"
+    ++ "Substitution: \n\t" ++ printSubstitution subst ++ "\n"
 
     ++ "Type: \n\t" ++ printType t ++ "\n"
 
-    -- TODO: make function for printing scheme.
-    ++ "Scheme: \n\t" ++ show sch
+    ++ "Scheme: \n\t" ++ printScheme sch
