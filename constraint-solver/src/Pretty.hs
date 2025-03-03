@@ -52,7 +52,7 @@ printExp = show
 
 printInferResult :: Exp -> String
 printInferResult e = 
-  "Expression: " ++ printExp e ++
+  "Expression: \n\t" ++ printExp e ++ "\n" ++
   case constraintsExp emptyEnv e of
     Left err -> printTypeError err
 

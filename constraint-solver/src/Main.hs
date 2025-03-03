@@ -16,4 +16,4 @@ exp1Inferred = constraintsExp emptyEnv exp1
 main :: IO ()
 main = do 
     -- putStrLn "Hello, Haskell!"
-    putStrLn $ printInferResult exp1Inferred
+    putStrLn $ printInferResult exp1
