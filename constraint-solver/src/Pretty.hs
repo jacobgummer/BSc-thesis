@@ -47,8 +47,8 @@ printSubstitutions substs =
         printSubstitution pairs =
           case pairs of
             [] -> ""
-            [(TV t1, t2)] -> t1 ++ " |-> " ++ printType t2
-            ((TV t1, t2) : ts) -> t1 ++ " |-> " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
+            [(TV t1, t2)] -> t1 ++ " ↦ " ++ printType t2
+            ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
 
 printScheme :: Scheme -> String
 printScheme sch =
