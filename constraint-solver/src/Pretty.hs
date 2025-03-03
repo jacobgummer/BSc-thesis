@@ -34,19 +34,33 @@ printConstraints = removeLastComma . foldr consConstraint ""
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 3) str
 
-printInferResult :: Either TypeError ([Constraint], Subst, Type, Scheme)
-                    -> String
-printInferResult infRes = case infRes of
-  -- TODO: make function for handling different kinds of type errors. 
-  Left err -> show err
+-- TODO: Implement this.
+printSubstitution :: Subst -> String
+printSubstitution = show
 
-  Right (csts, s, t, sch) ->
-    "Constraints: \n\t" ++ printConstraints csts ++ "\n"
+-- TODO: Implement this.
+printScheme :: Scheme -> String
+printScheme = show
 
-    -- TODO: make function for printing substitution.
-    ++ "Substitution: \n\t" ++ show s ++ "\n"
+-- TODO: Implement this.
+printTypeError :: TypeError -> String
+printTypeError = show
 
-    ++ "Type: \n\t" ++ printType t ++ "\n"
+-- TODO: Implement this.
+printExp :: Exp -> String
+printExp = show
 
-    -- TODO: make function for printing scheme.
-    ++ "Scheme: \n\t" ++ show sch
+printInferResult :: Exp -> String
+printInferResult e = 
+  "Expression: \n\t" ++ printExp e ++ "\n" ++
+  case constraintsExp emptyEnv e of
+    Left err -> printTypeError err
+
+    Right (csts, subst, t, sch) ->
+      "Constraints: \n\t" ++ printConstraints csts ++ "\n"
+
+      ++ "Substitution: \n\t" ++ printSubstitution subst ++ "\n"
+
+      ++ "Type: \n\t" ++ printType t ++ "\n"
+
+      ++ "Scheme: \n\t" ++ printScheme sch
