@@ -85,24 +85,37 @@ printExp :: Exp -> String
 printExp expr =
   case expr of
     Var n -> n
-    App e1 e2 -> "(" ++ printExp e1 ++ "(" ++ printExp e2 ++ "))" 
-    Lam n e -> "(" ++ "λ" ++ n ++ " => " ++ printExp e ++ ")"
-    Let n e1 e2 -> "let" ++ n ++ printExp e1 ++ printExp e2
-    If e1 e2 e3 -> "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
+    App e1 e2 -> 
+      maybeParenthesisExp e1 ++ " " ++ maybeParenthesisExp e2
+    Lam n e -> 
+      "λ" ++ n ++ " -> " ++ printExp e
+    Let n e1 e2 -> 
+      "let" ++ n ++ printExp e1 ++ printExp e2
+    If e1 e2 e3 -> 
+      "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
     Fix e -> "rec " ++ printExp e
     Op binop e1 e2 ->
-      let e1Pretty = printExp e1
-          e2Pretty = printExp e2
-      in
-        case binop of
-          Add -> "(" ++ e1Pretty ++ "+" ++ e2Pretty ++ ")"
-          Sub -> "(" ++ e1Pretty ++ "-" ++ e2Pretty ++ ")"
-          Mul -> "(" ++ e1Pretty ++ "*" ++ e2Pretty ++ ")"
-          Eql -> "(" ++ e1Pretty ++ "=" ++ e2Pretty ++ ")"
+      maybeParenthesisExp e1 ++ printBinop binop ++ maybeParenthesisExp e2
     Lit l -> 
       case l of
         LInt i -> show i
         LBool b -> show b
+    where
+      maybeParenthesisExp :: Exp -> String
+      maybeParenthesisExp e = case e of
+        (Lit l) -> 
+          case l of
+            LInt i  -> show i
+            LBool b -> show b
+        Var v -> v
+        _ -> "(" ++ printExp e ++ ")"
+
+      printBinop :: Binop -> String
+      printBinop binop = case binop of
+        Add -> " + "
+        Sub -> " - "
+        Mul -> " * "
+        Eql -> " == "
 
 printInferResult :: Exp -> String
 printInferResult e = 
