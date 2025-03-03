@@ -7,8 +7,8 @@ import Type
 
 import qualified Data.Map as Map
 
-maybeParenthesis :: Type -> String
-maybeParenthesis t' = case t' of
+maybeParenthesisType :: Type -> String
+maybeParenthesisType t' = case t' of
   TVar (TV v) -> v
   TCon c      -> c
   _           -> "(" ++ printType t' ++ ")"
@@ -17,19 +17,19 @@ printType :: Type -> String
 printType t = case t of
   TVar (TV v) -> v
   TCon c      -> c
-  TArr t1 t2  -> maybeParenthesis t1 ++ " -> " ++ maybeParenthesis t2
+  TArr t1 t2  -> maybeParenthesisType t1 ++ " -> " ++ maybeParenthesisType t2
 
 -- printConstraint :: Constraint -> String
--- printConstraint (t1, t2) = maybeParenthesis t1 ++ " ~ " ++ maybeParenthesis t2
+-- printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
 
 printConstraints :: [Constraint] -> String
 printConstraints = removeLastComma . foldr consConstraint ""
   where
     consConstraint :: Constraint -> String -> String
     consConstraint (t1, t2) acc =
-      maybeParenthesis t1
+      maybeParenthesisType t1
       ++ " ~ "
-      ++ maybeParenthesis t2
+      ++ maybeParenthesisType t2
       ++ ",\n\t"
       ++ acc
 
