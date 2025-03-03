@@ -46,6 +46,10 @@ printScheme = show
 printTypeError :: TypeError -> String
 printTypeError = show
 
+-- TODO: Implement this.
+printExp :: Exp -> String
+printExp = show
+
 printInferResult :: Exp -> String
 printInferResult infRes = case constraintsExp emptyEnv infRes of
   Left err -> printTypeError err
