@@ -51,14 +51,16 @@ printExp :: Exp -> String
 printExp = show
 
 printInferResult :: Exp -> String
-printInferResult infRes = case constraintsExp emptyEnv infRes of
-  Left err -> printTypeError err
+printInferResult e = 
+  "Expression: " ++ printExp e ++
+  case constraintsExp emptyEnv e of
+    Left err -> printTypeError err
 
-  Right (csts, subst, t, sch) ->
-    "Constraints: \n\t" ++ printConstraints csts ++ "\n"
+    Right (csts, subst, t, sch) ->
+      "Constraints: \n\t" ++ printConstraints csts ++ "\n"
 
-    ++ "Substitution: \n\t" ++ printSubstitution subst ++ "\n"
+      ++ "Substitution: \n\t" ++ printSubstitution subst ++ "\n"
 
-    ++ "Type: \n\t" ++ printType t ++ "\n"
+      ++ "Type: \n\t" ++ printType t ++ "\n"
 
-    ++ "Scheme: \n\t" ++ printScheme sch
+      ++ "Scheme: \n\t" ++ printScheme sch
