@@ -31,15 +31,18 @@ printSubstitutions :: Subst -> String
 printSubstitutions substs =
   case substs of
     Subst subMap -> 
-      let pairs = Map.toList subMap
-      in printSubstitution pairs 
+      if null subMap then 
+        "No substitution." 
+      else
+        let pairs = Map.toList subMap
+        in "[" ++ printSubstitution pairs ++ "]"
       where
         printSubstitution :: [(TVar, Type)] -> String
         printSubstitution pairs =
           case pairs of
-            [] -> "No substitution."
+            [] -> ""
             [(TV t1, t2)] -> t1 ++ " ↦ " ++ printType t2
-            ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
+            ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t " ++ printSubstitution ts
 
 printScheme :: Scheme -> String
 printScheme sch =
