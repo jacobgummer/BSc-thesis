@@ -46,7 +46,7 @@ printSubstitutions substs =
         printSubstitution :: [(TVar, Type)] -> String
         printSubstitution pairs =
           case pairs of
-            [] -> ""
+            [] -> "No substitution."
             [(TV t1, t2)] -> t1 ++ " ↦ " ++ printType t2
             ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
 
