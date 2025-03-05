@@ -201,7 +201,11 @@ infer expr = case expr of
   Fix e1 -> do
     (t1, c1) <- infer e1
     tv <- fresh
-    return (tv, c1 ++ [(tv `TArr` tv, t1)])
+    let cs = [(tv `TArr` tv, t1)]
+    traceM $
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs
+    return (tv, c1 ++ cs)
 
   Op op e1 e2 -> do
     (t1, c1) <- infer e1
