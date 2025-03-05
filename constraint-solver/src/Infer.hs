@@ -215,7 +215,11 @@ infer expr = case expr of
     (t1, c1) <- infer cond
     (t2, c2) <- infer tr
     (t3, c3) <- infer fl
-    return (t2, c1 ++ c2 ++ c3 ++ [(t1, typeBool), (t2, t3)])
+    let cs = [(t1, typeBool), (t2, t3)]
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' introduced the constraints:\n\t"
+      ++ printConstraints cs
+    return (t2, c1 ++ c2 ++ c3 ++ cs)
 
 inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
 inferTop env [] = Right env
