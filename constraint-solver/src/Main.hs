@@ -10,6 +10,11 @@ import Pretty
 simpleExp :: Exp
 simpleExp = Op Add (Lit (LInt 1)) (Op Add (Lit (LInt 2)) (Lit (LInt 5)))
 
+appExp :: Exp 
+appExp = App 
+          (App (Lam "x" (Lam "y" (Op Mul (Var "x") (Var "y")))) (Lit $ LInt 5)) 
+          (Lit $ LInt 2)
+
 -- \x -> x
 identityFunction :: Exp
 identityFunction = Lam "x" (Var "x")
@@ -46,6 +51,8 @@ unboundVariable =
 main :: IO ()
 main = do 
     putStrLn $ printInferResult simpleExp
+    putStrLn "-------------------------------------------------------------------------------------"
+    putStrLn $ printInferResult appExp
     putStrLn "-------------------------------------------------------------------------------------"
     putStrLn $ printInferResult identityFunction
     putStrLn "-------------------------------------------------------------------------------------"
