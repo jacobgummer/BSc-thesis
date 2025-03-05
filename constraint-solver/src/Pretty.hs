@@ -90,7 +90,7 @@ printExp expr =
     Lam n e -> 
       "λ" ++ n ++ " -> " ++ printExp e
     Let n e1 e2 -> 
-      "let" ++ n ++ printExp e1 ++ printExp e2
+      "let " ++ n ++ " = " ++ printExp e1 ++ " in " ++ printExp e2
     If e1 e2 e3 -> 
       "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
     Fix e -> "rec " ++ printExp e
