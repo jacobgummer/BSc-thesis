@@ -192,7 +192,7 @@ infer expr = case expr of
     let cs = [(t1, t2 `TArr` tv)]
     traceM $
       "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs
+      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
     return (tv, c1 ++ c2 ++ cs)
 
   Let x e1 e2 -> do
