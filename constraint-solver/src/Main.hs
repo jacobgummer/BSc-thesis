@@ -6,18 +6,19 @@ import Syntax
 import Type
 import Pretty
 
-exp1 :: Exp
-exp1 = Op Add (Lit (LInt 1)) (Op Add (Lit (LInt 2)) (Lit (LInt 5)))
 -- 1 + (2 + 5)
-exp1Inferred :: Either TypeError ([Constraint], Subst, Type, Scheme)
-exp1Inferred = constraintsExp emptyEnv exp1
+simpleExp :: Exp
+simpleExp = Op Add (Lit (LInt 1)) (Op Add (Lit (LInt 2)) (Lit (LInt 5)))
 
+-- \x -> x
 identityFunction :: Exp
 identityFunction = Lam "x" (Var "x")
 
+-- \x y -> x
 twoForAllFunc :: Exp
 twoForAllFunc = Lam "x" (Lam "y" (Var "x"))
 
+-- \f n -> if n == 0 then 1 else f (n - 1)
 factorialFunc :: Exp
 factorialFunc = Fix (Lam "f" (Lam "n" 
                 (If (Op Eql (Var "n") (Lit (LInt 0)))
@@ -25,39 +26,26 @@ factorialFunc = Fix (Lam "f" (Lam "n"
                     (Op Mul (Var "n") (App (Var "f") (Op Sub (Var "n") (Lit (LInt 1)))))
                 )))
 
--- 1. UnificationFail - Occurs when two types can't be unified
--- For example, trying to use an integer where a boolean is expected
-testUnificationFail :: Exp
-testUnificationFail =
-  If (Lit (LInt 1)) -- Condition should be a Bool, not an Int
+-- if 1 then 2 else 3
+unificationFail :: Exp
+unificationFail =
+  If (Lit (LInt 1))
      (Lit (LInt 2)) 
      (Lit (LInt 3))
 
--- 2. InfiniteType - Occurs with recursive types that would lead to infinite types
--- Classic example: trying to apply a function to itself recursively
-testInfiniteType :: Exp
-testInfiniteType =
-  -- λx. x x - a function that applies its argument to itself
+-- \x -> x x
+infiniteType :: Exp
+infiniteType =
   Lam "x" (App (Var "x") (Var "x"))
 
--- 3. UnboundVariable - Occurs when a variable is not defined in the environment
-testUnboundVariable :: Exp
-testUnboundVariable =
-  -- Trying to use a variable 'y' that hasn't been defined
+-- (\x -> x) y
+unboundVariable :: Exp
+unboundVariable =
   App (Lam "x" (Var "x")) (Var "y")
-
--- 4. UnificationMismatch - Occurs when trying to unify lists of types of different lengths
--- This often happens with wrong number of arguments to a function
-testUnificationMismatch :: Exp
-testUnificationMismatch =
-  Let "f" (Lam "x" (Lam "y" (Var "x")))
-    (App (App (App (Var "f") (Lit (LInt 5))) (Lit (LInt 6))) (Lit (LInt 7)))
-
 
 main :: IO ()
 main = do 
-    -- putStrLn "Hello, Haskell!"
-    putStrLn $ printInferResult exp1
+    putStrLn $ printInferResult simpleExp
     putStrLn "-------------------------------------------------------------------------------------"
     putStrLn $ printInferResult identityFunction
     putStrLn "-------------------------------------------------------------------------------------"
@@ -65,10 +53,8 @@ main = do
     putStrLn "-------------------------------------------------------------------------------------"
     putStrLn $ printInferResult factorialFunc
     putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult testUnificationFail
+    putStrLn $ printInferResult unificationFail
     putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult testInfiniteType
+    putStrLn $ printInferResult infiniteType
     putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult testUnboundVariable
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult testUnificationMismatch
+    putStrLn $ printInferResult unboundVariable
