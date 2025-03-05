@@ -29,6 +29,8 @@ import Data.List (nub)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 
+import Debug.Trace ( traceM )
+
 -------------------------------------------------------------------------------
 -- Classes
 -------------------------------------------------------------------------------
@@ -178,13 +180,21 @@ infer expr = case expr of
   Lam x e -> do
     tv <- fresh
     (t, c) <- inEnv (x, Forall [] tv) (infer e)
-    return (tv `TArr` t, c)
+    let exprType = tv `TArr` t
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' has type:\n\t"
+      ++ printType exprType
+    return (exprType, c)
 
   App e1 e2 -> do
     (t1, c1) <- infer e1
     (t2, c2) <- infer e2
     tv <- fresh
-    return (tv, c1 ++ c2 ++ [(t1, t2 `TArr` tv)])
+    let cs = [(t1, t2 `TArr` tv)]
+    traceM $
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
+    return (tv, c1 ++ c2 ++ cs)
 
   Let x e1 e2 -> do
     env <- ask
@@ -199,7 +209,11 @@ infer expr = case expr of
   Fix e1 -> do
     (t1, c1) <- infer e1
     tv <- fresh
-    return (tv, c1 ++ [(tv `TArr` tv, t1)])
+    let cs = [(tv `TArr` tv, t1)]
+    traceM $
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs
+    return (tv, c1 ++ cs)
 
   Op op e1 e2 -> do
     (t1, c1) <- infer e1
@@ -207,13 +221,21 @@ infer expr = case expr of
     tv <- fresh
     let u1 = t1 `TArr` (t2 `TArr` tv)
         u2 = ops op
-    return (tv, c1 ++ c2 ++ [(u1, u2)])
+    let cs = [(u1, u2)]
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
+    return (tv, c1 ++ c2 ++ cs)
 
   If cond tr fl -> do
     (t1, c1) <- infer cond
     (t2, c2) <- infer tr
     (t3, c3) <- infer fl
-    return (t2, c1 ++ c2 ++ c3 ++ [(t1, typeBool), (t2, t3)])
+    let cs = [(t1, typeBool), (t2, t3)]
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' introduced the constraints:\n\t"
+      ++ printConstraints cs
+    return (t2, c1 ++ c2 ++ c3 ++ cs)
 
 inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
 inferTop env [] = Right env
@@ -285,3 +307,59 @@ bind a t | t == TVar a     = return emptySubst
 
 occursCheck ::  Substitutable a => TVar -> a -> Bool
 occursCheck a t = a `Set.member` ftv t
+
+maybeParenthesisType :: Type -> String
+maybeParenthesisType t' = case t' of
+  TVar (TV v) -> v
+  TCon c      -> c
+  _           -> "(" ++ printType t' ++ ")"
+
+printType :: Type -> String
+printType t = case t of
+  TVar (TV v) -> v
+  TCon c      -> c
+  TArr t1 t2  -> maybeParenthesisType t1 ++ " -> " ++ maybeParenthesisType t2
+
+printConstraint :: Constraint -> String
+printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
+
+printConstraints :: [Constraint] -> String
+printConstraints []     = "No constraints."
+printConstraints [c]    = printConstraint c
+printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
+
+printExp :: Exp -> String
+printExp expr =
+  case expr of
+    Var n -> n
+    App e1 e2 -> 
+      maybeParenthesisExp e1 ++ " " ++ maybeParenthesisExp e2
+    Lam n e -> 
+      "λ" ++ n ++ " -> " ++ printExp e
+    Let n e1 e2 -> 
+      "let " ++ n ++ " = " ++ printExp e1 ++ " in " ++ printExp e2
+    If e1 e2 e3 -> 
+      "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
+    Fix e -> "rec " ++ printExp e
+    Op binop e1 e2 ->
+      maybeParenthesisExp e1 ++ printBinop binop ++ maybeParenthesisExp e2
+    Lit l -> 
+      case l of
+        LInt i -> show i
+        LBool b -> show b
+    where
+      maybeParenthesisExp :: Exp -> String
+      maybeParenthesisExp e = case e of
+        Lit l -> 
+          case l of
+            LInt i  -> show i
+            LBool b -> show b
+        Var v -> v
+        _ -> "(" ++ printExp e ++ ")"
+
+      printBinop :: Binop -> String
+      printBinop binop = case binop of
+        Add -> " + "
+        Sub -> " - "
+        Mul -> " * "
+        Eql -> " == "
