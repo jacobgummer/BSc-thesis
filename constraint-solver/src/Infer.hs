@@ -186,7 +186,11 @@ infer expr = case expr of
     (t1, c1) <- infer e1
     (t2, c2) <- infer e2
     tv <- fresh
-    return (tv, c1 ++ c2 ++ [(t1, t2 `TArr` tv)])
+    let cs = [(t1, t2 `TArr` tv)]
+    traceM $
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs
+    return (tv, c1 ++ c2 ++ cs)
 
   Let x e1 e2 -> do
     env <- ask
