@@ -287,3 +287,108 @@ bind a t | t == TVar a     = return emptySubst
 
 occursCheck ::  Substitutable a => TVar -> a -> Bool
 occursCheck a t = a `Set.member` ftv t
+
+maybeParenthesisType :: Type -> String
+maybeParenthesisType t' = case t' of
+  TVar (TV v) -> v
+  TCon c      -> c
+  _           -> "(" ++ printType t' ++ ")"
+
+printType :: Type -> String
+printType t = case t of
+  TVar (TV v) -> v
+  TCon c      -> c
+  TArr t1 t2  -> maybeParenthesisType t1 ++ " -> " ++ maybeParenthesisType t2
+
+printConstraint :: Constraint -> String
+printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
+
+printConstraints :: [Constraint] -> String
+printConstraints []     = "No constraints."
+printConstraints [c]    = printConstraint c
+printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
+
+
+printSubstitutions :: Subst -> String
+printSubstitutions substs =
+  case substs of
+    Subst subMap -> 
+      if null subMap then 
+        "No substitution." 
+      else
+        let pairs = Map.toList subMap
+        in "[" ++ printSubstitution pairs ++ "]"
+      where
+        printSubstitution :: [(TVar, Type)] -> String
+        printSubstitution pairs =
+          case pairs of
+            [] -> ""
+            [(TV t1, t2)] -> t1 ++ " ↦ " ++ printType t2
+            ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t " ++ printSubstitution ts
+
+printScheme :: Scheme -> String
+printScheme sch =
+  case sch of
+    Forall [] t -> printType t
+    Forall [TV v] t -> "∀" ++ v ++ ". " ++ printType t
+    Forall tvs t -> "∀" ++ printTVars tvs ++ ". " ++ printType t
+    where
+      printTVars :: [TVar] -> String
+      printTVars h =
+        case h of
+          [] -> ""
+          [TV v] -> v
+          ((TV v) : tvs) -> v ++ "," ++ printTVars tvs
+
+printTypeError :: TypeError -> String
+printTypeError typeError =
+  case typeError of
+    UnificationFail t1 t2 -> "Cannot unify types: " ++ printType t1 ++ " and " ++ printType t2
+    InfiniteType (TV v) t1 -> "Cannot construct the infinite type: " ++ v ++ " ~ " ++ printType t1
+    UnboundVariable str -> "Unbound variable: " ++ str
+    Ambigious con -> "Ambiguous constraint: " ++ printConstraints con
+    UnificationMismatch t1 t2 -> 
+      "Unification mismatch between: " ++ printTypes t1 ++ " and " ++ printTypes t2
+        where
+          printTypes :: [Type] -> String
+          printTypes ts =
+            case ts of
+              [] -> ""
+              [t] -> printType t
+              (t:ts') -> printType t ++ ", " ++ printTypes ts'
+
+printExp :: Exp -> String
+printExp expr =
+  case expr of
+    Var n -> n
+    App e1 e2 -> 
+      maybeParenthesisExp e1 ++ " " ++ maybeParenthesisExp e2
+    Lam n e -> 
+      "λ" ++ n ++ " -> " ++ printExp e
+    Let n e1 e2 -> 
+      "let " ++ n ++ " = " ++ printExp e1 ++ " in " ++ printExp e2
+    If e1 e2 e3 -> 
+      "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
+    Fix e -> "rec " ++ printExp e
+    Op binop e1 e2 ->
+      maybeParenthesisExp e1 ++ printBinop binop ++ maybeParenthesisExp e2
+    Lit l -> 
+      case l of
+        LInt i -> show i
+        LBool b -> show b
+    where
+      maybeParenthesisExp :: Exp -> String
+      maybeParenthesisExp e = case e of
+        Lit l -> 
+          case l of
+            LInt i  -> show i
+            LBool b -> show b
+        Var v -> v
+        _ -> "(" ++ printExp e ++ ")"
+
+      printBinop :: Binop -> String
+      printBinop binop = case binop of
+        Add -> " + "
+        Sub -> " - "
+        Mul -> " * "
+        Eql -> " == "
