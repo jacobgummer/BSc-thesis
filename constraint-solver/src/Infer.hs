@@ -209,7 +209,11 @@ infer expr = case expr of
     tv <- fresh
     let u1 = t1 `TArr` (t2 `TArr` tv)
         u2 = ops op
-    return (tv, c1 ++ c2 ++ [(u1, u2)])
+    let cs = [(u1, u2)]
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
+      ++ printConstraints cs
+    return (tv, c1 ++ c2 ++ cs)
 
   If cond tr fl -> do
     (t1, c1) <- infer cond
