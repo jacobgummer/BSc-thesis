@@ -180,6 +180,9 @@ infer expr = case expr of
   Lam x e -> do
     tv <- fresh
     (t, c) <- inEnv (x, Forall [] tv) (infer e)
+    traceM $ 
+      "expression '" ++ printExp expr ++ "' has type:\n\t"
+      ++ printType (tv `TArr` t)
     return (tv `TArr` t, c)
 
   App e1 e2 -> do
