@@ -324,55 +324,6 @@ printConstraints []     = "No constraints."
 printConstraints [c]    = printConstraint c
 printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
 
-
-printSubstitutions :: Subst -> String
-printSubstitutions substs =
-  case substs of
-    Subst subMap -> 
-      if null subMap then 
-        "No substitution." 
-      else
-        let pairs = Map.toList subMap
-        in "[" ++ printSubstitution pairs ++ "]"
-      where
-        printSubstitution :: [(TVar, Type)] -> String
-        printSubstitution pairs =
-          case pairs of
-            [] -> ""
-            [(TV t1, t2)] -> t1 ++ " ↦ " ++ printType t2
-            ((TV t1, t2) : ts) -> t1 ++ " ↦ " ++ printType t2 ++ ",\n\t " ++ printSubstitution ts
-
-printScheme :: Scheme -> String
-printScheme sch =
-  case sch of
-    Forall [] t -> printType t
-    Forall [TV v] t -> "∀" ++ v ++ ". " ++ printType t
-    Forall tvs t -> "∀" ++ printTVars tvs ++ ". " ++ printType t
-    where
-      printTVars :: [TVar] -> String
-      printTVars h =
-        case h of
-          [] -> ""
-          [TV v] -> v
-          ((TV v) : tvs) -> v ++ "," ++ printTVars tvs
-
-printTypeError :: TypeError -> String
-printTypeError typeError =
-  case typeError of
-    UnificationFail t1 t2 -> "Cannot unify types: " ++ printType t1 ++ " and " ++ printType t2
-    InfiniteType (TV v) t1 -> "Cannot construct the infinite type: " ++ v ++ " ~ " ++ printType t1
-    UnboundVariable str -> "Unbound variable: " ++ str
-    Ambigious con -> "Ambiguous constraint: " ++ printConstraints con
-    UnificationMismatch t1 t2 -> 
-      "Unification mismatch between: " ++ printTypes t1 ++ " and " ++ printTypes t2
-        where
-          printTypes :: [Type] -> String
-          printTypes ts =
-            case ts of
-              [] -> ""
-              [t] -> printType t
-              (t:ts') -> printType t ++ ", " ++ printTypes ts'
-
 printExp :: Exp -> String
 printExp expr =
   case expr of
