@@ -53,7 +53,7 @@ printSubstitutions substs =
 printScheme :: Scheme -> String
 printScheme sch =
   case sch of
-    Forall [] _ -> "No schemes found."
+    Forall [] t -> printType t
     Forall [TV v] t -> "∀" ++ v ++ ". " ++ printType t
     Forall tvs t -> "∀" ++ printTVars tvs ++ ". " ++ printType t
     where
