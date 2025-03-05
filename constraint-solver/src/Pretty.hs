@@ -27,6 +27,7 @@ printConstraints []     = "No constraints."
 printConstraints [c]    = printConstraint c
 printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
 
+
 printSubstitutions :: Subst -> String
 printSubstitutions substs =
   case substs of
