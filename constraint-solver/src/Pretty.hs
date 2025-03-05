@@ -36,7 +36,7 @@ printConstraints = removeLastComma . foldr consConstraint ""
     removeLastComma :: String -> String
     removeLastComma str = take (length str - 3) str
 
--- TODO: Implement this.
+
 printSubstitutions :: Subst -> String
 printSubstitutions substs =
   case substs of
@@ -52,12 +52,10 @@ printSubstitutions substs =
             ((TV t1, t2) : ts) -> t1 ++ " |-> " ++ printType t2 ++ ",\n\t" ++ printSubstitution ts
 
 
-
--- TODO: Implement this.
 printScheme :: Scheme -> String
 printScheme sch =
   case sch of
-    Forall [] _ -> "No schemes found."
+    Forall [] t -> printType t
     Forall [TV v] t -> "∀" ++ v ++ ". " ++ printType t
     Forall tvs t -> "∀" ++ printTVars tvs ++ ". " ++ printType t
     where
@@ -69,8 +67,6 @@ printScheme sch =
           ((TV v) : tvs) -> v ++ "," ++ printTVars tvs
 
 
-
--- TODO: Implement this.
 printTypeError :: TypeError -> String
 printTypeError typeError =
   case typeError of
@@ -89,14 +85,13 @@ printTypeError typeError =
               (t:ts') -> printType t ++ ", " ++ printTypes ts'
 
 
--- TODO: Implement this.
 printExp :: Exp -> String
 printExp expr =
   case expr of
     Var n -> n
     App e1 e2 -> "(" ++ printExp e1 ++ "(" ++ printExp e2 ++ "))" 
     Lam n e -> "(" ++ "λ" ++ n ++ " => " ++ printExp e ++ ")"
-    Let n e1 e2 -> "let" ++ n ++ printExp e1 ++ printExp e2
+    Let n e1 e2 -> "let " ++ n ++ " = " ++ printExp e1 ++ " in " ++ printExp e2
     If e1 e2 e3 -> "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
     Fix e -> "rec " ++ printExp e
     Op binop e1 e2 ->

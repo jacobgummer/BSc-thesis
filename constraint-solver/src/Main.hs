@@ -46,21 +46,13 @@ testUnboundVariable =
   -- Trying to use a variable 'y' that hasn't been defined
   App (Lam "x" (Var "x")) (Var "y")
 
--- 4. Ambiguous - Occurs when there are ambiguous constraints
--- This typically happens when there's not enough information to determine a type
-testAmbiguous :: Exp
-testAmbiguous =
-  -- Using polymorphic id function with no context to determine its type
-  Lam "id" (Lam "x" (App (Var "id") (Var "x")))
-
--- 5. UnificationMismatch - Occurs when trying to unify lists of types of different lengths
+-- 4. UnificationMismatch - Occurs when trying to unify lists of types of different lengths
 -- This often happens with wrong number of arguments to a function
 testUnificationMismatch :: Exp
 testUnificationMismatch =
-  -- Create a function application with mismatched types
-  App (Lam "x" (Lam "y" (Var "x"))) -- Function expects two arguments
-      (Lit (LInt 1))                -- But we're trying to apply it to three
-      -- Synthetic error - your current code might not directly generate this error
+  Let "f" (Lam "x" (Lam "y" (Var "x")))
+    (App (App (App (Var "f") (Lit (LInt 5))) (Lit (LInt 6))) (Lit (LInt 7)))
+
 
 main :: IO ()
 main = do 
@@ -78,7 +70,5 @@ main = do
     putStrLn $ printInferResult testInfiniteType
     putStrLn "-------------------------------------------------------------------------------------"
     putStrLn $ printInferResult testUnboundVariable
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult testAmbiguous
     putStrLn "-------------------------------------------------------------------------------------"
     putStrLn $ printInferResult testUnificationMismatch
