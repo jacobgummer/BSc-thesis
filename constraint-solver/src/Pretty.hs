@@ -97,7 +97,7 @@ printExp expr =
     where
       maybeParenthesisExp :: Exp -> String
       maybeParenthesisExp e = case e of
-        (Lit l) -> 
+        Lit l -> 
           case l of
             LInt i  -> show i
             LBool b -> show b
