@@ -19,22 +19,13 @@ printType t = case t of
   TCon c      -> c
   TArr t1 t2  -> maybeParenthesisType t1 ++ " -> " ++ maybeParenthesisType t2
 
--- printConstraint :: Constraint -> String
--- printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
+printConstraint :: Constraint -> String
+printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
 
 printConstraints :: [Constraint] -> String
-printConstraints = removeLastComma . foldr consConstraint ""
-  where
-    consConstraint :: Constraint -> String -> String
-    consConstraint (t1, t2) acc =
-      maybeParenthesisType t1
-      ++ " ~ "
-      ++ maybeParenthesisType t2
-      ++ ",\n\t"
-      ++ acc
-
-    removeLastComma :: String -> String
-    removeLastComma str = take (length str - 3) str
+printConstraints []     = "No constraints."
+printConstraints [c]    = printConstraint c
+printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
 
 printSubstitutions :: Subst -> String
 printSubstitutions substs =
