@@ -95,7 +95,7 @@ data TypeError
   = UnificationFail Type Type
   | InfiniteType TVar Type
   | UnboundVariable String
-  | Ambigious [Constraint]
+  | Ambigious [Constraint] -- ? Not sure if this is needed
   | UnificationMismatch [Type] [Type]
   deriving Show
 
@@ -279,17 +279,17 @@ runSolve cs = runIdentity $ runExceptT $ solver st
 unifyMany :: [Type] -> [Type] -> Solve Subst
 unifyMany [] [] = return emptySubst
 unifyMany (t1 : ts1) (t2 : ts2) =
-  do su1 <- unifies t1 t2
+  do su1 <- unify t1 t2
      su2 <- unifyMany (apply su1 ts1) (apply su1 ts2)
      return (su2 `compose` su1)
 unifyMany t1 t2 = throwError $ UnificationMismatch t1 t2
 
-unifies :: Type -> Type -> Solve Subst
-unifies t1 t2 | t1 == t2 = return emptySubst
-unifies (TVar v) t = v `bind` t
-unifies t (TVar v) = v `bind` t
-unifies (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
-unifies t1 t2 = throwError $ UnificationFail t1 t2
+unify :: Type -> Type -> Solve Subst
+unify t1 t2 | t1 == t2 = return emptySubst
+unify (TVar v) t = v `bind` t
+unify t (TVar v) = v `bind` t
+unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
+unify t1 t2 = throwError $ UnificationFail t1 t2
 
 -- Unification solver
 solver :: Unifier -> Solve Subst
@@ -297,7 +297,7 @@ solver (su, cs) =
   case cs of
     [] -> return su
     ((t1, t2): cs') -> do
-      su1  <- unifies t1 t2
+      su1  <- unify t1 t2
       solver (su1 `compose` su, apply su1 cs')
 
 bind ::  TVar -> Type -> Solve Subst
