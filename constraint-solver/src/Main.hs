@@ -51,19 +51,12 @@ unboundVariable =
   App (Lam "x" (Var "x")) (Var "y")
 
 main :: IO ()
-main = do 
-    putStrLn $ printInferResult simpleExp
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult appExp
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult identityFunction
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult twoForAllFunc
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult factorialFunc
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult unificationFail
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult infiniteType
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult unboundVariable
+main = do
+  let tVar = TVar $ TV "a"
+  let result = runST $ do
+        p <- makeSet tVar
+        q <- makeSet typeInt
+        q `union` p
+        getDescriptor p
+    
+  putStrLn $ printType result
