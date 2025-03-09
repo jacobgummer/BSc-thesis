@@ -131,29 +131,6 @@ constraintsExp env ex = case runInfer env (infer ex) of
       where
         sc = closeOver $ apply subst ty
 
-lookupUF :: TVar -> UF s -> ST s (Maybe (TypeNode s))
-lookupUF tv ufRef = do
-  uf <- readSTRef ufRef
-  return $ Map.lookup tv uf
-
-insertUF :: TVar -> TypeNode s -> UF s -> ST s ()
-insertUF tv tn ufRef = modifySTRef ufRef (Map.insert tv tn)
-
-unifyUF :: UF s -> Type -> Type -> ST s ()
-unifyUF ufRef t1 t2 = undefined
-
-findRep :: UF s -> Type -> ST s Type
-findRep ufRef (TVar v) = undefined
-
-bindVar :: UF s -> TVar -> Type -> ST s ()
-bindVar ufRef v t = undefined
-
-solveConstraintsUF :: UF s -> [Constraint] -> ST s ()
-solveConstraintsUF ufRef = undefined
-
-extractSubst :: UF s -> ST s Subst
-extractSubst ufRef = undefined
-
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
 closeOver = normalize . generalize Env.emptyEnv
