@@ -139,6 +139,21 @@ lookupUF tv ufRef = do
 insertUF :: TVar -> TypeNode s -> UF s -> ST s ()
 insertUF tv tn ufRef = modifySTRef ufRef (Map.insert tv tn)
 
+unifyUF :: UF s -> Type -> Type -> ST s ()
+unifyUF ufRef t1 t2 = undefined
+
+findRep :: UF s -> Type -> ST s Type
+findRep ufRef (TVar v) = undefined
+
+bindVar :: UF s -> TVar -> Type -> ST s ()
+bindVar ufRef v t = undefined
+
+solveConstraintsUF :: UF s -> [Constraint] -> ST s ()
+solveConstraintsUF ufRef = undefined
+
+extractSubst :: UF s -> ST s Subst
+extractSubst ufRef = undefined
+
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
 closeOver = normalize . generalize Env.emptyEnv
