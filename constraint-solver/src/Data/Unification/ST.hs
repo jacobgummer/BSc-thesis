@@ -89,9 +89,7 @@ setDescriptor node new_descr = do
 -- node that doesn't represent a type variable.
 union :: VarNode s -> VarNode s -> ST s ()
 union n1 n2 = do
-  -- (node1@(VarNode link_ref1), node2@(VarNode link_ref2)) <- preprocess n1 n2
-  node1@(Node link_ref1) <- find n1
-  node2@(Node link_ref2) <- find n2
+  (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
 
   -- Ensure that nodes aren't in the same equivalence class. 
   when (node1 /= node2) $ do
@@ -111,26 +109,16 @@ union n1 n2 = do
       -- This shouldn't be possible.       
       _ -> error "'find' somehow didn't return a Repr" 
 
-    -- TODO: determine if this is necessary or not.
-    -- where
-    --   preprocess :: VarNode s -> VarNode s -> ST s (VarNode s, VarNode s) 
-    --   preprocess n1' n2' = do
-    --     -- Find representatives of each node's equivalence class.
-    --     r1 <- find n1'
-    --     r2 <- find n2'
-    --     -- Check if representatives represent type variables.
-    --     r1IsTVar <- isTVar r1
-    --     r2IsTVar <- isTVar r2
-    --     case (r1IsTVar, r2IsTVar) of 
-    --       (False, True) -> return (r2, r1)
-    --       _             -> return (r1, r2)
-
-    --   isTVar :: VarNode s -> ST s Bool
-    --   isTVar node = do
-    --     t <- getDescriptor node
-    --     case t of
-    --       Type _ -> return True
-    --       _      -> return False      
+      where
+        preprocess :: VarNode s -> VarNode s -> ST s (VarNode s, VarNode s) 
+        preprocess n1' n2' = do
+          r1 <- find n1'
+          r2 <- find n2'
+          -- Checking if n1 points to root with type assigned to it.
+          d1 <- getDescriptor r1
+          case d1 of
+            Just _  -> return (r2, r1)
+            Nothing -> return (r1, r2)    
 
 -- | /O(1)/. Return @True@ if both nodes belong to the same
 -- | equivalence class.
