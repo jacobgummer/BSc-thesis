@@ -48,7 +48,7 @@ type Infer s a = (ReaderT
                     TypeError))
                   a)              -- Result
 
-type UF s = Map.Map TVar (TypeNode s)
+type UF s = Map.Map TVar (VarNode s)
 
 -- | Inference state
 data InferState s = InferState 
@@ -63,6 +63,8 @@ initInfer = InferState { count = 0, unionFind = Map.empty }
 type Constraint = (Type, Type)
 
 type Unifier = (Subst, [Constraint])
+
+type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
 type Solve a = ExceptT TypeError Identity a
@@ -276,6 +278,15 @@ normalize (Forall _ body) = Forall (map snd ord) (normtype body)
 emptySubst :: Subst
 emptySubst = mempty
 
+emptyUF :: UF s
+emptyUF = Map.empty
+
+lookupUF :: TVar -> UF s -> VarNode s
+lookupUF tv@(TV v) uf = 
+  case Map.lookup tv uf of
+    Nothing   -> error "unbound type variable"
+    Just node -> node
+
 -- | Compose substitutions
 compose :: Subst -> Subst -> Subst
 (Subst s1) `compose` (Subst s2) = Subst $ Map.map (apply (Subst s1)) s2 `Map.union` s1
@@ -284,6 +295,10 @@ compose :: Subst -> Subst -> Subst
 runSolve :: [Constraint] -> Either TypeError Subst
 runSolve cs = runIdentity $ runExceptT $ solver st
   where st = (emptySubst, cs)
+
+runSolveUF :: [Constraint] -> Either TypeError (UF s)
+runSolveUF cs = runIdentity $ runExceptT $ solverUF st
+  where st = (emptyUF, cs)
 
 unifyMany :: [Type] -> [Type] -> Solve Subst
 unifyMany [] [] = return emptySubst
@@ -299,6 +314,46 @@ unify (TVar v) t = v `bind` t
 unify t (TVar v) = v `bind` t
 unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
 unify t1 t2 = throwError $ UnificationFail t1 t2
+
+solverUF :: UnifierUF s -> Solve (UF s)
+solverUF (uf, cs) = 
+  case cs of
+    [] -> return uf
+    ((t1, t2) : cs') -> do
+      uf' <- unifyUF t1 t2 uf
+      solverUF (uf', cs')
+
+unifyUF :: Type -> Type -> UF s -> Solve (UF s)
+unifyUF t1 t2 uf | t1 == t2 = return uf
+unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
+unifyUF (TVar v) t uf = bindUF v t uf
+unifyUF t (TVar v) uf = bindUF v t uf
+unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = do
+  uf' <- unifyUF arg1 arg2 uf
+  unifyUF ret1 ret2 uf'
+unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
+
+bindUF :: TVar -> Type -> UF s -> Solve (UF s)
+bindUF a t uf | t == TVar a     = return uf
+              | occursCheck a t = throwError $ InfiniteType a t
+              -- TODO: Ensure that this is correct (because it feels illegal).
+              | otherwise       = 
+                let _ = do assignType (lookupUF a uf) t
+                in return uf
+
+-- TODO: Fix this function.
+unifyVars :: TVar -> TVar -> UF s -> Solve (UF s)
+unifyVars v1 v2 uf = undefined
+  -- let (n1, n2) = do 
+  --       n1 <- lookupUF v1 uf
+  --       n2 <- lookupUF v2 uf
+  --       return (n1, n2)
+  -- in
+  -- case (getType n1, getType n2) of
+  --   (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
+  --                      | otherwise -> return uf
+  --   (Nothing, Just t) -> undefined
+  --   (Just t, Nothing) -> undefined
 
 -- Unification solver
 solver :: Unifier -> Solve Subst
