@@ -31,7 +31,7 @@ import qualified Data.Set as Set
 
 import Debug.Trace ( traceM )
 
-import Data.OurUnionFind.ST
+import Data.Unification.ST
 import Control.Monad.ST
 import Data.STRef
 

@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
-module Data.OurUnionFind.ST where
+module Data.Unification.ST where
 
 import Type 
 
@@ -19,12 +19,12 @@ data Link s
 data Info = MkInfo
   { weight :: {-# UNPACK #-} !Int
     -- ^ The size of the equivalence class, used by 'union'.
-  , descr  :: Type
+  , descr  :: Maybe Type
   } deriving Eq
 
 -- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
-makeSet :: Type -> ST s (TypeNode s)
+makeSet :: Maybe Type -> ST s (TypeNode s)
 makeSet t = do
   info <- newSTRef (MkInfo { weight = 1, descr = t })
   l <- newSTRef (Repr info)
@@ -66,21 +66,21 @@ descrRef node@(Node link_ref) = do
 
 -- | /O(1)/. Return the decriptor associated with argument node's
 -- equivalence class.
-getDescriptor :: TypeNode s -> ST s Type
+getDescriptor :: TypeNode s -> ST s (Maybe Type)
 getDescriptor node = do
   descr <$> (readSTRef =<< descrRef node)
 
 -- | /O(1)/. Replace the descriptor of the node's equivalence class
 -- with the second argument.
-setDescriptor :: TypeNode s -> Type -> ST s ()
+setDescriptor :: TypeNode s -> Maybe Type -> ST s ()
 setDescriptor node new_descr = do
   r <- descrRef node
   modifySTRef r $ \i -> i { descr = new_descr }
 
-modifyDescriptor :: TypeNode s -> (Type -> Type) -> ST s ()
-modifyDescriptor node f = do
-  r <- descrRef node
-  modifySTRef r $ \i -> i { descr = f (descr i) }
+-- modifyDescriptor :: TypeNode s -> (Type -> Type) -> ST s ()
+-- modifyDescriptor node f = do
+--   r <- descrRef node
+--   modifySTRef r $ \i -> i { descr = f (descr i) }
 
 -- | /O(1)/. Join the equivalence classes of the nodes. If both or none
 -- of the nodes are in equivalence classes with a type variable as a

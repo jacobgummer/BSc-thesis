@@ -66,9 +66,8 @@ executable constraintSolver
         Infer
         Syntax
         Type
-        Pretty
-        Data.UnionFind.ST
-        Data.OurUnionFind.ST        
+        Pretty  
+        Data.Unification.ST
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 

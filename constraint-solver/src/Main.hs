@@ -5,7 +5,7 @@ import Infer
 import Syntax
 import Type
 import Pretty
-import Data.OurUnionFind.ST
+import Data.Unification.ST
 import Control.Monad.ST ( runST )
 
 -- 1 + (2 + 5)
