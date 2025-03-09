@@ -40,20 +40,25 @@ import Data.STRef
 -------------------------------------------------------------------------------
 
 -- | Inference monad
-type Infer a = (ReaderT
+type Infer s a = (ReaderT
                   Env             -- Typing environment
                   (StateT         -- Inference state
-                  InferState
+                  (InferState s)
                   (Except         -- Inference errors
                     TypeError))
                   a)              -- Result
 
+type UF s = Map.Map TVar (TypeNode s)
+
 -- | Inference state
-newtype InferState = InferState { count :: Int }
+data InferState s = InferState 
+  { count :: Int
+  , unionFind :: UF s
+  }
 
 -- | Initial inference state
-initInfer :: InferState
-initInfer = InferState { count = 0 }
+initInfer :: InferState s
+initInfer = InferState { count = 0, unionFind = Map.empty }
 
 type Constraint = (Type, Type)
 
@@ -64,8 +69,6 @@ type Solve a = ExceptT TypeError Identity a
 
 newtype Subst = Subst (Map.Map TVar Type)
   deriving (Eq, Ord, Show, Semigroup, Monoid)
-
-type UF s = STRef s (Map.Map TVar (TypeNode s))
 
 class Substitutable a where
   apply :: Subst -> a -> a
@@ -110,7 +113,7 @@ data TypeError
 -------------------------------------------------------------------------------
 
 -- | Run the inference monad
-runInfer :: Env -> Infer (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
+runInfer :: Env -> Infer s (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
 runInfer env m = runExcept $ evalStateT (runReaderT m env) initInfer
 
 -- | Solve for the toplevel type of an expression in a given environment
@@ -136,13 +139,13 @@ closeOver :: Type -> Scheme
 closeOver = normalize . generalize Env.emptyEnv
 
 -- | Extend type environment
-inEnv :: (Name, Scheme) -> Infer a -> Infer a
+inEnv :: (Name, Scheme) -> Infer s a -> Infer s a
 inEnv (x, sc) m = do
   let scope e = remove e x `extend` (x, sc)
   local scope m
 
 -- | Lookup type in the environment
-lookupEnv :: Name -> Infer Type
+lookupEnv :: Name -> Infer s Type
 lookupEnv x = do
   (TypeEnv env) <- ask
   case Map.lookup x env of
@@ -152,13 +155,13 @@ lookupEnv x = do
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-fresh :: Infer Type
+fresh :: Infer s Type
 fresh = do
     s <- get
     put s{count = count s + 1}
     return $ TVar $ TV (letters !! count s)
 
-instantiate ::  Scheme -> Infer Type
+instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
     as' <- mapM (const fresh) as
     let s = Subst $ Map.fromList $ zip as as'
@@ -174,7 +177,7 @@ ops Mul = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Sub = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Eql = typeInt `TArr` (typeInt `TArr` typeBool)
 
-infer :: Exp -> Infer (Type, [Constraint])
+infer :: Exp -> Infer s (Type, [Constraint])
 infer expr = case expr of
   Lit (LInt _)  -> return (typeInt, [])
   Lit (LBool _) -> return (typeBool, [])
