@@ -66,8 +66,8 @@ descrRef node@(Node link_ref) = do
 
 -- | /O(1)/. Return the decriptor associated with argument node's
 -- equivalence class.
-getDescriptor :: VarNode s -> ST s (Maybe Type)
-getDescriptor node = do
+getType :: VarNode s -> ST s (Maybe Type)
+getType node = do
   descr <$> (readSTRef =<< descrRef node)
 
 -- | /O(1)/. Replace the descriptor of the node's equivalence class
@@ -116,7 +116,7 @@ union n1 n2 = do
           r1 <- find n1'
           r2 <- find n2'
           -- Checking if n1 points to root with type assigned to it.
-          d1 <- getDescriptor r1
+          d1 <- getType r1
           case d1 of
             Just _  -> return (r2, r1)
             Nothing -> return (r1, r2)    
