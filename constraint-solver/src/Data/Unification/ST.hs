@@ -110,6 +110,7 @@ union n1 n2 = do
       _ -> error "'find' somehow didn't return a Repr" 
 
       where
+        -- TODO: Maybe handle if (different) roots both have assigned values?
         preprocess :: VarNode s -> VarNode s -> ST s (VarNode s, VarNode s) 
         preprocess n1' n2' = do
           r1 <- find n1'
