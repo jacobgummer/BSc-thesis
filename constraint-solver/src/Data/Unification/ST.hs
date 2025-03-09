@@ -7,12 +7,12 @@ import Control.Monad ( when )
 import Control.Monad.ST
 import Data.STRef
 
-newtype TypeNode s = Node (STRef s (Link s)) deriving Eq
+newtype VarNode s = Node (STRef s (Link s)) deriving Eq
 
 data Link s
     = Repr {-# UNPACK #-} !(STRef s Info)
       -- ^ This is the representative of the equivalence class.
-    | Link {-# UNPACK #-} !(TypeNode s)
+    | Link {-# UNPACK #-} !(VarNode s)
       -- ^ Pointer to some other element of the equivalence class.
      deriving Eq
 
@@ -24,7 +24,7 @@ data Info = MkInfo
 
 -- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
-makeSet :: Maybe Type -> ST s (TypeNode s)
+makeSet :: Maybe Type -> ST s (VarNode s)
 makeSet t = do
   info <- newSTRef (MkInfo { weight = 1, descr = t })
   l <- newSTRef (Repr info)
@@ -34,7 +34,7 @@ makeSet t = do
 -- @node@'s equivalence class.
 --
 -- This method performs the path compresssion.
-find :: TypeNode s -> ST s (TypeNode s)
+find :: VarNode s -> ST s (VarNode s)
 find node@(Node l) = do
   link <- readSTRef l
   case link of
@@ -53,7 +53,7 @@ find node@(Node l) = do
 
 -- | Return the reference to the node's equivalence class's
 -- descriptor.
-descrRef :: TypeNode s -> ST s (STRef s Info) 
+descrRef :: VarNode s -> ST s (STRef s Info) 
 descrRef node@(Node link_ref) = do
   link <- readSTRef link_ref
   case link of
@@ -66,18 +66,18 @@ descrRef node@(Node link_ref) = do
 
 -- | /O(1)/. Return the decriptor associated with argument node's
 -- equivalence class.
-getDescriptor :: TypeNode s -> ST s (Maybe Type)
+getDescriptor :: VarNode s -> ST s (Maybe Type)
 getDescriptor node = do
   descr <$> (readSTRef =<< descrRef node)
 
 -- | /O(1)/. Replace the descriptor of the node's equivalence class
 -- with the second argument.
-setDescriptor :: TypeNode s -> Maybe Type -> ST s ()
+setDescriptor :: VarNode s -> Maybe Type -> ST s ()
 setDescriptor node new_descr = do
   r <- descrRef node
   modifySTRef r $ \i -> i { descr = new_descr }
 
--- modifyDescriptor :: TypeNode s -> (Type -> Type) -> ST s ()
+-- modifyDescriptor :: VarNode s -> (Type -> Type) -> ST s ()
 -- modifyDescriptor node f = do
 --   r <- descrRef node
 --   modifySTRef r $ \i -> i { descr = f (descr i) }
@@ -87,9 +87,9 @@ setDescriptor node new_descr = do
 -- representative, the resulting equivalence class will get the descriptor
 -- of the second argument; otherwise, the new descriptor will be from the 
 -- node that doesn't represent a type variable.
-union :: TypeNode s -> TypeNode s -> ST s ()
+union :: VarNode s -> VarNode s -> ST s ()
 union n1 n2 = do
-  -- (node1@(TypeNode link_ref1), node2@(TypeNode link_ref2)) <- preprocess n1 n2
+  -- (node1@(VarNode link_ref1), node2@(VarNode link_ref2)) <- preprocess n1 n2
   node1@(Node link_ref1) <- find n1
   node2@(Node link_ref2) <- find n2
 
@@ -113,7 +113,7 @@ union n1 n2 = do
 
     -- TODO: determine if this is necessary or not.
     -- where
-    --   preprocess :: TypeNode s -> TypeNode s -> ST s (TypeNode s, TypeNode s) 
+    --   preprocess :: VarNode s -> VarNode s -> ST s (VarNode s, VarNode s) 
     --   preprocess n1' n2' = do
     --     -- Find representatives of each node's equivalence class.
     --     r1 <- find n1'
@@ -125,7 +125,7 @@ union n1 n2 = do
     --       (False, True) -> return (r2, r1)
     --       _             -> return (r1, r2)
 
-    --   isTVar :: TypeNode s -> ST s Bool
+    --   isTVar :: VarNode s -> ST s Bool
     --   isTVar node = do
     --     t <- getDescriptor node
     --     case t of
@@ -134,5 +134,5 @@ union n1 n2 = do
 
 -- | /O(1)/. Return @True@ if both nodes belong to the same
 -- | equivalence class.
-equivalent :: TypeNode s -> TypeNode s -> ST s Bool
+equivalent :: VarNode s -> VarNode s -> ST s Bool
 equivalent n1 n2 = (==) <$> find n1 <*> find n2
