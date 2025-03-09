@@ -72,10 +72,10 @@ getType node = do
 
 -- | /O(1)/. Replace the descriptor of the node's equivalence class
 -- with the second argument.
-setDescriptor :: VarNode s -> Maybe Type -> ST s ()
-setDescriptor node new_descr = do
+assignType :: VarNode s -> Type -> ST s ()
+assignType node new_descr = do
   r <- descrRef node
-  modifySTRef r $ \i -> i { descr = new_descr }
+  modifySTRef r $ \i -> i { descr = Just new_descr }
 
 -- modifyDescriptor :: VarNode s -> (Type -> Type) -> ST s ()
 -- modifyDescriptor node f = do
