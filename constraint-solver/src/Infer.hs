@@ -31,6 +31,10 @@ import qualified Data.Set as Set
 
 import Debug.Trace ( traceM )
 
+import Data.OurUnionFind.ST
+import Control.Monad.ST
+import Data.STRef
+
 -------------------------------------------------------------------------------
 -- Classes
 -------------------------------------------------------------------------------
@@ -60,6 +64,8 @@ type Solve a = ExceptT TypeError Identity a
 
 newtype Subst = Subst (Map.Map TVar Type)
   deriving (Eq, Ord, Show, Semigroup, Monoid)
+
+type UF s = STRef s (Map.Map TVar (TypeNode s))
 
 class Substitutable a where
   apply :: Subst -> a -> a
@@ -124,6 +130,14 @@ constraintsExp env ex = case runInfer env (infer ex) of
     Right subst -> Right (cs, subst, ty, sc)
       where
         sc = closeOver $ apply subst ty
+
+lookupUF :: TVar -> UF s -> ST s (Maybe (TypeNode s))
+lookupUF tv ufRef = do
+  uf <- readSTRef ufRef
+  return $ Map.lookup tv uf
+
+insertUF :: TVar -> TypeNode s -> UF s -> ST s ()
+insertUF tv tn ufRef = modifySTRef ufRef (Map.insert tv tn)
 
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
