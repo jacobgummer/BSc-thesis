@@ -52,11 +52,12 @@ unboundVariable =
 
 main :: IO ()
 main = do
-  let tVar = TVar $ TV "a"
+  let tVar1 = TVar $ TV "a"
+  let tVar2 = TVar $ TV "b"
   let result = runST $ do
-        p <- makeSet tVar
-        q <- makeSet typeInt
-        q `union` p
+        p <- makeSet tVar1
+        q <- makeSet tVar2
+        p `union` q
         getDescriptor p
     
   putStrLn $ printType result
