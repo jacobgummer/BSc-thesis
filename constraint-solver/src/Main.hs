@@ -2,6 +2,7 @@ module Main where
 
 import Env
 import Infer
+import InferUF
 import Syntax
 import Type
 import Pretty

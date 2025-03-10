@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Infer (
+module InferUF (
   Constraint,
   TypeError(..),
   Subst(..),
@@ -62,10 +62,45 @@ initInfer = InferState { count = 0, unionFind = Map.empty }
 
 type Constraint = (Type, Type)
 
+type Unifier = (Subst, [Constraint])
+
 type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
 type Solve a = ExceptT TypeError Identity a
+
+newtype Subst = Subst (Map.Map TVar Type)
+  deriving (Eq, Ord, Show, Semigroup, Monoid)
+
+class Substitutable a where
+  apply :: Subst -> a -> a
+  ftv   :: a -> Set.Set TVar
+
+instance Substitutable Type where
+  apply _ (TCon a)       = TCon a
+  apply (Subst s) t@(TVar a) = Map.findWithDefault t a s
+  apply s (t1 `TArr` t2) = apply s t1 `TArr` apply s t2
+
+  ftv TCon{}         = Set.empty
+  ftv (TVar a)       = Set.singleton a
+  ftv (t1 `TArr` t2) = ftv t1 `Set.union` ftv t2
+
+instance Substitutable Scheme where
+  apply (Subst s) (Forall as t)   = Forall as $ apply s' t
+                            where s' = Subst $ foldr Map.delete s as
+  ftv (Forall as t) = ftv t `Set.difference` Set.fromList as
+
+instance Substitutable Constraint where
+   apply s (t1, t2) = (apply s t1, apply s t2)
+   ftv (t1, t2) = ftv t1 `Set.union` ftv t2
+
+instance Substitutable a => Substitutable [a] where
+  apply = map . apply
+  ftv   = foldr (Set.union . ftv) Set.empty
+
+instance Substitutable Env where
+  apply s (TypeEnv env) = TypeEnv $ Map.map (apply s) env
+  ftv (TypeEnv env) = ftv $ Map.elems env
 
 data TypeError
   = UnificationFail Type Type
@@ -239,6 +274,10 @@ normalize (Forall _ body) = Forall (map snd ord) (normtype body)
 -- Constraint Solver
 -------------------------------------------------------------------------------
 
+-- | The empty substitution
+emptySubst :: Subst
+emptySubst = mempty
+
 emptyUF :: UF s
 emptyUF = Map.empty
 
@@ -248,10 +287,33 @@ lookupUF tv@(TV v) uf =
     Nothing   -> error "unbound type variable"
     Just node -> node
 
+-- | Compose substitutions
+compose :: Subst -> Subst -> Subst
+(Subst s1) `compose` (Subst s2) = Subst $ Map.map (apply (Subst s1)) s2 `Map.union` s1
+
 -- | Run the constraint solver
+runSolve :: [Constraint] -> Either TypeError Subst
+runSolve cs = runIdentity $ runExceptT $ solver st
+  where st = (emptySubst, cs)
+
 runSolveUF :: [Constraint] -> Either TypeError (UF s)
 runSolveUF cs = runIdentity $ runExceptT $ solverUF st
   where st = (emptyUF, cs)
+
+unifyMany :: [Type] -> [Type] -> Solve Subst
+unifyMany [] [] = return emptySubst
+unifyMany (t1 : ts1) (t2 : ts2) =
+  do su1 <- unify t1 t2
+     su2 <- unifyMany (apply su1 ts1) (apply su1 ts2)
+     return (su2 `compose` su1)
+unifyMany t1 t2 = throwError $ UnificationMismatch t1 t2
+
+unify :: Type -> Type -> Solve Subst
+unify t1 t2 | t1 == t2 = return emptySubst
+unify (TVar v) t = v `bind` t
+unify t (TVar v) = v `bind` t
+unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
+unify t1 t2 = throwError $ UnificationFail t1 t2
 
 solverUF :: UnifierUF s -> Solve (UF s)
 solverUF (uf, cs) = 
@@ -293,6 +355,19 @@ unifyVars v1 v2 uf = undefined
   --   (Nothing, Just t) -> undefined
   --   (Just t, Nothing) -> undefined
 
+-- Unification solver
+solver :: Unifier -> Solve Subst
+solver (su, cs) =
+  case cs of
+    [] -> return su
+    ((t1, t2): cs') -> do
+      su1  <- unify t1 t2
+      solver (su1 `compose` su, apply su1 cs')
+
+bind ::  TVar -> Type -> Solve Subst
+bind a t | t == TVar a     = return emptySubst
+         | occursCheck a t = throwError $ InfiniteType a t
+         | otherwise       = return (Subst $ Map.singleton a t)
 
 occursCheck ::  Substitutable a => TVar -> a -> Bool
 occursCheck a t = a `Set.member` ftv t
