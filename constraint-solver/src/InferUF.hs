@@ -192,9 +192,6 @@ infer expr = case expr of
     tv <- fresh
     (t, c) <- inEnv (x, Forall [] tv) (infer e)
     let exprType = tv `TArr` t
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' has type:\n\t"
-      ++ printType exprType
     return (exprType, c)
 
   App e1 e2 -> do
@@ -202,9 +199,6 @@ infer expr = case expr of
     (t2, c2) <- infer e2
     tv <- fresh
     let cs = [(t1, t2 `TArr` tv)]
-    traceM $
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
     return (tv, c1 ++ c2 ++ cs)
 
   Let x e1 e2 -> do
@@ -221,9 +215,6 @@ infer expr = case expr of
     (t1, c1) <- infer e1
     tv <- fresh
     let cs = [(tv `TArr` tv, t1)]
-    traceM $
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs
     return (tv, c1 ++ cs)
 
   Op op e1 e2 -> do
@@ -233,9 +224,6 @@ infer expr = case expr of
     let u1 = t1 `TArr` (t2 `TArr` tv)
         u2 = ops op
     let cs = [(u1, u2)]
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
     return (tv, c1 ++ c2 ++ cs)
 
   If cond tr fl -> do
@@ -243,9 +231,6 @@ infer expr = case expr of
     (t2, c2) <- infer tr
     (t3, c3) <- infer fl
     let cs = [(t1, typeBool), (t2, t3)]
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' introduced the constraints:\n\t"
-      ++ printConstraints cs
     return (t2, c1 ++ c2 ++ c3 ++ cs)
 
 inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
