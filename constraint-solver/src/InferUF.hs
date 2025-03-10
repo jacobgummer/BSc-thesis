@@ -31,65 +31,41 @@ import qualified Data.Set as Set
 
 import Debug.Trace ( traceM )
 
+import Data.Unification.ST
+import Control.Monad.ST
+import Data.STRef
+
 -------------------------------------------------------------------------------
 -- Classes
 -------------------------------------------------------------------------------
 
 -- | Inference monad
-type Infer a = (ReaderT
+type Infer s a = (ReaderT
                   Env             -- Typing environment
                   (StateT         -- Inference state
-                  InferState
+                  (InferState s)
                   (Except         -- Inference errors
                     TypeError))
                   a)              -- Result
 
+type UF s = Map.Map TVar (VarNode s)
+
 -- | Inference state
-newtype InferState = InferState { count :: Int }
+data InferState s = InferState 
+  { count :: Int
+  , unionFind :: UF s
+  }
 
 -- | Initial inference state
-initInfer :: InferState
-initInfer = InferState { count = 0 }
+initInfer :: InferState s
+initInfer = InferState { count = 0, unionFind = Map.empty }
 
 type Constraint = (Type, Type)
 
-type Unifier = (Subst, [Constraint])
+type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
 type Solve a = ExceptT TypeError Identity a
-
-newtype Subst = Subst (Map.Map TVar Type)
-  deriving (Eq, Ord, Show, Semigroup, Monoid)
-
-class Substitutable a where
-  apply :: Subst -> a -> a
-  ftv   :: a -> Set.Set TVar
-
-instance Substitutable Type where
-  apply _ (TCon a)       = TCon a
-  apply (Subst s) t@(TVar a) = Map.findWithDefault t a s
-  apply s (t1 `TArr` t2) = apply s t1 `TArr` apply s t2
-
-  ftv TCon{}         = Set.empty
-  ftv (TVar a)       = Set.singleton a
-  ftv (t1 `TArr` t2) = ftv t1 `Set.union` ftv t2
-
-instance Substitutable Scheme where
-  apply (Subst s) (Forall as t)   = Forall as $ apply s' t
-                            where s' = Subst $ foldr Map.delete s as
-  ftv (Forall as t) = ftv t `Set.difference` Set.fromList as
-
-instance Substitutable Constraint where
-   apply s (t1, t2) = (apply s t1, apply s t2)
-   ftv (t1, t2) = ftv t1 `Set.union` ftv t2
-
-instance Substitutable a => Substitutable [a] where
-  apply = map . apply
-  ftv   = foldr (Set.union . ftv) Set.empty
-
-instance Substitutable Env where
-  apply s (TypeEnv env) = TypeEnv $ Map.map (apply s) env
-  ftv (TypeEnv env) = ftv $ Map.elems env
 
 data TypeError
   = UnificationFail Type Type
@@ -104,7 +80,7 @@ data TypeError
 -------------------------------------------------------------------------------
 
 -- | Run the inference monad
-runInfer :: Env -> Infer (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
+runInfer :: Env -> Infer s (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
 runInfer env m = runExcept $ evalStateT (runReaderT m env) initInfer
 
 -- | Solve for the toplevel type of an expression in a given environment
@@ -130,13 +106,13 @@ closeOver :: Type -> Scheme
 closeOver = normalize . generalize Env.emptyEnv
 
 -- | Extend type environment
-inEnv :: (Name, Scheme) -> Infer a -> Infer a
+inEnv :: (Name, Scheme) -> Infer s a -> Infer s a
 inEnv (x, sc) m = do
   let scope e = remove e x `extend` (x, sc)
   local scope m
 
 -- | Lookup type in the environment
-lookupEnv :: Name -> Infer Type
+lookupEnv :: Name -> Infer s Type
 lookupEnv x = do
   (TypeEnv env) <- ask
   case Map.lookup x env of
@@ -146,13 +122,13 @@ lookupEnv x = do
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-fresh :: Infer Type
+fresh :: Infer s Type
 fresh = do
     s <- get
     put s{count = count s + 1}
     return $ TVar $ TV (letters !! count s)
 
-instantiate ::  Scheme -> Infer Type
+instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
     as' <- mapM (const fresh) as
     let s = Subst $ Map.fromList $ zip as as'
@@ -168,7 +144,7 @@ ops Mul = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Sub = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Eql = typeInt `TArr` (typeInt `TArr` typeBool)
 
-infer :: Exp -> Infer (Type, [Constraint])
+infer :: Exp -> Infer s (Type, [Constraint])
 infer expr = case expr of
   Lit (LInt _)  -> return (typeInt, [])
   Lit (LBool _) -> return (typeBool, [])
@@ -263,47 +239,60 @@ normalize (Forall _ body) = Forall (map snd ord) (normtype body)
 -- Constraint Solver
 -------------------------------------------------------------------------------
 
--- | The empty substitution
-emptySubst :: Subst
-emptySubst = mempty
+emptyUF :: UF s
+emptyUF = Map.empty
 
--- | Compose substitutions
-compose :: Subst -> Subst -> Subst
-(Subst s1) `compose` (Subst s2) = Subst $ Map.map (apply (Subst s1)) s2 `Map.union` s1
+lookupUF :: TVar -> UF s -> VarNode s
+lookupUF tv@(TV v) uf = 
+  case Map.lookup tv uf of
+    Nothing   -> error "unbound type variable"
+    Just node -> node
 
 -- | Run the constraint solver
-runSolve :: [Constraint] -> Either TypeError Subst
-runSolve cs = runIdentity $ runExceptT $ solver st
-  where st = (emptySubst, cs)
+runSolveUF :: [Constraint] -> Either TypeError (UF s)
+runSolveUF cs = runIdentity $ runExceptT $ solverUF st
+  where st = (emptyUF, cs)
 
-unifyMany :: [Type] -> [Type] -> Solve Subst
-unifyMany [] [] = return emptySubst
-unifyMany (t1 : ts1) (t2 : ts2) =
-  do su1 <- unify t1 t2
-     su2 <- unifyMany (apply su1 ts1) (apply su1 ts2)
-     return (su2 `compose` su1)
-unifyMany t1 t2 = throwError $ UnificationMismatch t1 t2
-
-unify :: Type -> Type -> Solve Subst
-unify t1 t2 | t1 == t2 = return emptySubst
-unify (TVar v) t = v `bind` t
-unify t (TVar v) = v `bind` t
-unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
-unify t1 t2 = throwError $ UnificationFail t1 t2
-
--- Unification solver
-solver :: Unifier -> Solve Subst
-solver (su, cs) =
+solverUF :: UnifierUF s -> Solve (UF s)
+solverUF (uf, cs) = 
   case cs of
-    [] -> return su
-    ((t1, t2): cs') -> do
-      su1  <- unify t1 t2
-      solver (su1 `compose` su, apply su1 cs')
+    [] -> return uf
+    ((t1, t2) : cs') -> do
+      uf' <- unifyUF t1 t2 uf
+      solverUF (uf', cs')
 
-bind ::  TVar -> Type -> Solve Subst
-bind a t | t == TVar a     = return emptySubst
-         | occursCheck a t = throwError $ InfiniteType a t
-         | otherwise       = return (Subst $ Map.singleton a t)
+unifyUF :: Type -> Type -> UF s -> Solve (UF s)
+unifyUF t1 t2 uf | t1 == t2 = return uf
+unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
+unifyUF (TVar v) t uf = bindUF v t uf
+unifyUF t (TVar v) uf = bindUF v t uf
+unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = do
+  uf' <- unifyUF arg1 arg2 uf
+  unifyUF ret1 ret2 uf'
+unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
+
+bindUF :: TVar -> Type -> UF s -> Solve (UF s)
+bindUF a t uf | t == TVar a     = return uf
+              | occursCheck a t = throwError $ InfiniteType a t
+              | otherwise       = 
+                -- TODO: Ensure that this is correct (because it feels illegal).
+                let _ = do assignType (lookupUF a uf) t
+                in return uf
+
+-- TODO: Fix this function.
+unifyVars :: TVar -> TVar -> UF s -> Solve (UF s)
+unifyVars v1 v2 uf = undefined
+  -- let (n1, n2) = do 
+  --       n1 <- lookupUF v1 uf
+  --       n2 <- lookupUF v2 uf
+  --       return (n1, n2)
+  -- in
+  -- case (getType n1, getType n2) of
+  --   (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
+  --                      | otherwise -> return uf
+  --   (Nothing, Just t) -> undefined
+  --   (Just t, Nothing) -> undefined
+
 
 occursCheck ::  Substitutable a => TVar -> a -> Bool
 occursCheck a t = a `Set.member` ftv t
