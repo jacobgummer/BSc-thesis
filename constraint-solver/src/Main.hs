@@ -56,5 +56,6 @@ main = do
         p <- makeSet Nothing
         q <- makeSet $ Just typeInt
         p `union` q
-        getType p
-  putStrLn ("p has type: " ++ maybe "No value assigned" printType result)
+        assignType p typeBool
+        getType q
+  putStrLn ("q has type: " ++ maybe "No value assigned" printType result)
