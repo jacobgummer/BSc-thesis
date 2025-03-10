@@ -336,8 +336,8 @@ unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 bindUF :: TVar -> Type -> UF s -> Solve (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
-              -- TODO: Ensure that this is correct (because it feels illegal).
               | otherwise       = 
+                -- TODO: Ensure that this is correct (because it feels illegal).
                 let _ = do assignType (lookupUF a uf) t
                 in return uf
 
