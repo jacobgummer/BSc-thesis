@@ -2,9 +2,12 @@ module Main where
 
 import Env
 import Infer
+import InferUF
 import Syntax
 import Type
 import Pretty
+import Data.Unification.ST
+import Control.Monad.ST ( runST )
 
 -- 1 + (2 + 5)
 simpleExp :: Exp
@@ -49,19 +52,11 @@ unboundVariable =
   App (Lam "x" (Var "x")) (Var "y")
 
 main :: IO ()
-main = do 
-    putStrLn $ printInferResult simpleExp
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult appExp
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult identityFunction
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult twoForAllFunc
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult factorialFunc
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult unificationFail
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult infiniteType
-    putStrLn "-------------------------------------------------------------------------------------"
-    putStrLn $ printInferResult unboundVariable
+main = do
+  let result = runST $ do
+        p <- makeSet Nothing
+        q <- makeSet $ Just typeInt
+        p `union` q
+        assignType p typeBool
+        getType q
+  putStrLn ("q has type: " ++ maybe "No value assigned" printType result)
