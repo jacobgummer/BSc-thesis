@@ -64,13 +64,13 @@ descrRef node@(Node link_ref) = do
         Repr info -> return info
         _ -> descrRef =<< find node
 
--- | /O(1)/. Return the decriptor associated with argument node's
+-- | /O(1)/. Return the type associated with argument node's
 -- equivalence class.
 getType :: VarNode s -> ST s (Maybe Type)
 getType node = do
   descr <$> (readSTRef =<< descrRef node)
 
--- | /O(1)/. Replace the descriptor of the node's equivalence class
+-- | /O(1)/. Replace the type of the node's equivalence class
 -- with the second argument.
 assignType :: VarNode s -> Type -> ST s ()
 assignType node new_descr = do
@@ -82,11 +82,7 @@ assignType node new_descr = do
 --   r <- descrRef node
 --   modifySTRef r $ \i -> i { descr = f (descr i) }
 
--- | /O(1)/. Join the equivalence classes of the nodes. If both or none
--- of the nodes are in equivalence classes with a type variable as a
--- representative, the resulting equivalence class will get the descriptor
--- of the second argument; otherwise, the new descriptor will be from the 
--- node that doesn't represent a type variable.
+-- | /O(1)/. Join the equivalence classes of the nodes.
 union :: VarNode s -> VarNode s -> ST s ()
 union n1 n2 = do
   (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
