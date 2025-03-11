@@ -331,9 +331,9 @@ runSolve :: [Constraint] -> Either TypeError Subst
 runSolve cs = runIdentity $ runExceptT $ solver st
   where st = (emptySubst, cs)
 
-runSolveUF :: [Constraint] -> Either TypeError (UF s)
-runSolveUF cs = runIdentity $ runExceptT $ solverUF st
-  where st = (emptyUF, cs)
+runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
+runSolveUF uf cs = do runExceptT $ solverUF st
+  where st = (uf, cs)
 
 unifyMany :: [Type] -> [Type] -> Solve Subst
 unifyMany [] [] = return emptySubst
