@@ -116,26 +116,66 @@ data TypeError
 -------------------------------------------------------------------------------
 
 -- | Run the inference monad
-runInfer :: Env -> Infer s (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
-runInfer env m = runExcept $ evalStateT (runReaderT m env) initInfer
+runInfer :: Env -> Infer s a -> ST s (Either TypeError (a, InferState s))
+runInfer env m =
+  let r1 = runReaderT m env
+      r2 = runStateT r1 initInfer
+      r3 = runExceptT r2
+  in r3
 
--- | Solve for the toplevel type of an expression in a given environment
+convertUFToSubst :: UF s -> ST s (Map.Map TVar Type)
+convertUFToSubst uf =
+  Map.fromList <$> mapM (\(k, node) -> do
+    root <- find node
+    maybe_ty <- getType root
+    pure $ case maybe_ty of
+      Nothing -> (k, TVar k)
+      Just ty -> (k, ty)
+   ) (Map.toList uf)
+
+test :: Env -> Exp -> Either TypeError Subst
+test env ex = runST $ do
+  inferResult <- runInfer env (infer ex)
+  case inferResult of
+    Left err -> return (Left err)
+    Right (_, infState) -> do
+      pureUF <- convertUFToSubst $ unionFind infState
+      return $ Right $ Subst pureUF
+
 inferExpr :: Env -> Exp -> Either TypeError Scheme
-inferExpr env ex = case runInfer env (infer ex) of
-  Left err -> Left err
-  Right (ty, cs) -> case runSolve cs of
-    Left err -> Left err
-    Right subst -> Right $ closeOver $ apply subst ty
+inferExpr env ex = runST $ do
+  inferRes <- runInfer env (infer ex)
+  case inferRes of
+    Left err -> pure (Left err)
+    Right ((ty, cs), infState) -> do
+      res <- runSolveUF (unionFind infState) cs
+      case res of 
+        Left err -> pure $ Left err
+        Right uf -> do
+          converted <- convertUFToSubst uf
+          let s = Subst converted
+          return $ Right $ closeOver $ apply s ty
+
+-- ! Original code
+-- | Solve for the toplevel type of an expression in a given environment
+-- inferExpr :: Env -> Exp -> Either TypeError Scheme
+-- inferExpr env ex = do
+--   inferRes <- runInfer env (infer ex)
+--   case inferRes of
+--     Left err -> Left err
+--     Right (ty, cs) -> case runSolve cs of
+--       Left err -> Left err
+--       Right subst -> Right $ closeOver $ apply subst ty
 
 -- | Return the internal constraints used in solving for the type of an expression
-constraintsExp :: Env -> Exp -> Either TypeError ([Constraint], Subst, Type, Scheme)
-constraintsExp env ex = case runInfer env (infer ex) of
-  Left err -> Left err
-  Right (ty, cs) -> case runSolve cs of
-    Left err -> Left err
-    Right subst -> Right (cs, subst, ty, sc)
-      where
-        sc = closeOver $ apply subst ty
+-- constraintsExp :: Env -> Exp -> Either TypeError ([Constraint], Subst, Type, Scheme)
+-- constraintsExp env ex = case runInfer env (infer ex) of
+--   Left err -> Left err
+--   Right (ty, cs) -> case runSolve cs of
+--     Left err -> Left err
+--     Right subst -> Right (cs, subst, ty, sc)
+--       where
+--         sc = closeOver $ apply subst ty
 
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
