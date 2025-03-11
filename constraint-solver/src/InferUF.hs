@@ -5,9 +5,10 @@ module InferUF (
   Constraint,
   TypeError(..),
   Subst(..),
-  inferTop,
-  constraintsExp
+  test
 ) where
+  -- inferTop,
+  -- constraintsExp
 
 import Env ( Env(TypeEnv), emptyEnv, extend, remove )
 import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
