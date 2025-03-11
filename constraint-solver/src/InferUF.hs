@@ -20,7 +20,7 @@ import Control.Monad.Except
       Except,
       ExceptT, MonadTrans (lift) )
 import Control.Monad.State
-    ( evalStateT, MonadState(put, get), StateT )
+    ( evalStateT, MonadState(put, get), StateT (runStateT), modify, execStateT )
 import Control.Monad.Reader
     ( replicateM, MonadReader(local, ask), ReaderT(runReaderT) )
 import Control.Monad.Identity ( Identity(runIdentity) )
