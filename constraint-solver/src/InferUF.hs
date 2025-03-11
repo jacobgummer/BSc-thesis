@@ -39,19 +39,18 @@ import Data.STRef
 -- Classes
 -------------------------------------------------------------------------------
 
--- | Inference monad
-type Infer s a = (ReaderT
-                  Env             -- Typing environment
-                  (StateT         -- Inference state
-                  (InferState s)
-                  (Except         -- Inference errors
-                    TypeError))
-                  a)              -- Result
+type Infer s a = ReaderT
+                  Env
+                  (StateT
+                   (InferState s)
+                   (ExceptT TypeError
+                    (ST s)))
+                  a
 
 type UF s = Map.Map TVar (VarNode s)
 
 -- | Inference state
-data InferState s = InferState 
+data InferState s = InferState
   { count :: Int
   , unionFind :: UF s
   }
@@ -68,6 +67,8 @@ type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
 type Solve a = ExceptT TypeError Identity a
+
+type SolveST s a = ExceptT TypeError (ST s) a
 
 newtype Subst = Subst (Map.Map TVar Type)
   deriving (Eq, Ord, Show, Semigroup, Monoid)
