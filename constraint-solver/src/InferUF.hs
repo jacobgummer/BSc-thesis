@@ -371,10 +371,10 @@ unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
-              | otherwise       = 
-                -- TODO: Ensure that this is correct (because it feels illegal).
-                let _ = do assignType (lookupUF a uf) t
-                in return uf
+              | otherwise       =
+                  lift $ do
+                    assignType (lookupUF a uf) t
+                    return uf
 
 -- TODO: Fix this function.
 unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
