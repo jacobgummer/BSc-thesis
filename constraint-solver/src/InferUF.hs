@@ -317,7 +317,7 @@ emptyUF :: UF s
 emptyUF = Map.empty
 
 lookupUF :: TVar -> UF s -> VarNode s
-lookupUF tv@(TV v) uf = 
+lookupUF tv uf =
   case Map.lookup tv uf of
     Nothing   -> error "unbound type variable"
     Just node -> node
