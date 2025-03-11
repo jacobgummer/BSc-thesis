@@ -24,9 +24,9 @@ data Info = MkInfo
 
 -- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
-makeSet :: Maybe Type -> ST s (VarNode s)
-makeSet t = do
-  info <- newSTRef (MkInfo { weight = 1, descr = t })
+makeSet :: ST s (VarNode s)
+makeSet = do
+  info <- newSTRef (MkInfo { weight = 1, descr = Nothing })
   l <- newSTRef (Repr info)
   return (Node l)
 
