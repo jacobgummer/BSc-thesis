@@ -29,11 +29,8 @@ import Data.List (nub)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 
-import Debug.Trace ( traceM )
-
 import Data.Unification.ST
 import Control.Monad.ST
-import Data.STRef
 
 -------------------------------------------------------------------------------
 -- Classes
