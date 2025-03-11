@@ -200,9 +200,18 @@ letters = [1..] >>= flip replicateM ['a'..'z']
 
 fresh :: Infer s Type
 fresh = do
-    s <- get
-    put s{count = count s + 1}
-    return $ TVar $ TV (letters !! count s)
+  s <- get
+  let n = count s
+      tv = TV $ letters !! n
+  node <- liftST makeSet
+  let uf' = Map.insert tv node (unionFind s)
+  put s { count = n + 1, unionFind = uf' }
+  return $ TVar tv
+  
+  where
+    liftST :: ST s a -> Infer s a
+    liftST = lift . lift . lift    
+
 
 instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
