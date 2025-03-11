@@ -18,7 +18,7 @@ import Control.Monad.Except
       runExceptT,
       MonadError(throwError),
       Except,
-      ExceptT )
+      ExceptT, MonadTrans (lift) )
 import Control.Monad.State
     ( evalStateT, MonadState(put, get), StateT )
 import Control.Monad.Reader
