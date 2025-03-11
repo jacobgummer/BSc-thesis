@@ -314,11 +314,11 @@ emptySubst = mempty
 emptyUF :: UF s
 emptyUF = Map.empty
 
-lookupUF :: TVar -> UF s -> VarNode s
-lookupUF tv uf =
+lookupUF :: TVar -> UF s -> SolveST s (VarNode s)
+lookupUF tv@(TV v) uf =
   case Map.lookup tv uf of
-    Nothing   -> error "unbound type variable"
-    Just node -> node
+    Nothing   -> throwError $ UnboundVariable v
+    Just node -> return node
 
 -- | Compose substitutions
 compose :: Subst -> Subst -> Subst
