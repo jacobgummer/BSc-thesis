@@ -350,15 +350,15 @@ unify t (TVar v) = v `bind` t
 unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
 unify t1 t2 = throwError $ UnificationFail t1 t2
 
-solverUF :: UnifierUF s -> Solve (UF s)
-solverUF (uf, cs) = 
+solverUF :: UnifierUF s -> SolveST s (UF s)
+solverUF (uf, cs) =
   case cs of
     [] -> return uf
     ((t1, t2) : cs') -> do
       uf' <- unifyUF t1 t2 uf
       solverUF (uf', cs')
 
-unifyUF :: Type -> Type -> UF s -> Solve (UF s)
+unifyUF :: Type -> Type -> UF s -> SolveST s (UF s)
 unifyUF t1 t2 uf | t1 == t2 = return uf
 unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
 unifyUF (TVar v) t uf = bindUF v t uf
@@ -368,7 +368,7 @@ unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = do
   unifyUF ret1 ret2 uf'
 unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 
-bindUF :: TVar -> Type -> UF s -> Solve (UF s)
+bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
               | otherwise       = 
@@ -377,7 +377,7 @@ bindUF a t uf | t == TVar a     = return uf
                 in return uf
 
 -- TODO: Fix this function.
-unifyVars :: TVar -> TVar -> UF s -> Solve (UF s)
+unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
 unifyVars v1 v2 uf = undefined
   -- let (n1, n2) = do 
   --       n1 <- lookupUF v1 uf
