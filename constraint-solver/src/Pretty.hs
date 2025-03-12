@@ -1,7 +1,7 @@
 module Pretty where
 
 import Env
-import Infer
+import InferUF
 import Syntax
 import Type
 
