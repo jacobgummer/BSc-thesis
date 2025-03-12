@@ -332,20 +332,33 @@ runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
 runSolveUF uf cs = runExceptT $ solverUF st
   where st = (uf, cs)
 
-unifyMany :: [Type] -> [Type] -> Solve Subst
-unifyMany [] [] = return emptySubst
-unifyMany (t1 : ts1) (t2 : ts2) =
-  do su1 <- unify t1 t2
-     su2 <- unifyMany (apply su1 ts1) (apply su1 ts2)
-     return (su2 `compose` su1)
-unifyMany t1 t2 = throwError $ UnificationMismatch t1 t2
+-- | Get the type assigned to representative of equivalence class.
+probeValue :: TVar -> UF s -> SolveST s (Maybe Type)
+probeValue tv uf = do
+  node <- lookupUF tv uf
+  lift $ getType node
 
-unify :: Type -> Type -> Solve Subst
-unify t1 t2 | t1 == t2 = return emptySubst
-unify (TVar v) t = v `bind` t
-unify t (TVar v) = v `bind` t
-unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
-unify t1 t2 = throwError $ UnificationFail t1 t2
+-- | Normalize a type, i.e., find out if a type variable
+--   has already been resolved to a type.
+normalizeTy :: Type -> UF s -> SolveST s Type
+normalizeTy ty uf = case ty of
+  ty'@(TCon _)     -> return ty'
+  (TArr argT retT) -> do
+    argT' <- normalizeTy argT uf
+    retT' <- normalizeTy retT uf
+    return $ TArr argT' retT'
+  (TVar v) -> do
+    mt <- probeValue v uf
+    case mt of
+      -- Also normalize the found type.
+      Just ty' -> normalizeTy ty' uf
+
+      -- Return the type variable representing
+      -- the root of equivalence class.
+      Nothing -> do
+        node <- lookupUF v uf
+        key' <- lift $ getKey node
+        return $ TVar key'
 
 -- | Unification solver
 solverUF :: UnifierUF s -> SolveST s (UF s)
