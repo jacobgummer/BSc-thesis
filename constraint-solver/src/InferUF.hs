@@ -309,7 +309,7 @@ lookupUF tv@(TV v) uf =
     Nothing   -> throwError $ UnboundVariable v
     Just node -> return node
 
--- | Run the constraint solver
+-- | Run the constraint solver.
 runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
 runSolveUF uf cs = runExceptT $ solverUF st
   where st = (uf, cs)
@@ -342,7 +342,7 @@ normalizeTy ty uf = case ty of
         key' <- lift $ getKey node
         return $ TVar key'
 
--- | Unification solver
+-- | Unification solver.
 solverUF :: UnifierUF s -> SolveST s (UF s)
 solverUF (uf, cs) =
   case cs of
@@ -353,6 +353,7 @@ solverUF (uf, cs) =
       uf' <- unifyUF t1' t2' uf
       solverUF (uf', cs')
 
+-- | Unify two types.
 unifyUF :: Type -> Type -> UF s -> SolveST s (UF s)
 unifyUF t1 t2 uf | t1 == t2 = return uf
 unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
@@ -363,6 +364,7 @@ unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = do
   unifyUF ret1 ret2 uf'
 unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 
+-- | Bind a type variable to a type.
 bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
@@ -371,6 +373,7 @@ bindUF a t uf | t == TVar a     = return uf
                     lift $ assignType node t
                     return uf
 
+-- | Unify two type variables.
 unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
 unifyVars v1 v2 uf = do
   n1 <- lookupUF v1 uf
