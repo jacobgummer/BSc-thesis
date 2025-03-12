@@ -368,7 +368,7 @@ unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
-              | otherwise       = 
+              | otherwise       =
                 do  node <- lookupUF a uf
                     lift $ assignType node t
                     return uf
