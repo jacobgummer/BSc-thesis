@@ -122,25 +122,20 @@ runInfer env m =
   in r3
 
 convertUFToSubst :: UF s -> ST s (Map.Map TVar Type)
-convertUFToSubst uf =
-  Map.fromList <$> mapM helper (Map.toList uf)
+convertUFToSubst uf = do
+  mappings <- mapM helper (Map.toList uf)
+
+  -- Remove type variables that haven't been assigned any type.
+  return $ Map.fromList (catMaybes mappings)
+
   where
-    helper :: (TVar, VarNode s) -> ST s (TVar, Type)
+    helper :: (TVar, VarNode s) -> ST s (Maybe (TVar, Type))
     helper (k, node) = do
       root <- find node
       maybe_ty <- getType root
       return $ case maybe_ty of
-        Nothing -> (k, TVar k)
-        Just ty -> (k, ty)
-
-test :: Env -> Exp -> Either TypeError Subst
-test env ex = runST $ do
-  inferResult <- runInfer env (infer ex)
-  case inferResult of
-    Left err -> return (Left err)
-    Right (_, infState) -> do
-      pureUF <- convertUFToSubst $ unionFind infState
-      return $ Right $ Subst pureUF
+        Nothing -> Nothing
+        Just ty -> Just (k, ty)
 
 inferExpr :: Env -> Exp -> Either TypeError Scheme
 inferExpr env ex = runST $ do
