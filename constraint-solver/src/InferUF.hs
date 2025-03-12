@@ -156,26 +156,22 @@ inferExpr env ex = runST $ do
           let s = Subst converted
           return $ Right $ closeOver $ apply s ty
 
--- ! Original code
--- | Solve for the toplevel type of an expression in a given environment
--- inferExpr :: Env -> Exp -> Either TypeError Scheme
--- inferExpr env ex = do
---   inferRes <- runInfer env (infer ex)
---   case inferRes of
---     Left err -> Left err
---     Right (ty, cs) -> case runSolve cs of
---       Left err -> Left err
---       Right subst -> Right $ closeOver $ apply subst ty
-
--- | Return the internal constraints used in solving for the type of an expression
--- constraintsExp :: Env -> Exp -> Either TypeError ([Constraint], Subst, Type, Scheme)
--- constraintsExp env ex = case runInfer env (infer ex) of
---   Left err -> Left err
---   Right (ty, cs) -> case runSolve cs of
---     Left err -> Left err
---     Right subst -> Right (cs, subst, ty, sc)
---       where
---         sc = closeOver $ apply subst ty
+constraintsExp :: Env
+                  -> Exp
+                  -> Either TypeError ([Constraint], Subst, Type, Scheme)
+constraintsExp env ex = runST $ do
+  inferRes <- runInfer env (infer ex)
+  case inferRes of
+    Left err -> return $ Left err
+    Right ((ty, cs), infState) -> do
+      res <- runSolveUF (unionFind infState) cs
+      case res of
+        Left err -> return $ Left err
+        Right uf -> do
+          s <- convertUFToSubst uf
+          let subst = Subst s
+              sc = closeOver $ apply subst ty
+          return $ Right (cs, subst, ty, sc)
 
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
