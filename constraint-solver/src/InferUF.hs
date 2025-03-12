@@ -330,7 +330,7 @@ runSolve cs = runIdentity $ runExceptT $ solver st
   where st = (emptySubst, cs)
 
 runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
-runSolveUF uf cs = do runExceptT $ solverUF st
+runSolveUF uf cs = runExceptT $ solverUF st
   where st = (uf, cs)
 
 unifyMany :: [Type] -> [Type] -> Solve Subst
