@@ -322,7 +322,7 @@ probeValue tv uf = do
   lift $ getType node
 
 -- | Normalize a type, i.e., find out if a type variable
---   has already been resolved to a type.
+-- has already been resolved to a type.
 normalizeType :: Type -> UF s -> SolveST s Type
 normalizeType ty uf = case ty of
   ty'@(TCon _)     -> return ty'
