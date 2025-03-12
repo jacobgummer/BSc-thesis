@@ -146,11 +146,11 @@ inferExpr :: Env -> Exp -> Either TypeError Scheme
 inferExpr env ex = runST $ do
   inferRes <- runInfer env (infer ex)
   case inferRes of
-    Left err -> pure (Left err)
+    Left err -> return $ Left err
     Right ((ty, cs), infState) -> do
       res <- runSolveUF (unionFind infState) cs
-      case res of 
-        Left err -> pure $ Left err
+      case res of
+        Left err -> return $ Left err
         Right uf -> do
           converted <- convertUFToSubst uf
           let s = Subst converted
