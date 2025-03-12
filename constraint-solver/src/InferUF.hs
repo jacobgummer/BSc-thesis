@@ -39,7 +39,7 @@ type Infer s a = ReaderT
                   Env                 -- Typing environment
                   (StateT             
                    (InferState s)     -- Inference state
-                   (ExceptT TypeError -- Inference error
+                   (ExceptT TypeError -- Inference errors
                     (ST s)))          -- Inner state
                   a                   -- Result
 
