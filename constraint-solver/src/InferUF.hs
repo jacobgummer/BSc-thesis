@@ -321,13 +321,6 @@ normalize (Forall _ body) = Forall (map snd ord) (normtype body)
 -- Constraint Solver
 -------------------------------------------------------------------------------
 
--- | The empty substitution
-emptySubst :: Subst
-emptySubst = mempty
-
-emptyUF :: UF s
-emptyUF = Map.empty
-
 lookupUF :: TVar -> UF s -> SolveST s (VarNode s)
 lookupUF tv@(TV v) uf =
   case Map.lookup tv uf of
@@ -335,10 +328,6 @@ lookupUF tv@(TV v) uf =
     Just node -> return node
 
 -- | Run the constraint solver
-runSolve :: [Constraint] -> Either TypeError Subst
-runSolve cs = runIdentity $ runExceptT $ solver st
-  where st = (emptySubst, cs)
-
 runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
 runSolveUF uf cs = runExceptT $ solverUF st
   where st = (uf, cs)
@@ -397,75 +386,5 @@ unifyVars v1 v2 uf = do
       lift $ union n1 n2
       return uf
 
--- Unification solver
-solver :: Unifier -> Solve Subst
-solver (su, cs) =
-  case cs of
-    [] -> return su
-    ((t1, t2): cs') -> do
-      su1  <- unify t1 t2
-      solver (su1 `compose` su, apply su1 cs')
-
-bind ::  TVar -> Type -> Solve Subst
-bind a t | t == TVar a     = return emptySubst
-         | occursCheck a t = throwError $ InfiniteType a t
-         | otherwise       = return (Subst $ Map.singleton a t)
-
 occursCheck ::  Substitutable a => TVar -> a -> Bool
 occursCheck a t = a `Set.member` ftv t
-
-maybeParenthesisType :: Type -> String
-maybeParenthesisType t' = case t' of
-  TVar (TV v) -> v
-  TCon c      -> c
-  _           -> "(" ++ printType t' ++ ")"
-
-printType :: Type -> String
-printType t = case t of
-  TVar (TV v) -> v
-  TCon c      -> c
-  TArr t1 t2  -> maybeParenthesisType t1 ++ " -> " ++ maybeParenthesisType t2
-
-printConstraint :: Constraint -> String
-printConstraint (t1, t2) = maybeParenthesisType t1 ++ " ~ " ++ maybeParenthesisType t2
-
-printConstraints :: [Constraint] -> String
-printConstraints []     = "No constraints."
-printConstraints [c]    = printConstraint c
-printConstraints (c:cs) = printConstraint c ++ ",\n\t" ++ printConstraints cs
-
-printExp :: Exp -> String
-printExp expr =
-  case expr of
-    Var n -> n
-    App e1 e2 -> 
-      maybeParenthesisExp e1 ++ " " ++ maybeParenthesisExp e2
-    Lam n e -> 
-      "λ" ++ n ++ " -> " ++ printExp e
-    Let n e1 e2 -> 
-      "let " ++ n ++ " = " ++ printExp e1 ++ " in " ++ printExp e2
-    If e1 e2 e3 -> 
-      "if " ++ printExp e1 ++ " then " ++ printExp e2 ++ " else " ++ printExp e3
-    Fix e -> "rec " ++ printExp e
-    Op binop e1 e2 ->
-      maybeParenthesisExp e1 ++ printBinop binop ++ maybeParenthesisExp e2
-    Lit l -> 
-      case l of
-        LInt i -> show i
-        LBool b -> show b
-    where
-      maybeParenthesisExp :: Exp -> String
-      maybeParenthesisExp e = case e of
-        Lit l -> 
-          case l of
-            LInt i  -> show i
-            LBool b -> show b
-        Var v -> v
-        _ -> "(" ++ printExp e ++ ")"
-
-      printBinop :: Binop -> String
-      printBinop binop = case binop of
-        Add -> " + "
-        Sub -> " - "
-        Mul -> " * "
-        Eql -> " == "
