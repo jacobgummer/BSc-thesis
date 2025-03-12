@@ -295,11 +295,11 @@ infer expr = case expr of
     let cs = [(t1, typeBool), (t2, t3)]
     return (t2, c1 ++ c2 ++ c3 ++ cs)
 
-inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
-inferTop env [] = Right env
-inferTop env ((name, ex):xs) = case inferExpr env ex of
-  Left err -> Left err
-  Right ty -> inferTop (extend env (name, ty)) xs
+-- inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
+-- inferTop env [] = Right env
+-- inferTop env ((name, ex):xs) = case inferExpr env ex of
+--   Left err -> Left err
+--   Right ty -> inferTop (extend env (name, ty)) xs
 
 normalize :: Scheme -> Scheme
 normalize (Forall _ body) = Forall (map snd ord) (normtype body)
