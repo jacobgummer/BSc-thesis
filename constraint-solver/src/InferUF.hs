@@ -382,6 +382,9 @@ unifyVars v1 v2 uf = do
   case (mt1, mt2) of
     (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
                        | otherwise -> return uf
+    (Just _, Nothing) -> do
+      lift $ union n2 n1
+      return uf
     _ -> do
       lift $ union n1 n2
       return uf
