@@ -330,7 +330,7 @@ normalizeTy ty uf = case ty of
     retT' <- normalizeTy retT uf
     return $ TArr argT' retT'
   (TVar v) -> do
-    mt <- probeValue v uf
+    mt <- probeValue v uf -- Note: probeValue performs path compression.
     case mt of
       -- Also normalize the found type.
       Just ty' -> normalizeTy ty' uf
