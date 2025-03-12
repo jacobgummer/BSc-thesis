@@ -311,8 +311,7 @@ lookupUF tv@(TV v) uf =
 
 -- | Run the constraint solver.
 runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
-runSolveUF uf cs = runExceptT $ solverUF st
-  where st = (uf, cs)
+runSolveUF uf cs = runExceptT $ solverUF (uf, cs)
 
 -- | Get the type assigned to representative of equivalence class.
 probeValue :: TVar -> UF s -> SolveST s (Maybe Type)
