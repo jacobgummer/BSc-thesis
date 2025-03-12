@@ -35,12 +35,14 @@ import Data.Maybe (catMaybes)
 -- Classes
 -------------------------------------------------------------------------------
 
+-- | Inference monad
 type Infer s a = ReaderT Env              -- Typing environment
                   (StateT (InferState s)  -- Inference state
                    (ExceptT TypeError     -- Inference errors
                     (ST s)))              -- Inner state
                   a                       -- Result
 
+-- | UnionFind data structure
 type UF s = Map.Map TVar (VarNode s)
 
 -- | Inference state
@@ -139,9 +141,9 @@ inferExpr env ex = runST $ do
       case res of
         Left err -> return $ Left err
         Right uf -> do
-          converted <- convertUFToSubst uf
-          let s = Subst converted
-          return $ Right $ closeOver $ apply s ty
+          s <- convertUFToSubst uf
+          let subst = Subst s
+          return $ Right $ closeOver $ apply subst ty
 
 constraintsExp :: Env
                   -> Exp
