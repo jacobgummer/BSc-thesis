@@ -203,14 +203,14 @@ fresh = do
   s <- get
   let n = count s
       tv = TV $ letters !! n
-  node <- liftST makeSet
+  node <- liftST $ makeSet tv
   let uf' = Map.insert tv node (unionFind s)
   put s { count = n + 1, unionFind = uf' }
   return $ TVar tv
   
   where
     liftST :: ST s a -> Infer s a
-    liftST = lift . lift . lift    
+    liftST = lift . lift . lift
 
 
 instantiate ::  Scheme -> Infer s Type
