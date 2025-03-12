@@ -5,26 +5,22 @@ module InferUF (
   Constraint,
   TypeError(..),
   Subst(..),
-  test
+  constraintsExp,
+  inferExpr,
 ) where
-  -- inferTop,
-  -- constraintsExp
 
 import Env ( Env(TypeEnv), emptyEnv, extend, remove )
 import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
 import Syntax ( Binop(..), Lit(LBool, LInt), Exp(..), Name )
 
 import Control.Monad.Except
-    ( runExcept,
-      runExceptT,
+    ( runExceptT,
       MonadError(throwError),
-      Except,
       ExceptT, MonadTrans (lift) )
 import Control.Monad.State
-    ( evalStateT, MonadState(put, get), StateT (runStateT), modify, execStateT, gets )
+    ( MonadState(put, get), StateT (runStateT), gets )
 import Control.Monad.Reader
     ( replicateM, MonadReader(local, ask), ReaderT(runReaderT) )
-import Control.Monad.Identity ( Identity(runIdentity) )
 
 import Data.List (nub)
 import qualified Data.Map as Map
@@ -33,17 +29,19 @@ import qualified Data.Set as Set
 import Data.Unification.ST
 import Control.Monad.ST
 
+import Data.Maybe (catMaybes)
+
 -------------------------------------------------------------------------------
 -- Classes
 -------------------------------------------------------------------------------
 
 type Infer s a = ReaderT
-                  Env
-                  (StateT
-                   (InferState s)
-                   (ExceptT TypeError
-                    (ST s)))
-                  a
+                  Env                 -- Typing environment
+                  (StateT             
+                   (InferState s)     -- Inference state
+                   (ExceptT TypeError -- Inference error
+                    (ST s)))          -- Inner state
+                  a                   -- Result
 
 type UF s = Map.Map TVar (VarNode s)
 
@@ -59,13 +57,9 @@ initInfer = InferState { count = 0, unionFind = Map.empty }
 
 type Constraint = (Type, Type)
 
-type Unifier = (Subst, [Constraint])
-
 type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
-type Solve a = ExceptT TypeError Identity a
-
 type SolveST s a = ExceptT TypeError (ST s) a
 
 newtype Subst = Subst (Map.Map TVar Type)
