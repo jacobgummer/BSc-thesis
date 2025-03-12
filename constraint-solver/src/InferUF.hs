@@ -262,7 +262,7 @@ infer expr = case expr of
     case res of
       Left err -> throwError err
       Right uf' -> do
-        -- ?TODO: Do this without converting 'uf'.
+        -- TODO: If possible, do this without converting 'uf'.
         env <- ask
         s <- liftST $ convertUFToSubst uf'
         let sub = Subst s
@@ -347,12 +347,15 @@ unify t (TVar v) = v `bind` t
 unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
 unify t1 t2 = throwError $ UnificationFail t1 t2
 
+-- | Unification solver
 solverUF :: UnifierUF s -> SolveST s (UF s)
 solverUF (uf, cs) =
   case cs of
     [] -> return uf
     ((t1, t2) : cs') -> do
-      uf' <- unifyUF t1 t2 uf
+      t1' <- normalizeTy t1 uf
+      t2' <- normalizeTy t2 uf
+      uf' <- unifyUF t1' t2' uf
       solverUF (uf', cs')
 
 unifyUF :: Type -> Type -> UF s -> SolveST s (UF s)
