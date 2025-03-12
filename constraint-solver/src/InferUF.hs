@@ -229,6 +229,9 @@ ops Mul = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Sub = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Eql = typeInt `TArr` (typeInt `TArr` typeBool)
 
+getUF :: Infer s (UF s)
+getUF = gets unionFind
+
 infer :: Exp -> Infer s (Type, [Constraint])
 infer expr = case expr of
   Lit (LInt _)  -> return (typeInt, [])
