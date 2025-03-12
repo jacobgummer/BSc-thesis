@@ -35,13 +35,11 @@ import Data.Maybe (catMaybes)
 -- Classes
 -------------------------------------------------------------------------------
 
-type Infer s a = ReaderT
-                  Env                 -- Typing environment
-                  (StateT             
-                   (InferState s)     -- Inference state
-                   (ExceptT TypeError -- Inference errors
-                    (ST s)))          -- Inner state
-                  a                   -- Result
+type Infer s a = ReaderT Env              -- Typing environment
+                  (StateT (InferState s)  -- Inference state
+                   (ExceptT TypeError     -- Inference errors
+                    (ST s)))              -- Inner state
+                  a                       -- Result
 
 type UF s = Map.Map TVar (VarNode s)
 
