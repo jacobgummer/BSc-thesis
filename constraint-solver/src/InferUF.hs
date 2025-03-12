@@ -21,7 +21,7 @@ import Control.Monad.Except
       Except,
       ExceptT, MonadTrans (lift) )
 import Control.Monad.State
-    ( evalStateT, MonadState(put, get), StateT (runStateT), modify, execStateT )
+    ( evalStateT, MonadState(put, get), StateT (runStateT), modify, execStateT, gets )
 import Control.Monad.Reader
     ( replicateM, MonadReader(local, ask), ReaderT(runReaderT) )
 import Control.Monad.Identity ( Identity(runIdentity) )
@@ -254,6 +254,7 @@ infer expr = case expr of
   -- TODO: Make this not use 'runSolve'.
   Let x e1 e2 -> do
     env <- ask
+    uf <- getUF
     (t1, c1) <- infer e1
     case runSolve c1 of
         Left err -> throwError err
