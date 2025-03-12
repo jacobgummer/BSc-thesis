@@ -123,13 +123,15 @@ runInfer env m =
 
 convertUFToSubst :: UF s -> ST s (Map.Map TVar Type)
 convertUFToSubst uf =
-  Map.fromList <$> mapM (\(k, node) -> do
-    root <- find node
-    maybe_ty <- getType root
-    pure $ case maybe_ty of
-      Nothing -> (k, TVar k)
-      Just ty -> (k, ty)
-   ) (Map.toList uf)
+  Map.fromList <$> mapM helper (Map.toList uf)
+  where
+    helper :: (TVar, VarNode s) -> ST s (TVar, Type)
+    helper (k, node) = do
+      root <- find node
+      maybe_ty <- getType root
+      return $ case maybe_ty of
+        Nothing -> (k, TVar k)
+        Just ty -> (k, ty)
 
 test :: Env -> Exp -> Either TypeError Subst
 test env ex = runST $ do
