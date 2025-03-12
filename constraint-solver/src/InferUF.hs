@@ -115,8 +115,8 @@ runInfer env m =
       r3 = runExceptT r2
   in r3
 
-convertUFToSubst :: UF s -> ST s (Map.Map TVar Type)
-convertUFToSubst uf = do
+convertUF :: UF s -> ST s (Map.Map TVar Type)
+convertUF uf = do
   mappings <- mapM helper (Map.toList uf)
 
   -- Remove type variables that haven't been assigned any type.
@@ -141,7 +141,7 @@ inferExpr env ex = runST $ do
       case res of
         Left err -> return $ Left err
         Right uf -> do
-          s <- convertUFToSubst uf
+          s <- convertUF uf
           let subst = Subst s
           return $ Right $ closeOver $ apply subst ty
 
@@ -157,7 +157,7 @@ constraintsExp env ex = runST $ do
       case res of
         Left err -> return $ Left err
         Right uf -> do
-          s <- convertUFToSubst uf
+          s <- convertUF uf
           let subst = Subst s
               sc = closeOver $ apply subst ty
           return $ Right (cs, subst, ty, sc)
@@ -248,7 +248,7 @@ infer expr = case expr of
       Right uf' -> do
         -- TODO: If possible, do this without converting 'uf'.
         env <- ask
-        s <- liftST $ convertUFToSubst uf'
+        s <- liftST $ convertUF uf'
         let sub = Subst s
             sc = generalize (apply sub env) (apply sub t1)
         (t2, c2) <- inEnv (x, sc) $ local (apply sub) (infer e2)
