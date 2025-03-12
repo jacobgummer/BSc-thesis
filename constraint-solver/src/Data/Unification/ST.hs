@@ -20,13 +20,14 @@ data Info = MkInfo
   { weight :: {-# UNPACK #-} !Int
     -- ^ The size of the equivalence class, used by 'union'.
   , descr  :: Maybe Type
+  , key :: TVar
   } deriving Eq
 
 -- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
-makeSet :: ST s (VarNode s)
-makeSet = do
-  info <- newSTRef (MkInfo { weight = 1, descr = Nothing })
+makeSet :: TVar -> ST s (VarNode s)
+makeSet tv = do
+  info <- newSTRef (MkInfo { weight = 1, descr = Nothing, key = tv})
   l <- newSTRef (Repr info)
   return (Node l)
 
@@ -70,6 +71,10 @@ getType :: VarNode s -> ST s (Maybe Type)
 getType node = do
   descr <$> (readSTRef =<< descrRef node)
 
+getKey :: VarNode s -> ST s TVar
+getKey node = do
+  key <$> (readSTRef =<< descrRef node)
+
 -- | /O(1)/. Replace the type of the node's equivalence class
 -- with the second argument.
 assignType :: VarNode s -> Type -> ST s ()
@@ -85,7 +90,8 @@ assignType node new_descr = do
 -- | /O(1)/. Join the equivalence classes of the nodes.
 union :: VarNode s -> VarNode s -> ST s ()
 union n1 n2 = do
-  (node1@(Node link_ref1), node2@(Node link_ref2)) <- preprocess n1 n2
+  node1@(Node link_ref1) <- find n1
+  node2@(Node link_ref2) <- find n2
 
   -- Ensure that nodes aren't in the same equivalence class. 
   when (node1 /= node2) $ do
@@ -93,29 +99,17 @@ union n1 n2 = do
     link2 <- readSTRef link_ref2
     case (link1, link2) of
       (Repr info_ref1, Repr info_ref2) -> do
-        (MkInfo w1 _) <- readSTRef info_ref1
-        (MkInfo w2 d2) <- readSTRef info_ref2
+        (MkInfo w1 _ _) <- readSTRef info_ref1
+        (MkInfo w2 mt2 tv2) <- readSTRef info_ref2
         if w1 >= w2 then do
           writeSTRef link_ref2 (Link n1)
-          writeSTRef info_ref1 (MkInfo (w1 + w2) d2)
+          writeSTRef info_ref1 (MkInfo (w1 + w2) mt2 tv2)
         else do
           writeSTRef link_ref1 (Link node2)
-          writeSTRef info_ref2 (MkInfo (w1 + w2) d2)
+          writeSTRef info_ref2 (MkInfo (w1 + w2) mt2 tv2)
 
       -- This shouldn't be possible.       
       _ -> error "'find' somehow didn't return a Repr" 
-
-      where
-        -- TODO: Maybe handle if (different) roots both have assigned values?
-        preprocess :: VarNode s -> VarNode s -> ST s (VarNode s, VarNode s) 
-        preprocess n1' n2' = do
-          r1 <- find n1'
-          r2 <- find n2'
-          -- Checking if n1 points to root with type assigned to it.
-          d1 <- getType r1
-          case d1 of
-            Just _  -> return (r2, r1)
-            Nothing -> return (r1, r2)    
 
 -- | /O(1)/. Return @True@ if both nodes belong to the same
 -- | equivalence class.
