@@ -321,18 +321,18 @@ probeValue tv uf = do
 
 -- | Normalize a type, i.e., find out if a type variable
 --   has already been resolved to a type.
-normalizeTy :: Type -> UF s -> SolveST s Type
-normalizeTy ty uf = case ty of
+normalizeType :: Type -> UF s -> SolveST s Type
+normalizeType ty uf = case ty of
   ty'@(TCon _)     -> return ty'
   (TArr argT retT) -> do
-    argT' <- normalizeTy argT uf
-    retT' <- normalizeTy retT uf
+    argT' <- normalizeType argT uf
+    retT' <- normalizeType retT uf
     return $ TArr argT' retT'
   (TVar v) -> do
     mt <- probeValue v uf -- Note: probeValue performs path compression.
     case mt of
       -- Also normalize the found type.
-      Just ty' -> normalizeTy ty' uf
+      Just ty' -> normalizeType ty' uf
 
       -- Return the type variable representing
       -- the root of equivalence class.
@@ -347,8 +347,8 @@ solverUF (uf, cs) =
   case cs of
     [] -> return uf
     ((t1, t2) : cs') -> do
-      t1' <- normalizeTy t1 uf
-      t2' <- normalizeTy t2 uf
+      t1' <- normalizeType t1 uf
+      t2' <- normalizeType t2 uf
       uf' <- unifyUF t1' t2' uf
       solverUF (uf', cs')
 
