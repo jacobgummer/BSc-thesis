@@ -54,9 +54,11 @@ unboundVariable =
 main :: IO ()
 main = do
   let result = runST $ do
-        p <- makeSet Nothing
-        q <- makeSet $ Just typeInt
+        p <- makeSet
+        q <- makeSet
         p `union` q
         assignType p typeBool
         getType q
   putStrLn ("q has type: " ++ maybe "No value assigned" printType result)
+  putStrLn $ printInferResult factorialFunc
+  print $ test emptyEnv factorialFunc

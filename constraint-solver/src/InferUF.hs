@@ -5,9 +5,10 @@ module InferUF (
   Constraint,
   TypeError(..),
   Subst(..),
-  inferTop,
-  constraintsExp
+  test
 ) where
+  -- inferTop,
+  -- constraintsExp
 
 import Env ( Env(TypeEnv), emptyEnv, extend, remove )
 import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
@@ -18,9 +19,9 @@ import Control.Monad.Except
       runExceptT,
       MonadError(throwError),
       Except,
-      ExceptT )
+      ExceptT, MonadTrans (lift) )
 import Control.Monad.State
-    ( evalStateT, MonadState(put, get), StateT )
+    ( evalStateT, MonadState(put, get), StateT (runStateT), modify, execStateT )
 import Control.Monad.Reader
     ( replicateM, MonadReader(local, ask), ReaderT(runReaderT) )
 import Control.Monad.Identity ( Identity(runIdentity) )
@@ -29,29 +30,25 @@ import Data.List (nub)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 
-import Debug.Trace ( traceM )
-
 import Data.Unification.ST
 import Control.Monad.ST
-import Data.STRef
 
 -------------------------------------------------------------------------------
 -- Classes
 -------------------------------------------------------------------------------
 
--- | Inference monad
-type Infer s a = (ReaderT
-                  Env             -- Typing environment
-                  (StateT         -- Inference state
-                  (InferState s)
-                  (Except         -- Inference errors
-                    TypeError))
-                  a)              -- Result
+type Infer s a = ReaderT
+                  Env
+                  (StateT
+                   (InferState s)
+                   (ExceptT TypeError
+                    (ST s)))
+                  a
 
 type UF s = Map.Map TVar (VarNode s)
 
 -- | Inference state
-data InferState s = InferState 
+data InferState s = InferState
   { count :: Int
   , unionFind :: UF s
   }
@@ -68,6 +65,8 @@ type UnifierUF s = (UF s, [Constraint])
 
 -- | Constraint solver monad
 type Solve a = ExceptT TypeError Identity a
+
+type SolveST s a = ExceptT TypeError (ST s) a
 
 newtype Subst = Subst (Map.Map TVar Type)
   deriving (Eq, Ord, Show, Semigroup, Monoid)
@@ -115,26 +114,66 @@ data TypeError
 -------------------------------------------------------------------------------
 
 -- | Run the inference monad
-runInfer :: Env -> Infer s (Type, [Constraint]) -> Either TypeError (Type, [Constraint])
-runInfer env m = runExcept $ evalStateT (runReaderT m env) initInfer
+runInfer :: Env -> Infer s a -> ST s (Either TypeError (a, InferState s))
+runInfer env m =
+  let r1 = runReaderT m env
+      r2 = runStateT r1 initInfer
+      r3 = runExceptT r2
+  in r3
 
--- | Solve for the toplevel type of an expression in a given environment
+convertUFToSubst :: UF s -> ST s (Map.Map TVar Type)
+convertUFToSubst uf =
+  Map.fromList <$> mapM (\(k, node) -> do
+    root <- find node
+    maybe_ty <- getType root
+    pure $ case maybe_ty of
+      Nothing -> (k, TVar k)
+      Just ty -> (k, ty)
+   ) (Map.toList uf)
+
+test :: Env -> Exp -> Either TypeError Subst
+test env ex = runST $ do
+  inferResult <- runInfer env (infer ex)
+  case inferResult of
+    Left err -> return (Left err)
+    Right (_, infState) -> do
+      pureUF <- convertUFToSubst $ unionFind infState
+      return $ Right $ Subst pureUF
+
 inferExpr :: Env -> Exp -> Either TypeError Scheme
-inferExpr env ex = case runInfer env (infer ex) of
-  Left err -> Left err
-  Right (ty, cs) -> case runSolve cs of
-    Left err -> Left err
-    Right subst -> Right $ closeOver $ apply subst ty
+inferExpr env ex = runST $ do
+  inferRes <- runInfer env (infer ex)
+  case inferRes of
+    Left err -> pure (Left err)
+    Right ((ty, cs), infState) -> do
+      res <- runSolveUF (unionFind infState) cs
+      case res of 
+        Left err -> pure $ Left err
+        Right uf -> do
+          converted <- convertUFToSubst uf
+          let s = Subst converted
+          return $ Right $ closeOver $ apply s ty
+
+-- ! Original code
+-- | Solve for the toplevel type of an expression in a given environment
+-- inferExpr :: Env -> Exp -> Either TypeError Scheme
+-- inferExpr env ex = do
+--   inferRes <- runInfer env (infer ex)
+--   case inferRes of
+--     Left err -> Left err
+--     Right (ty, cs) -> case runSolve cs of
+--       Left err -> Left err
+--       Right subst -> Right $ closeOver $ apply subst ty
 
 -- | Return the internal constraints used in solving for the type of an expression
-constraintsExp :: Env -> Exp -> Either TypeError ([Constraint], Subst, Type, Scheme)
-constraintsExp env ex = case runInfer env (infer ex) of
-  Left err -> Left err
-  Right (ty, cs) -> case runSolve cs of
-    Left err -> Left err
-    Right subst -> Right (cs, subst, ty, sc)
-      where
-        sc = closeOver $ apply subst ty
+-- constraintsExp :: Env -> Exp -> Either TypeError ([Constraint], Subst, Type, Scheme)
+-- constraintsExp env ex = case runInfer env (infer ex) of
+--   Left err -> Left err
+--   Right (ty, cs) -> case runSolve cs of
+--     Left err -> Left err
+--     Right subst -> Right (cs, subst, ty, sc)
+--       where
+--         sc = closeOver $ apply subst ty
 
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
@@ -159,9 +198,18 @@ letters = [1..] >>= flip replicateM ['a'..'z']
 
 fresh :: Infer s Type
 fresh = do
-    s <- get
-    put s{count = count s + 1}
-    return $ TVar $ TV (letters !! count s)
+  s <- get
+  let n = count s
+      tv = TV $ letters !! n
+  node <- liftST makeSet
+  let uf' = Map.insert tv node (unionFind s)
+  put s { count = n + 1, unionFind = uf' }
+  return $ TVar tv
+  
+  where
+    liftST :: ST s a -> Infer s a
+    liftST = lift . lift . lift    
+
 
 instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
@@ -192,9 +240,6 @@ infer expr = case expr of
     tv <- fresh
     (t, c) <- inEnv (x, Forall [] tv) (infer e)
     let exprType = tv `TArr` t
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' has type:\n\t"
-      ++ printType exprType
     return (exprType, c)
 
   App e1 e2 -> do
@@ -202,9 +247,6 @@ infer expr = case expr of
     (t2, c2) <- infer e2
     tv <- fresh
     let cs = [(t1, t2 `TArr` tv)]
-    traceM $
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
     return (tv, c1 ++ c2 ++ cs)
 
   Let x e1 e2 -> do
@@ -221,9 +263,6 @@ infer expr = case expr of
     (t1, c1) <- infer e1
     tv <- fresh
     let cs = [(tv `TArr` tv, t1)]
-    traceM $
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs
     return (tv, c1 ++ cs)
 
   Op op e1 e2 -> do
@@ -233,9 +272,6 @@ infer expr = case expr of
     let u1 = t1 `TArr` (t2 `TArr` tv)
         u2 = ops op
     let cs = [(u1, u2)]
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' introduced the constraint:\n\t"
-      ++ printConstraints cs ++ "\n and has type:\n\t" ++ printType tv
     return (tv, c1 ++ c2 ++ cs)
 
   If cond tr fl -> do
@@ -243,9 +279,6 @@ infer expr = case expr of
     (t2, c2) <- infer tr
     (t3, c3) <- infer fl
     let cs = [(t1, typeBool), (t2, t3)]
-    traceM $ 
-      "expression '" ++ printExp expr ++ "' introduced the constraints:\n\t"
-      ++ printConstraints cs
     return (t2, c1 ++ c2 ++ c3 ++ cs)
 
 inferTop :: Env -> [(String, Exp)] -> Either TypeError Env
@@ -282,7 +315,7 @@ emptyUF :: UF s
 emptyUF = Map.empty
 
 lookupUF :: TVar -> UF s -> VarNode s
-lookupUF tv@(TV v) uf = 
+lookupUF tv uf =
   case Map.lookup tv uf of
     Nothing   -> error "unbound type variable"
     Just node -> node
@@ -296,9 +329,9 @@ runSolve :: [Constraint] -> Either TypeError Subst
 runSolve cs = runIdentity $ runExceptT $ solver st
   where st = (emptySubst, cs)
 
-runSolveUF :: [Constraint] -> Either TypeError (UF s)
-runSolveUF cs = runIdentity $ runExceptT $ solverUF st
-  where st = (emptyUF, cs)
+runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
+runSolveUF uf cs = do runExceptT $ solverUF st
+  where st = (uf, cs)
 
 unifyMany :: [Type] -> [Type] -> Solve Subst
 unifyMany [] [] = return emptySubst
@@ -315,15 +348,15 @@ unify t (TVar v) = v `bind` t
 unify (TArr t1 t2) (TArr t3 t4) = unifyMany [t1, t2] [t3, t4]
 unify t1 t2 = throwError $ UnificationFail t1 t2
 
-solverUF :: UnifierUF s -> Solve (UF s)
-solverUF (uf, cs) = 
+solverUF :: UnifierUF s -> SolveST s (UF s)
+solverUF (uf, cs) =
   case cs of
     [] -> return uf
     ((t1, t2) : cs') -> do
       uf' <- unifyUF t1 t2 uf
       solverUF (uf', cs')
 
-unifyUF :: Type -> Type -> UF s -> Solve (UF s)
+unifyUF :: Type -> Type -> UF s -> SolveST s (UF s)
 unifyUF t1 t2 uf | t1 == t2 = return uf
 unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
 unifyUF (TVar v) t uf = bindUF v t uf
@@ -333,16 +366,16 @@ unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = do
   unifyUF ret1 ret2 uf'
 unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 
-bindUF :: TVar -> Type -> UF s -> Solve (UF s)
+bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
-              | otherwise       = 
-                -- TODO: Ensure that this is correct (because it feels illegal).
-                let _ = do assignType (lookupUF a uf) t
-                in return uf
+              | otherwise       =
+                  lift $ do
+                    assignType (lookupUF a uf) t
+                    return uf
 
 -- TODO: Fix this function.
-unifyVars :: TVar -> TVar -> UF s -> Solve (UF s)
+unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
 unifyVars v1 v2 uf = undefined
   -- let (n1, n2) = do 
   --       n1 <- lookupUF v1 uf
