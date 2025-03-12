@@ -71,6 +71,10 @@ getType :: VarNode s -> ST s (Maybe Type)
 getType node = do
   descr <$> (readSTRef =<< descrRef node)
 
+getKey :: VarNode s -> ST s TVar
+getKey node = do
+  key <$> (readSTRef =<< descrRef node)
+
 -- | /O(1)/. Replace the type of the node's equivalence class
 -- with the second argument.
 assignType :: VarNode s -> Type -> ST s ()
