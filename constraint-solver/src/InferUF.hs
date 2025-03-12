@@ -254,17 +254,24 @@ infer expr = case expr of
     let cs = [(t1, t2 `TArr` tv)]
     return (tv, c1 ++ c2 ++ cs)
 
-  -- TODO: Make this not use 'runSolve'.
   Let x e1 e2 -> do
-    env <- ask
-    uf <- getUF
     (t1, c1) <- infer e1
-    case runSolve c1 of
-        Left err -> throwError err
-        Right sub -> do
-            let sc = generalize (apply sub env) (apply sub t1)
-            (t2, c2) <- inEnv (x, sc) $ local (apply sub) (infer e2)
-            return (t2, c1 ++ c2)
+
+    uf <- getUF
+    res <- liftST $ runSolveUF uf c1
+    case res of
+      Left err -> throwError err
+      Right uf' -> do
+        -- ?TODO: Do this without converting 'uf'.
+        env <- ask
+        s <- liftST $ convertUFToSubst uf'
+        let sub = Subst s
+            sc = generalize (apply sub env) (apply sub t1)
+        (t2, c2) <- inEnv (x, sc) $ local (apply sub) (infer e2)
+        return (t2, c1 ++ c2)    
+    where 
+      liftST :: ST s a -> Infer s a
+      liftST = lift . lift . lift
 
   Fix e1 -> do
     (t1, c1) <- infer e1
