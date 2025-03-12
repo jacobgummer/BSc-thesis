@@ -239,7 +239,6 @@ infer expr = case expr of
 
   Let x e1 e2 -> do
     (t1, c1) <- infer e1
-
     uf <- getUF
     res <- liftST $ runSolveUF uf c1
     case res of
