@@ -99,11 +99,11 @@ union n1 n2 = do
     link2 <- readSTRef link_ref2
     case (link1, link2) of
       (Repr info_ref1, Repr info_ref2) -> do
-        (MkInfo w1 _ _) <- readSTRef info_ref1
+        (MkInfo w1 _ tv1) <- readSTRef info_ref1
         (MkInfo w2 mt2 tv2) <- readSTRef info_ref2
         if w1 >= w2 then do
           writeSTRef link_ref2 (Link n1)
-          writeSTRef info_ref1 (MkInfo (w1 + w2) mt2 tv2)
+          writeSTRef info_ref1 (MkInfo (w1 + w2) mt2 tv1)
         else do
           writeSTRef link_ref1 (Link node2)
           writeSTRef info_ref2 (MkInfo (w1 + w2) mt2 tv2)
