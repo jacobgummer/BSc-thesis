@@ -251,6 +251,7 @@ infer expr = case expr of
     let cs = [(t1, t2 `TArr` tv)]
     return (tv, c1 ++ c2 ++ cs)
 
+  -- TODO: Make this not use 'runSolve'.
   Let x e1 e2 -> do
     env <- ask
     (t1, c1) <- infer e1
@@ -321,10 +322,6 @@ lookupUF tv@(TV v) uf =
   case Map.lookup tv uf of
     Nothing   -> throwError $ UnboundVariable v
     Just node -> return node
-
--- | Compose substitutions
-compose :: Subst -> Subst -> Subst
-(Subst s1) `compose` (Subst s2) = Subst $ Map.map (apply (Subst s1)) s2 `Map.union` s1
 
 -- | Run the constraint solver
 runSolve :: [Constraint] -> Either TypeError Subst
