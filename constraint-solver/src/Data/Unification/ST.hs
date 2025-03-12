@@ -20,13 +20,14 @@ data Info = MkInfo
   { weight :: {-# UNPACK #-} !Int
     -- ^ The size of the equivalence class, used by 'union'.
   , descr  :: Maybe Type
+  , key :: TVar
   } deriving Eq
 
 -- | /O(1)/. Create a fresh node and return it.  A fresh node is in
 -- the equivalence class that contains only itself.
-makeSet :: ST s (VarNode s)
-makeSet = do
-  info <- newSTRef (MkInfo { weight = 1, descr = Nothing })
+makeSet :: TVar -> ST s (VarNode s)
+makeSet tv = do
+  info <- newSTRef (MkInfo { weight = 1, descr = Nothing, key = tv})
   l <- newSTRef (Repr info)
   return (Node l)
 
