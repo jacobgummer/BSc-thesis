@@ -373,19 +373,18 @@ bindUF a t uf | t == TVar a     = return uf
                     assignType (lookupUF a uf) t
                     return uf
 
--- TODO: Fix this function.
 unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
-unifyVars v1 v2 uf = undefined
-  -- let (n1, n2) = do 
-  --       n1 <- lookupUF v1 uf
-  --       n2 <- lookupUF v2 uf
-  --       return (n1, n2)
-  -- in
-  -- case (getType n1, getType n2) of
-  --   (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
-  --                      | otherwise -> return uf
-  --   (Nothing, Just t) -> undefined
-  --   (Just t, Nothing) -> undefined
+unifyVars v1 v2 uf = do
+  n1 <- lookupUF v1 uf
+  n2 <- lookupUF v2 uf
+  mt1 <- lift $ getType n1
+  mt2 <- lift $ getType n2
+  case (mt1, mt2) of
+    (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
+                       | otherwise -> return uf
+    _ -> do
+      lift $ union n1 n2
+      return uf
 
 -- Unification solver
 solver :: Unifier -> Solve Subst
