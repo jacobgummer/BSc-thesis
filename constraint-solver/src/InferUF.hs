@@ -6,8 +6,8 @@ module InferUF (
   TypeError(..),
   Subst(..),
   constraintsExp,
+  inferExpr,
 ) where
-  -- inferExpr,
 
 import Env ( Env(TypeEnv), emptyEnv, extend, remove )
 import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
@@ -129,18 +129,16 @@ convertUF uf = do
         Nothing -> Nothing
         Just ty -> Just (k, ty)
 
--- inferExpr :: Env -> Exp -> Either TypeError Scheme
--- inferExpr env ex =
---   case runInfer env (infer ex) of
---     Left err -> Left err
---     Right ((ty, cs), infState) -> do
---       res <- runSolveUF (unionFind infState) cs
---       case res of
---         Left err -> return $ Left err
---         Right uf -> do
---           s <- convertUF uf
---           let subst = Subst s
---           return $ Right $ closeOver $ apply subst ty
+inferExpr :: Env -> Exp -> Either TypeError Scheme
+inferExpr env ex =
+    case runInfer env (infer ex) of
+        Left err -> Left err
+        Right ((ty, cs), infState) -> do
+            case runSolveUF (count infState) cs of
+                Left err -> Left err
+                Right sub -> do
+                    let sc = closeOver $ apply sub ty
+                    Right sc
 
 constraintsExp :: Env
                   -> Exp
