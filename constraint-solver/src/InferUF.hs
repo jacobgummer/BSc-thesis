@@ -62,7 +62,7 @@ type UnifierUF s = (UF s, [Constraint])
 type SolveST s a = ExceptT TypeError (ST s) a
 
 newtype Subst = Subst (Map.Map TVar Type)
-  deriving (Eq, Ord, Show, Semigroup, Monoid)
+    deriving (Eq, Ord, Show, Semigroup, Monoid)
 
 class Substitutable a where
     apply :: Subst -> a -> a
@@ -160,16 +160,16 @@ closeOver = normalize . generalize Env.emptyEnv
 -- | Extend type environment
 inEnv :: (Name, Scheme) -> Infer a -> Infer a
 inEnv (x, sc) m = do
-  let scope e = remove e x `extend` (x, sc)
-  local scope m
+    let scope e = remove e x `extend` (x, sc)
+    local scope m
 
 -- | Lookup type in the environment
 lookupEnv :: Name -> Infer Type
 lookupEnv x = do
-  (TypeEnv env) <- ask
-  case Map.lookup x env of
-      Nothing   ->  throwError $ UnboundVariable x
-      Just s    ->  do instantiate s
+    (TypeEnv env) <- ask
+    case Map.lookup x env of
+        Nothing   ->  throwError $ UnboundVariable x
+        Just s    ->  do instantiate s
 
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
