@@ -291,15 +291,26 @@ lookupUF tv@(TV v) uf =
     Nothing   -> throwError $ UnboundVariable v
     Just node -> return node
 
-initUF :: Int -> UF s
-initUF n = undefined
+initUF :: Int -> SolveST s (UF s)
+initUF n = do
+    ufList <- initUF' (n + 1) []
+    return $ Map.fromList ufList
+  where
+    initUF' :: Int -> [(TVar, VarNode s)] -> SolveST s [(TVar, VarNode s)]
+    initUF' 0 acc = return acc
+    initUF' n' acc = do
+      let tv = TV $ letters !! (n' - 1)
+      node <- lift $ makeSet tv
+      initUF' (n' - 1) ((tv, node) : acc)
 
 -- | Run the constraint solver.
 runSolveUF :: Int -> [Constraint] -> Either TypeError Subst
-runSolveUF n cs = runST $ runExceptT $ solverUF (uf, cs)
+runSolveUF n cs = runST $ runExceptT $ do
+    uf <- getUF 
+    solverUF (uf, cs)
   where
-    uf :: UF s
-    uf = initUF n
+    getUF :: SolveST s (UF s)
+    getUF = initUF n
 
 -- | Get the type assigned to representative of equivalence class.
 probeValue :: TVar -> UF s -> SolveST s (Maybe Type)
