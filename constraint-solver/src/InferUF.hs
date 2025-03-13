@@ -6,8 +6,8 @@ module InferUF (
   TypeError(..),
   Subst(..),
   constraintsExp,
-  inferExpr,
 ) where
+  -- inferExpr,
 
 import Env ( Env(TypeEnv), emptyEnv, extend, remove )
 import Type ( Scheme(..), Type(..), TVar(..), typeInt, typeBool )
@@ -16,7 +16,7 @@ import Syntax ( Binop(..), Lit(LBool, LInt), Exp(..), Name )
 import Control.Monad.Except
     ( runExceptT,
       MonadError(throwError),
-      ExceptT, MonadTrans (lift) )
+      ExceptT, MonadTrans (lift), Except, runExcept )
 import Control.Monad.State
     ( MonadState(put, get), StateT (runStateT), gets )
 import Control.Monad.Reader
@@ -36,24 +36,23 @@ import Data.Maybe (catMaybes)
 -------------------------------------------------------------------------------
 
 -- | Inference monad
-type Infer s a = ReaderT Env              -- Typing environment
-                  (StateT (InferState s)  -- Inference state
-                   (ExceptT TypeError     -- Inference errors
-                    (ST s)))              -- Inner state
-                  a                       -- Result
+type Infer a = ReaderT
+                  Env             -- Typing environment
+                  (StateT         -- Inference state
+                  InferState
+                  (Except         -- Inference errors
+                    TypeError))
+                  a              -- Result
 
 -- | UnionFind data structure
 type UF s = Map.Map TVar (VarNode s)
 
 -- | Inference state
-data InferState s = InferState
-  { count :: Int
-  , unionFind :: UF s
-  }
+newtype InferState = InferState { count :: Int }
 
 -- | Initial inference state
-initInfer :: InferState s
-initInfer = InferState { count = 0, unionFind = Map.empty }
+initInfer :: InferState
+initInfer = InferState { count = 0 }
 
 type Constraint = (Type, Type)
 
@@ -108,11 +107,11 @@ data TypeError
 -------------------------------------------------------------------------------
 
 -- | Run the inference monad
-runInfer :: Env -> Infer s a -> ST s (Either TypeError (a, InferState s))
+runInfer :: Env -> Infer a -> Either TypeError (a, InferState)
 runInfer env m =
   let r1 = runReaderT m env
       r2 = runStateT r1 initInfer
-      r3 = runExceptT r2
+      r3 = runExcept r2
   in r3
 
 convertUF :: UF s -> ST s (Map.Map TVar Type)
@@ -131,49 +130,44 @@ convertUF uf = do
         Nothing -> Nothing
         Just ty -> Just (k, ty)
 
-inferExpr :: Env -> Exp -> Either TypeError Scheme
-inferExpr env ex = runST $ do
-  inferRes <- runInfer env (infer ex)
-  case inferRes of
-    Left err -> return $ Left err
-    Right ((ty, cs), infState) -> do
-      res <- runSolveUF (unionFind infState) cs
-      case res of
-        Left err -> return $ Left err
-        Right uf -> do
-          s <- convertUF uf
-          let subst = Subst s
-          return $ Right $ closeOver $ apply subst ty
+-- inferExpr :: Env -> Exp -> Either TypeError Scheme
+-- inferExpr env ex =
+--   case runInfer env (infer ex) of
+--     Left err -> Left err
+--     Right ((ty, cs), infState) -> do
+--       res <- runSolveUF (unionFind infState) cs
+--       case res of
+--         Left err -> return $ Left err
+--         Right uf -> do
+--           s <- convertUF uf
+--           let subst = Subst s
+--           return $ Right $ closeOver $ apply subst ty
 
 constraintsExp :: Env
                   -> Exp
                   -> Either TypeError ([Constraint], Subst, Type, Scheme)
-constraintsExp env ex = runST $ do
-  inferRes <- runInfer env (infer ex)
-  case inferRes of
-    Left err -> return $ Left err
+constraintsExp env ex = do
+  case runInfer env (infer ex) of
+    Left err -> Left err
     Right ((ty, cs), infState) -> do
-      res <- runSolveUF (unionFind infState) cs
-      case res of
-        Left err -> return $ Left err
-        Right uf -> do
-          s <- convertUF uf
-          let subst = Subst s
-              sc = closeOver $ apply subst ty
-          return $ Right (cs, subst, ty, sc)
+      case runSolveUF (count infState) cs of
+        Left err -> Left err
+        Right sub -> do
+          let sc = closeOver $ apply sub ty
+          Right (cs, sub, ty, sc)
 
 -- | Canonicalize and return the polymorphic toplevel type.
 closeOver :: Type -> Scheme
 closeOver = normalize . generalize Env.emptyEnv
 
 -- | Extend type environment
-inEnv :: (Name, Scheme) -> Infer s a -> Infer s a
+inEnv :: (Name, Scheme) -> Infer a -> Infer a
 inEnv (x, sc) m = do
   let scope e = remove e x `extend` (x, sc)
   local scope m
 
 -- | Lookup type in the environment
-lookupEnv :: Name -> Infer s Type
+lookupEnv :: Name -> Infer Type
 lookupEnv x = do
   (TypeEnv env) <- ask
   case Map.lookup x env of
@@ -183,20 +177,15 @@ lookupEnv x = do
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-liftSTInfer :: ST s a -> Infer s a
-liftSTInfer = lift . lift . lift
-
-fresh :: Infer s Type
+fresh :: Infer Type
 fresh = do
   s <- get
   let n = count s
       tv = TV $ letters !! n
-  node <- liftSTInfer $ makeSet tv
-  let uf' = Map.insert tv node (unionFind s)
-  put s { count = n + 1, unionFind = uf' }
+  put s { count = n + 1 }
   return $ TVar tv
 
-instantiate ::  Scheme -> Infer s Type
+instantiate ::  Scheme -> Infer Type
 instantiate (Forall as t) = do
     as' <- mapM (const fresh) as
     let s = Subst $ Map.fromList $ zip as as'
@@ -212,10 +201,10 @@ ops Mul = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Sub = typeInt `TArr` (typeInt `TArr` typeInt)
 ops Eql = typeInt `TArr` (typeInt `TArr` typeBool)
 
-getUF :: Infer s (UF s)
-getUF = gets unionFind
+getCount :: Infer Int
+getCount = gets count
 
-infer :: Exp -> Infer s (Type, [Constraint])
+infer :: Exp -> Infer (Type, [Constraint])
 infer expr = case expr of
   Lit (LInt _)  -> return (typeInt, [])
   Lit (LBool _) -> return (typeBool, [])
@@ -239,16 +228,12 @@ infer expr = case expr of
 
   Let x e1 e2 -> do
     (t1, c1) <- infer e1
-    uf <- getUF
-    res <- liftSTInfer $ runSolveUF uf c1
-    case res of
+    n <- getCount
+    case runSolveUF n c1 of
       Left err -> throwError err
-      Right uf' -> do
-        -- TODO: If possible, do this without converting 'uf'.
+      Right sub -> do
         env <- ask
-        s <- liftSTInfer $ convertUF uf'
-        let sub = Subst s
-            sc = generalize (apply sub env) (apply sub t1)
+        let sc = generalize (apply sub env) (apply sub t1)
         (t2, c2) <- inEnv (x, sc) $ local (apply sub) (infer e2)
         return (t2, c1 ++ c2)
 
@@ -306,9 +291,15 @@ lookupUF tv@(TV v) uf =
     Nothing   -> throwError $ UnboundVariable v
     Just node -> return node
 
+initUF :: Int -> UF s
+initUF n = undefined
+
 -- | Run the constraint solver.
-runSolveUF :: UF s -> [Constraint] -> ST s (Either TypeError (UF s))
-runSolveUF uf cs = runExceptT $ solverUF (uf, cs)
+runSolveUF :: Int -> [Constraint] -> Either TypeError Subst
+runSolveUF n cs = runST $ runExceptT $ solverUF (uf, cs)
+  where
+    uf :: UF s
+    uf = initUF n
 
 -- | Get the type assigned to representative of equivalence class.
 probeValue :: TVar -> UF s -> SolveST s (Maybe Type)
@@ -339,10 +330,12 @@ normalizeType ty uf = case ty of
         return $ TVar key'
 
 -- | Unification solver.
-solverUF :: UnifierUF s -> SolveST s (UF s)
+solverUF :: UnifierUF s -> SolveST s Subst
 solverUF (uf, cs) =
   case cs of
-    [] -> return uf
+    [] -> do
+      uf' <- lift $ convertUF uf
+      return $ Subst uf'
     ((t1, t2) : cs') -> do
       t1' <- normalizeType t1 uf
       t2' <- normalizeType t2 uf
