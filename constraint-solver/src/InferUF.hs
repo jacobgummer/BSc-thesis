@@ -197,7 +197,6 @@ fresh = do
     liftST :: ST s a -> Infer s a
     liftST = lift . lift . lift
 
-
 instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
     as' <- mapM (const fresh) as
