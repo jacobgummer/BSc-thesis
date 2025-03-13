@@ -183,19 +183,18 @@ lookupEnv x = do
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
+liftSTInfer :: ST s a -> Infer s a
+liftSTInfer = lift . lift . lift
+
 fresh :: Infer s Type
 fresh = do
   s <- get
   let n = count s
       tv = TV $ letters !! n
-  node <- liftST $ makeSet tv
+  node <- liftSTInfer $ makeSet tv
   let uf' = Map.insert tv node (unionFind s)
   put s { count = n + 1, unionFind = uf' }
   return $ TVar tv
-  
-  where
-    liftST :: ST s a -> Infer s a
-    liftST = lift . lift . lift
 
 instantiate ::  Scheme -> Infer s Type
 instantiate (Forall as t) = do
@@ -241,20 +240,17 @@ infer expr = case expr of
   Let x e1 e2 -> do
     (t1, c1) <- infer e1
     uf <- getUF
-    res <- liftST $ runSolveUF uf c1
+    res <- liftSTInfer $ runSolveUF uf c1
     case res of
       Left err -> throwError err
       Right uf' -> do
         -- TODO: If possible, do this without converting 'uf'.
         env <- ask
-        s <- liftST $ convertUF uf'
+        s <- liftSTInfer $ convertUF uf'
         let sub = Subst s
             sc = generalize (apply sub env) (apply sub t1)
         (t2, c2) <- inEnv (x, sc) $ local (apply sub) (infer e2)
-        return (t2, c1 ++ c2)    
-    where 
-      liftST :: ST s a -> Infer s a
-      liftST = lift . lift . lift
+        return (t2, c1 ++ c2)
 
   Fix e1 -> do
     (t1, c1) <- infer e1
