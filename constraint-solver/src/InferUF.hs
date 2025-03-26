@@ -356,7 +356,7 @@ unifyUF t1 t2 uf | t1 == t2 = return uf
 unifyUF (TVar v1) (TVar v2) uf = unifyVars v1 v2 uf
 unifyUF (TVar v) t uf = bindUF v t uf
 unifyUF t (TVar v) uf = bindUF v t uf
-unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf = 
+unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf =
     do  uf' <- unifyUF arg1 arg2 uf
         unifyUF ret1 ret2 uf'
 unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
@@ -366,9 +366,9 @@ bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
               | otherwise       =
-                do  node <- lookupUF a uf
-                    lift $ assignType node t
-                    return uf
+                    do  node <- lookupUF a uf
+                        lift $ assignType node t
+                        return uf
 
 -- | Unify two type variables.
 unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
@@ -379,7 +379,7 @@ unifyVars v1 v2 uf = do
     mt2 <- lift $ getType n2
     case (mt1, mt2) of
         (Just t1, Just t2) | t1 /= t2  -> throwError $ UnificationFail t1 t2
-                        | otherwise -> return uf
+                           | otherwise -> return uf
         (Just _, Nothing) -> do
             lift $ union n2 n1
             return uf
