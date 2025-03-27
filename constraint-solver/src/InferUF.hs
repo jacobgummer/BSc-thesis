@@ -42,7 +42,7 @@ type Infer a = ReaderT
                   InferState
                   (Except         -- Inference errors
                     TypeError))
-                  a              -- Result
+                  a               -- Result
 
 -- | UnionFind data structure
 type UF s = Map.Map TVar (VarNode s)
