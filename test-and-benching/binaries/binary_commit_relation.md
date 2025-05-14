@@ -68,5 +68,5 @@ A `scopeCheck` call has now been added in the `solveTyVar` function to fix the b
 
 
 
-# _prof binaries (TBD)
+# _prof binaries
 Binaries appended `_prof` has been compiled from the repo, branch and commit as the binary not appended with `_prof`.
