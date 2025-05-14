@@ -1,0 +1,46 @@
+Benchmark Run Log - 2025-05-14T15:50:05 CEST
+==================================================
+Starting benchmark script...
+--- Configuration ---
+NUM_DRY_RUNS: 3
+NUM_ACTUAL_RUNS: 15
+NEW_FUTHARK_LOC: /home/laust/repos/BSc-thesis/test-and-benching/binaries/futhark-new-2.1
+OLD_FUTHARK_LOC: /home/laust/repos/BSc-thesis/test-and-benching/binaries/futhark-automap
+HYPERFINE_LOC: hyperfine
+TEST_FILES_DIR: /home/laust/repos/BSc-thesis/test-and-benching/scripts/hyperfine_benching_in
+USER_SPECIFIED_OUTPUT_DIR_PREFIX: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out
+OUTPUT_DIR: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out/benchmark_out_20250514_155005
+OUTPUT_LOG: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out/benchmark_out_20250514_155005/benchmark_result.log
+----------------------
+Found hyperfine: /usr/bin/hyperfine
+Found jq: /usr/bin/jq
+Setup complete. All checks passed and environment is ready.
+==================================================
+Found 2 .fut files to benchmark in './hyperfine_benching_in'.
+
+Benchmarking [1/2]: ./hyperfine_benching_in/poseidon.fut
+ERROR: Hyperfine failed for './hyperfine_benching_in/poseidon.fut'.
+ERROR: Hyperfine stderr: [31mError:[0m Command terminated with non-zero exit code 2 in the first warmup run. Use the '-i'/'--ignore-failure' option if you want to ignore this. Alternatively, use the '--show-output' option to debug what went wrong.
+
+Benchmarking [2/2]: ./hyperfine_benching_in/myocyte.fut
+  New Futhark mean time (CUR_TIME for this file): 0.6192748434666666 s
+  Old Futhark mean time: 0.6997046204000001 s
+  Winner for myocyte.fut: New Futhark
+  New overall MAX_TIME: 0.6997046204000001 s (from file ./hyperfine_benching_in/myocyte.fut, based on its slower command mean)
+
+--- Benchmark Summary ---
+Total .fut files found: 2
+Total .fut files processed/attempted: 2
+Successfully benchmarked files (hyperfine completed and results parsed): 1
+Failed benchmarks (hyperfine error or result parsing issue): 1
+
+New Futhark wins: 1
+Old Futhark wins: 0
+Ties (or equal performance): 0
+
+Longest benchmark component time (MAX_TIME): 0.6997046204000001 s
+File associated with MAX_TIME: ./hyperfine_benching_in/myocyte.fut
+--- End of Summary ---
+Individual hyperfine JSON and Markdown reports are located in: ../results/hyperfine_benching_out/benchmark_out_20250514_155005
+This overall summary and detailed logs are in: ../results/hyperfine_benching_out/benchmark_out_20250514_155005/benchmark_result.log
+Benchmark script finished.

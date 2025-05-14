@@ -1,0 +1,2023 @@
+Benchmark Run Log - 2025-05-08T13:35:19 CEST
+==================================================
+Starting benchmark script...
+--- Configuration ---
+NUM_DRY_RUNS: 3
+NUM_ACTUAL_RUNS: 15
+NEW_FUTHARK_LOC: /home/laust/repos/futhark-bachelor/.misc/binaries/futhark-new
+OLD_FUTHARK_LOC: /home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap
+HYPERFINE_LOC: hyperfine
+TEST_FILES_DIR: /home/laust/repos/futhark-bachelor/futhark-benchmarks
+USER_SPECIFIED_OUTPUT_DIR_PREFIX: /home/laust/repos/futhark-bachelor/.misc/hyperfine_benching_out
+OUTPUT_DIR: /home/laust/repos/futhark-bachelor/.misc/hyperfine_benching_out/benchmark_out_20250508_133519
+OUTPUT_LOG: /home/laust/repos/futhark-bachelor/.misc/hyperfine_benching_out/benchmark_out_20250508_133519/benchmark_result.log
+----------------------
+Found hyperfine: /usr/bin/hyperfine
+Found jq: /usr/bin/jq
+Setup complete. All checks passed and environment is ready.
+==================================================
+Found 397 .fut files to benchmark in '../../futhark-benchmarks'.
+
+Benchmarking [1/397]: ../../futhark-benchmarks/parboil/lbm/lbm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40545338908666667 s
+  Old Futhark mean time: 0.4109237159533334 s
+  Winner for lbm.fut: New Futhark
+  New overall MAX_TIME: 0.4109237159533334 s (from file ../../futhark-benchmarks/parboil/lbm/lbm.fut, based on its slower command mean)
+
+Benchmarking [2/397]: ../../futhark-benchmarks/parboil/mri-q/mri-q.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3491706212399999 s
+  Old Futhark mean time: 0.3520212697733333 s
+  Winner for mri-q.fut: New Futhark
+
+Benchmarking [3/397]: ../../futhark-benchmarks/parboil/sgemm/sgemm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34999426234000003 s
+  Old Futhark mean time: 0.3478581290733334 s
+  Winner for sgemm.fut: Old Futhark
+
+Benchmarking [4/397]: ../../futhark-benchmarks/parboil/stencil/stencil.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3520262320133334 s
+  Old Futhark mean time: 0.35408815528000015 s
+  Winner for stencil.fut: New Futhark
+
+Benchmarking [5/397]: ../../futhark-benchmarks/parboil/histo/histo.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34942774294666684 s
+  Old Futhark mean time: 0.34724583848000007 s
+  Winner for histo.fut: Old Futhark
+
+Benchmarking [6/397]: ../../futhark-benchmarks/parboil/tpacf/tpacf.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36104929094666666 s
+  Old Futhark mean time: 0.3616815746133334 s
+  Winner for tpacf.fut: New Futhark
+
+Benchmarking [7/397]: ../../futhark-benchmarks/babelstream/babelstream.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3513144228733333 s
+  Old Futhark mean time: 0.3528814906066667 s
+  Winner for babelstream.fut: New Futhark
+
+Benchmarking [8/397]: ../../futhark-benchmarks/rsbench/rsbench.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40823590788 s
+  Old Futhark mean time: 0.4074515033466666 s
+  Winner for rsbench.fut: Old Futhark
+
+Benchmarking [9/397]: ../../futhark-benchmarks/rodinia/srad/srad.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3676334879333334 s
+  Old Futhark mean time: 0.36934012473333333 s
+  Winner for srad.fut: New Futhark
+
+Benchmarking [10/397]: ../../futhark-benchmarks/rodinia/lud/lud-input.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34863180041999997 s
+  Old Futhark mean time: 0.3481277861533333 s
+  Winner for lud-input.fut: Old Futhark
+
+Benchmarking [11/397]: ../../futhark-benchmarks/rodinia/lud/lud.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3689789827 s
+  Old Futhark mean time: 0.3751527371666666 s
+  Winner for lud.fut: New Futhark
+
+Benchmarking [12/397]: ../../futhark-benchmarks/rodinia/cfd/cfd.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3992384057466667 s
+  Old Futhark mean time: 0.4946264968133333 s
+  Winner for cfd.fut: New Futhark
+  New overall MAX_TIME: 0.4946264968133333 s (from file ../../futhark-benchmarks/rodinia/cfd/cfd.fut, based on its slower command mean)
+
+Benchmarking [13/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.55468088416 s
+  Old Futhark mean time: 0.5598989105600001 s
+  Winner for romu_tests.fut: New Futhark
+  New overall MAX_TIME: 0.5598989105600001 s (from file ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/romu_tests.fut, based on its slower command mean)
+
+Benchmarking [14/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48834065868666665 s
+  Old Futhark mean time: 0.48564631815333337 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [15/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5030462923466666 s
+  Old Futhark mean time: 0.50299987508 s
+  Winner for random_tests.fut: Old Futhark
+
+Benchmarking [16/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.52795274928 s
+  Old Futhark mean time: 0.53228618768 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [17/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4826013630066667 s
+  Old Futhark mean time: 0.48499928020666666 s
+  Winner for random.fut: New Futhark
+
+Benchmarking [18/397]: ../../futhark-benchmarks/rodinia/particlefilter/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5028045436733332 s
+  Old Futhark mean time: 0.5125408407400001 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [19/397]: ../../futhark-benchmarks/rodinia/particlefilter/particlefilter.fut
+  New Futhark mean time (CUR_TIME for this file): 0.53156375364 s
+  Old Futhark mean time: 0.5292215301066666 s
+  Winner for particlefilter.fut: Old Futhark
+
+Benchmarking [20/397]: ../../futhark-benchmarks/rodinia/bfs/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4213748948200001 s
+  Old Futhark mean time: 0.4254412736866667 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [21/397]: ../../futhark-benchmarks/rodinia/bfs/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3691023793666667 s
+  Old Futhark mean time: 0.3644240967666667 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [22/397]: ../../futhark-benchmarks/rodinia/bfs/bfs_asympt_ok_but_slow.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37819747768 s
+  Old Futhark mean time: 0.37641806101333336 s
+  Winner for bfs_asympt_ok_but_slow.fut: Old Futhark
+
+Benchmarking [23/397]: ../../futhark-benchmarks/rodinia/bfs/bfs_filt_padded_fused.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35528276142 s
+  Old Futhark mean time: 0.3576506334200001 s
+  Winner for bfs_filt_padded_fused.fut: New Futhark
+
+Benchmarking [24/397]: ../../futhark-benchmarks/rodinia/bfs/bfs_sequential.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35781607944000005 s
+  Old Futhark mean time: 0.35820346937333336 s
+  Winner for bfs_sequential.fut: New Futhark
+
+Benchmarking [25/397]: ../../futhark-benchmarks/rodinia/bfs/bfs_iter_work_ok.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3609051772466667 s
+  Old Futhark mean time: 0.36366603484666665 s
+  Winner for bfs_iter_work_ok.fut: New Futhark
+
+Benchmarking [26/397]: ../../futhark-benchmarks/rodinia/bfs/bfs_heuristic.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36089397145333335 s
+  Old Futhark mean time: 0.35939674685333334 s
+  Winner for bfs_heuristic.fut: Old Futhark
+
+Benchmarking [27/397]: ../../futhark-benchmarks/rodinia/bfs/common.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35344925293333335 s
+  Old Futhark mean time: 0.3486217683333334 s
+  Winner for common.fut: Old Futhark
+
+Benchmarking [28/397]: ../../futhark-benchmarks/rodinia/backprop/backprop.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38520793871333336 s
+  Old Futhark mean time: 0.38080031878000004 s
+  Winner for backprop.fut: Old Futhark
+
+Benchmarking [29/397]: ../../futhark-benchmarks/rodinia/pathfinder/pathfinder.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35454085296 s
+  Old Futhark mean time: 0.3574242044266666 s
+  Winner for pathfinder.fut: New Futhark
+
+Benchmarking [30/397]: ../../futhark-benchmarks/rodinia/nw/nw.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37305127336 s
+  Old Futhark mean time: 0.37481969216 s
+  Winner for nw.fut: New Futhark
+
+Benchmarking [31/397]: ../../futhark-benchmarks/rodinia/myocyte/myocyte.fut
+  New Futhark mean time (CUR_TIME for this file): 0.7280359377066667 s
+  Old Futhark mean time: 0.82024631484 s
+  Winner for myocyte.fut: New Futhark
+  New overall MAX_TIME: 0.82024631484 s (from file ../../futhark-benchmarks/rodinia/myocyte/myocyte.fut, based on its slower command mean)
+
+Benchmarking [32/397]: ../../futhark-benchmarks/rodinia/lavaMD/lavaMD-input.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37867675689333335 s
+  Old Futhark mean time: 0.3825008546266666 s
+  Winner for lavaMD-input.fut: New Futhark
+
+Benchmarking [33/397]: ../../futhark-benchmarks/rodinia/lavaMD/lavaMD.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3608598189733333 s
+  Old Futhark mean time: 0.36206563204000003 s
+  Winner for lavaMD.fut: New Futhark
+
+Benchmarking [34/397]: ../../futhark-benchmarks/rodinia/nn/nn.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34950540911333333 s
+  Old Futhark mean time: 0.35509906751333337 s
+  Winner for nn.fut: New Futhark
+
+Benchmarking [35/397]: ../../futhark-benchmarks/rodinia/hotspot/hotspot.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3765365025733333 s
+  Old Futhark mean time: 0.37613925190666664 s
+  Winner for hotspot.fut: Old Futhark
+
+Benchmarking [36/397]: ../../futhark-benchmarks/rodinia/kmeans/kmeans.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3572527480066668 s
+  Old Futhark mean time: 0.35849475994 s
+  Winner for kmeans.fut: New Futhark
+
+Benchmarking [37/397]: ../../futhark-benchmarks/xsbench/xsbench.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38588589098666665 s
+  Old Futhark mean time: 0.38485024885333335 s
+  Winner for xsbench.fut: Old Futhark
+
+Benchmarking [38/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36246176432000005 s
+  Old Futhark mean time: 0.36268250838666666 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [39/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3657415121266666 s
+  Old Futhark mean time: 0.36476423659333335 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [40/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45553552880666665 s
+  Old Futhark mean time: 0.4526469598066667 s
+  Winner for romu_tests.fut: Old Futhark
+
+Benchmarking [41/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4012781538066667 s
+  Old Futhark mean time: 0.4023772804066667 s
+  Winner for shuffle.fut: New Futhark
+
+Benchmarking [42/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4044611469933333 s
+  Old Futhark mean time: 0.40388745772666673 s
+  Winner for random_tests.fut: Old Futhark
+
+Benchmarking [43/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42963660686666666 s
+  Old Futhark mean time: 0.4314102690666667 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [44/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39059702996 s
+  Old Futhark mean time: 0.39482216169333334 s
+  Winner for random.fut: New Futhark
+
+Benchmarking [45/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40229658886 s
+  Old Futhark mean time: 0.40573421319333336 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [46/397]: ../../futhark-benchmarks/pbbs/maximalIndependentSet/maximalIndependentSet.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42799639404 s
+  Old Futhark mean time: 0.4255175131066667 s
+  Winner for maximalIndependentSet.fut: Old Futhark
+
+Benchmarking [47/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36035288138 s
+  Old Futhark mean time: 0.35787524038 s
+  Winner for segmented.fut: Old Futhark
+
+Benchmarking [48/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36523464404000006 s
+  Old Futhark mean time: 0.3659950539733334 s
+  Winner for segmented_tests.fut: New Futhark
+
+Benchmarking [49/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3519683424 s
+  Old Futhark mean time: 0.3496730098666667 s
+  Winner for insertion_sort.fut: Old Futhark
+
+Benchmarking [50/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3867367422333334 s
+  Old Futhark mean time: 0.3859037809 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [51/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3506946802933334 s
+  Old Futhark mean time: 0.35277713122666665 s
+  Winner for bubble_sort.fut: New Futhark
+
+Benchmarking [52/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37886755906 s
+  Old Futhark mean time: 0.3798997391933333 s
+  Winner for quick_sort.fut: New Futhark
+
+Benchmarking [53/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.355182479 s
+  Old Futhark mean time: 0.3525709155333334 s
+  Winner for bubble_sort_tests.fut: Old Futhark
+
+Benchmarking [54/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3816656246533333 s
+  Old Futhark mean time: 0.3812044745866667 s
+  Winner for merge_sort.fut: Old Futhark
+
+Benchmarking [55/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39627871156666666 s
+  Old Futhark mean time: 0.3983038099 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [56/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3851875317533334 s
+  Old Futhark mean time: 0.3885047584866667 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [57/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41797584926 s
+  Old Futhark mean time: 0.41701360412666666 s
+  Winner for radix_sort_tests.fut: Old Futhark
+
+Benchmarking [58/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35662764234666666 s
+  Old Futhark mean time: 0.35860367568 s
+  Winner for insertion_sort_tests.fut: New Futhark
+
+Benchmarking [59/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35837786052 s
+  Old Futhark mean time: 0.3532749919866667 s
+  Winner for bitonic_sort.fut: Old Futhark
+
+Benchmarking [60/397]: ../../futhark-benchmarks/pbbs/convexHull/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35707771402 s
+  Old Futhark mean time: 0.36109582002 s
+  Winner for bitonic_sort_tests.fut: New Futhark
+
+Benchmarking [61/397]: ../../futhark-benchmarks/pbbs/convexHull/convexhull.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4287483316333334 s
+  Old Futhark mean time: 0.42793676969999994 s
+  Winner for convexhull.fut: Old Futhark
+
+Benchmarking [62/397]: ../../futhark-benchmarks/pbbs/breadthFirstSearch/breadthFirstSearch.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36865823144000004 s
+  Old Futhark mean time: 0.37355189877333334 s
+  Winner for breadthFirstSearch.fut: New Futhark
+
+Benchmarking [63/397]: ../../futhark-benchmarks/pbbs/breadthFirstSearch/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35998651673333343 s
+  Old Futhark mean time: 0.37314110426666675 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [64/397]: ../../futhark-benchmarks/pbbs/breadthFirstSearch/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3792096857066667 s
+  Old Futhark mean time: 0.3622443591733333 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [65/397]: ../../futhark-benchmarks/pbbs/ray/radixtree.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36010352200000006 s
+  Old Futhark mean time: 0.35891910340000005 s
+  Winner for radixtree.fut: Old Futhark
+
+Benchmarking [66/397]: ../../futhark-benchmarks/pbbs/ray/ray.fut
+  New Futhark mean time (CUR_TIME for this file): 0.49107017458000013 s
+  Old Futhark mean time: 0.4976184543800001 s
+  Winner for ray.fut: New Futhark
+
+Benchmarking [67/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36735748958000014 s
+  Old Futhark mean time: 0.3712033150466667 s
+  Winner for vector_test.fut: New Futhark
+
+Benchmarking [68/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36718601536000006 s
+  Old Futhark mean time: 0.36453579935999997 s
+  Winner for vector.fut: Old Futhark
+
+Benchmarking [69/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3899677094933334 s
+  Old Futhark mean time: 0.3834288390933333 s
+  Winner for vspace.fut: Old Futhark
+
+Benchmarking [70/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3951418983466667 s
+  Old Futhark mean time: 0.3951171191466667 s
+  Winner for vspace_tests.fut: Old Futhark
+
+Benchmarking [71/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3630927037333333 s
+  Old Futhark mean time: 0.36349152939999996 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [72/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36113358664 s
+  Old Futhark mean time: 0.3611542061733333 s
+  Winner for segmented_tests.fut: New Futhark
+
+Benchmarking [73/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3481221988 s
+  Old Futhark mean time: 0.35307939633333335 s
+  Winner for insertion_sort.fut: New Futhark
+
+Benchmarking [74/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3877056807066668 s
+  Old Futhark mean time: 0.38271720790666675 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [75/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35221466136 s
+  Old Futhark mean time: 0.3470331330933334 s
+  Winner for bubble_sort.fut: Old Futhark
+
+Benchmarking [76/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38052939292000004 s
+  Old Futhark mean time: 0.3789433004533333 s
+  Winner for quick_sort.fut: Old Futhark
+
+Benchmarking [77/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35556072658 s
+  Old Futhark mean time: 0.35607463811333334 s
+  Winner for bubble_sort_tests.fut: New Futhark
+
+Benchmarking [78/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37855612921333337 s
+  Old Futhark mean time: 0.37863167008000004 s
+  Winner for merge_sort.fut: New Futhark
+
+Benchmarking [79/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40183906412 s
+  Old Futhark mean time: 0.40289814045333333 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [80/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3860516502466666 s
+  Old Futhark mean time: 0.38725385578 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [81/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41683003708000005 s
+  Old Futhark mean time: 0.41737395334666677 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [82/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3566405891733334 s
+  Old Futhark mean time: 0.35387554630666673 s
+  Winner for insertion_sort_tests.fut: Old Futhark
+
+Benchmarking [83/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35688016206666673 s
+  Old Futhark mean time: 0.3565034584 s
+  Winner for bitonic_sort.fut: Old Futhark
+
+Benchmarking [84/397]: ../../futhark-benchmarks/pbbs/ray/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35924962825333334 s
+  Old Futhark mean time: 0.36051156238666676 s
+  Winner for bitonic_sort_tests.fut: New Futhark
+
+Benchmarking [85/397]: ../../futhark-benchmarks/pbbs/ray/bvh.fut
+  New Futhark mean time (CUR_TIME for this file): 0.47787488566666664 s
+  Old Futhark mean time: 0.4816357485333333 s
+  Winner for bvh.fut: New Futhark
+
+Benchmarking [86/397]: ../../futhark-benchmarks/pbbs/ray/prim.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3925378977933334 s
+  Old Futhark mean time: 0.3898786183933333 s
+  Winner for prim.fut: Old Futhark
+
+Benchmarking [87/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/minSpanningForest.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4007223714866667 s
+  Old Futhark mean time: 0.40048891635333334 s
+  Winner for minSpanningForest.fut: Old Futhark
+
+Benchmarking [88/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3590922586466668 s
+  Old Futhark mean time: 0.36010498231333343 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [89/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36031872921333336 s
+  Old Futhark mean time: 0.36475179828000004 s
+  Winner for segmented_tests.fut: New Futhark
+
+Benchmarking [90/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3526434788133334 s
+  Old Futhark mean time: 0.34980411628 s
+  Winner for insertion_sort.fut: Old Futhark
+
+Benchmarking [91/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38513087863333334 s
+  Old Futhark mean time: 0.38339662423333337 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [92/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3511411753333333 s
+  Old Futhark mean time: 0.35075842373333344 s
+  Winner for bubble_sort.fut: Old Futhark
+
+Benchmarking [93/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3810823171466667 s
+  Old Futhark mean time: 0.3794393957466666 s
+  Winner for quick_sort.fut: Old Futhark
+
+Benchmarking [94/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35671758122 s
+  Old Futhark mean time: 0.35481141562 s
+  Winner for bubble_sort_tests.fut: Old Futhark
+
+Benchmarking [95/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38003800146 s
+  Old Futhark mean time: 0.3796953535266667 s
+  Winner for merge_sort.fut: Old Futhark
+
+Benchmarking [96/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3953685350733334 s
+  Old Futhark mean time: 0.3987840366066667 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [97/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38526623221333334 s
+  Old Futhark mean time: 0.3851979606133334 s
+  Winner for merge_sort_tests.fut: Old Futhark
+
+Benchmarking [98/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4153713027866666 s
+  Old Futhark mean time: 0.41848192098666664 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [99/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35611414073333336 s
+  Old Futhark mean time: 0.35211074846666673 s
+  Winner for insertion_sort_tests.fut: Old Futhark
+
+Benchmarking [100/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3547314492133333 s
+  Old Futhark mean time: 0.3568255325466667 s
+  Winner for bitonic_sort.fut: New Futhark
+
+Benchmarking [101/397]: ../../futhark-benchmarks/pbbs/minSpanningForest/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3626107663266666 s
+  Old Futhark mean time: 0.36045193546000004 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [102/397]: ../../futhark-benchmarks/pbbs/comparisonSort/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3809263215933335 s
+  Old Futhark mean time: 0.38542046379333333 s
+  Winner for quick_sort.fut: New Futhark
+
+Benchmarking [103/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3589928521133333 s
+  Old Futhark mean time: 0.35938790531333326 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [104/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36559016760000007 s
+  Old Futhark mean time: 0.3642967924666667 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [105/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35048767251999996 s
+  Old Futhark mean time: 0.3535304997866666 s
+  Winner for insertion_sort.fut: New Futhark
+
+Benchmarking [106/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38251463820666665 s
+  Old Futhark mean time: 0.38286678494000004 s
+  Winner for quick_sort_test.fut: New Futhark
+
+Benchmarking [107/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35250225119333334 s
+  Old Futhark mean time: 0.35382687746 s
+  Winner for bubble_sort.fut: New Futhark
+
+Benchmarking [108/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3791855154066667 s
+  Old Futhark mean time: 0.3798376080066667 s
+  Winner for quick_sort.fut: New Futhark
+
+Benchmarking [109/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3570059969133334 s
+  Old Futhark mean time: 0.35405504084666667 s
+  Winner for bubble_sort_tests.fut: Old Futhark
+
+Benchmarking [110/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37717399104666666 s
+  Old Futhark mean time: 0.3788326483133334 s
+  Winner for merge_sort.fut: New Futhark
+
+Benchmarking [111/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39677409607333336 s
+  Old Futhark mean time: 0.39797046127333335 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [112/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38553381736 s
+  Old Futhark mean time: 0.38603626069333336 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [113/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4163082639333334 s
+  Old Futhark mean time: 0.41647346006666663 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [114/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3563511631533334 s
+  Old Futhark mean time: 0.3508752838866667 s
+  Winner for insertion_sort_tests.fut: Old Futhark
+
+Benchmarking [115/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35432193190666667 s
+  Old Futhark mean time: 0.3550095087066667 s
+  Winner for bitonic_sort.fut: New Futhark
+
+Benchmarking [116/397]: ../../futhark-benchmarks/pbbs/comparisonSort/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35889608122666666 s
+  Old Futhark mean time: 0.35564657575999997 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [117/397]: ../../futhark-benchmarks/pbbs/comparisonSort/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3818735721133334 s
+  Old Futhark mean time: 0.3814249443133334 s
+  Winner for merge_sort.fut: Old Futhark
+
+Benchmarking [118/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3590241695866668 s
+  Old Futhark mean time: 0.3621112781866667 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [119/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36391681388 s
+  Old Futhark mean time: 0.3592422688800001 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [120/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34931749391333333 s
+  Old Futhark mean time: 0.35098251618000004 s
+  Winner for insertion_sort.fut: New Futhark
+
+Benchmarking [121/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3848122039666667 s
+  Old Futhark mean time: 0.3828011229666667 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [122/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35138891106666675 s
+  Old Futhark mean time: 0.35156785760000003 s
+  Winner for bubble_sort.fut: New Futhark
+
+Benchmarking [123/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38192712739333334 s
+  Old Futhark mean time: 0.3791695625266668 s
+  Winner for quick_sort.fut: Old Futhark
+
+Benchmarking [124/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35454771894666676 s
+  Old Futhark mean time: 0.35277266468 s
+  Winner for bubble_sort_tests.fut: Old Futhark
+
+Benchmarking [125/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3771118346666667 s
+  Old Futhark mean time: 0.38396710433333336 s
+  Winner for merge_sort.fut: New Futhark
+
+Benchmarking [126/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3977474380333333 s
+  Old Futhark mean time: 0.39625869696666666 s
+  Winner for radix_sort.fut: Old Futhark
+
+Benchmarking [127/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38121907508 s
+  Old Futhark mean time: 0.38440635521333344 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [128/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41611124694 s
+  Old Futhark mean time: 0.41518080394000006 s
+  Winner for radix_sort_tests.fut: Old Futhark
+
+Benchmarking [129/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3534967975866667 s
+  Old Futhark mean time: 0.3526649321866666 s
+  Winner for insertion_sort_tests.fut: Old Futhark
+
+Benchmarking [130/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3542749778333334 s
+  Old Futhark mean time: 0.35799935063333344 s
+  Winner for bitonic_sort.fut: New Futhark
+
+Benchmarking [131/397]: ../../futhark-benchmarks/pbbs/integerSort/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3593751760333333 s
+  Old Futhark mean time: 0.35809571816666674 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [132/397]: ../../futhark-benchmarks/pbbs/integerSort/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39997994499333334 s
+  Old Futhark mean time: 0.40344298179333327 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [133/397]: ../../futhark-benchmarks/pbbs/maximalMatching/maximalMatching.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36066233116 s
+  Old Futhark mean time: 0.3597024723600001 s
+  Winner for maximalMatching.fut: Old Futhark
+
+Benchmarking [134/397]: ../../futhark-benchmarks/pbbs/histogram/histogram.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3502713966133334 s
+  Old Futhark mean time: 0.3492038191466667 s
+  Winner for histogram.fut: Old Futhark
+
+Benchmarking [135/397]: ../../futhark-benchmarks/micro/scan.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3932886817933333 s
+  Old Futhark mean time: 0.39623795159333336 s
+  Winner for scan.fut: New Futhark
+
+Benchmarking [136/397]: ../../futhark-benchmarks/micro/intra.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34536545992666673 s
+  Old Futhark mean time: 0.34461019272666676 s
+  Winner for intra.fut: Old Futhark
+
+Benchmarking [137/397]: ../../futhark-benchmarks/micro/scan-segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3462433226866667 s
+  Old Futhark mean time: 0.35199645115333333 s
+  Winner for scan-segmented.fut: New Futhark
+
+Benchmarking [138/397]: ../../futhark-benchmarks/micro/transpose.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35154559705333344 s
+  Old Futhark mean time: 0.3559822318533334 s
+  Winner for transpose.fut: New Futhark
+
+Benchmarking [139/397]: ../../futhark-benchmarks/micro/reduce_by_index.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35666551548 s
+  Old Futhark mean time: 0.35270613281333335 s
+  Winner for reduce_by_index.fut: Old Futhark
+
+Benchmarking [140/397]: ../../futhark-benchmarks/micro/mmm/mmm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34998035076666667 s
+  Old Futhark mean time: 0.3498392031 s
+  Winner for mmm.fut: Old Futhark
+
+Benchmarking [141/397]: ../../futhark-benchmarks/micro/mmm/lud-internal.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3489639161600001 s
+  Old Futhark mean time: 0.35385571049333325 s
+  Winner for lud-internal.fut: New Futhark
+
+Benchmarking [142/397]: ../../futhark-benchmarks/micro/mmm/sgemm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3470753595866666 s
+  Old Futhark mean time: 0.3481293555866667 s
+  Winner for sgemm.fut: New Futhark
+
+Benchmarking [143/397]: ../../futhark-benchmarks/micro/mmm/mmm-batch.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34762832214666667 s
+  Old Futhark mean time: 0.34796838968 s
+  Winner for mmm-batch.fut: New Futhark
+
+Benchmarking [144/397]: ../../futhark-benchmarks/micro/reduce_by_index-segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3485375998533334 s
+  Old Futhark mean time: 0.34574654778666675 s
+  Winner for reduce_by_index-segmented.fut: Old Futhark
+
+Benchmarking [145/397]: ../../futhark-benchmarks/micro/reduce-segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36153844729999995 s
+  Old Futhark mean time: 0.3654364845 s
+  Winner for reduce-segmented.fut: New Futhark
+
+Benchmarking [146/397]: ../../futhark-benchmarks/micro/reduce.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38150702970666667 s
+  Old Futhark mean time: 0.38574334150666656 s
+  Winner for reduce.fut: New Futhark
+
+Benchmarking [147/397]: ../../futhark-benchmarks/misc/buddhabrot/buddhabrot.fut
+  New Futhark mean time (CUR_TIME for this file): 0.44543406664666674 s
+  Old Futhark mean time: 0.45004276318 s
+  Winner for buddhabrot.fut: New Futhark
+
+Benchmarking [148/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36697939638666666 s
+  Old Futhark mean time: 0.3672838840533333 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [149/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3636948255 s
+  Old Futhark mean time: 0.3674031510333334 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [150/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4510887715666667 s
+  Old Futhark mean time: 0.4523910431000001 s
+  Winner for romu_tests.fut: New Futhark
+
+Benchmarking [151/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3998099599599999 s
+  Old Futhark mean time: 0.39962991036 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [152/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4052984059466667 s
+  Old Futhark mean time: 0.40900796654666677 s
+  Winner for random_tests.fut: New Futhark
+
+Benchmarking [153/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.43104660079333346 s
+  Old Futhark mean time: 0.4338659009933334 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [154/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39652206917333327 s
+  Old Futhark mean time: 0.39489817377333336 s
+  Winner for random.fut: Old Futhark
+
+Benchmarking [155/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4014763300066667 s
+  Old Futhark mean time: 0.4039649495400001 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [156/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36518321546666666 s
+  Old Futhark mean time: 0.3637875346 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [157/397]: ../../futhark-benchmarks/misc/buddhabrot/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37625599492000006 s
+  Old Futhark mean time: 0.3774314116533334 s
+  Winner for complex_tests.fut: New Futhark
+
+Benchmarking [158/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36280174338000004 s
+  Old Futhark mean time: 0.36906325278 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [159/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36660784537999996 s
+  Old Futhark mean time: 0.3657700738466667 s
+  Winner for colour_test.fut: Old Futhark
+
+Benchmarking [160/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3872580795933333 s
+  Old Futhark mean time: 0.3883028605266666 s
+  Winner for lys.fut: New Futhark
+
+Benchmarking [161/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39497787086666675 s
+  Old Futhark mean time: 0.3930419046000001 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [162/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36220061791333336 s
+  Old Futhark mean time: 0.36107222078 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [163/397]: ../../futhark-benchmarks/misc/functional-images/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3792480194866667 s
+  Old Futhark mean time: 0.38019273802000003 s
+  Winner for complex_tests.fut: New Futhark
+
+Benchmarking [164/397]: ../../futhark-benchmarks/misc/functional-images/images.fut
+ERROR: Hyperfine failed for '../../futhark-benchmarks/misc/functional-images/images.fut'.
+ERROR: Hyperfine stderr: [31mError:[0m Command terminated with non-zero exit code 2 in the first warmup run. Use the '-i'/'--ignore-failure' option if you want to ignore this. Alternatively, use the '--show-output' option to debug what went wrong.
+
+Benchmarking [165/397]: ../../futhark-benchmarks/misc/functional-images/pan.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38261794378666675 s
+  Old Futhark mean time: 0.38091766818666656 s
+  Winner for pan.fut: Old Futhark
+
+Benchmarking [166/397]: ../../futhark-benchmarks/misc/life/life.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40847035991333336 s
+  Old Futhark mean time: 0.40972988351333334 s
+  Winner for life.fut: New Futhark
+
+Benchmarking [167/397]: ../../futhark-benchmarks/misc/life/genlife.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3840076744666667 s
+  Old Futhark mean time: 0.38481106146666666 s
+  Winner for genlife.fut: New Futhark
+
+Benchmarking [168/397]: ../../futhark-benchmarks/misc/life/conway.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39128333687333333 s
+  Old Futhark mean time: 0.38996806014 s
+  Winner for conway.fut: Old Futhark
+
+Benchmarking [169/397]: ../../futhark-benchmarks/misc/life/quad.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39316844440000004 s
+  Old Futhark mean time: 0.39013594220000003 s
+  Winner for quad.fut: Old Futhark
+
+Benchmarking [170/397]: ../../futhark-benchmarks/misc/life/quad2.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3918009207133333 s
+  Old Futhark mean time: 0.39318898931333324 s
+  Winner for quad2.fut: New Futhark
+
+Benchmarking [171/397]: ../../futhark-benchmarks/misc/life/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36383243028666673 s
+  Old Futhark mean time: 0.36793780462 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [172/397]: ../../futhark-benchmarks/misc/life/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36936604905333337 s
+  Old Futhark mean time: 0.36780592732 s
+  Winner for colour_test.fut: Old Futhark
+
+Benchmarking [173/397]: ../../futhark-benchmarks/misc/life/fading.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3898162989733334 s
+  Old Futhark mean time: 0.3876357843733333 s
+  Winner for fading.fut: Old Futhark
+
+Benchmarking [174/397]: ../../futhark-benchmarks/misc/life/genlife_1d.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3860957773466666 s
+  Old Futhark mean time: 0.38876594794666663 s
+  Winner for genlife_1d.fut: New Futhark
+
+Benchmarking [175/397]: ../../futhark-benchmarks/misc/life/rule101.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39131867074 s
+  Old Futhark mean time: 0.39429737820666666 s
+  Winner for rule101.fut: New Futhark
+
+Benchmarking [176/397]: ../../futhark-benchmarks/misc/ocean-sim/tridiag-test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37437105701333334 s
+  Old Futhark mean time: 0.37475174634666664 s
+  Winner for tridiag-test.fut: New Futhark
+
+Benchmarking [177/397]: ../../futhark-benchmarks/misc/ocean-sim/tke.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48102800223333336 s
+  Old Futhark mean time: 0.5171453905666668 s
+  Winner for tke.fut: New Futhark
+
+Benchmarking [178/397]: ../../futhark-benchmarks/misc/ocean-sim/tridiag.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3674827675666667 s
+  Old Futhark mean time: 0.36395995256666663 s
+  Winner for tridiag.fut: Old Futhark
+
+Benchmarking [179/397]: ../../futhark-benchmarks/misc/ocean-sim/typeinst32.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34903082135333324 s
+  Old Futhark mean time: 0.3481142434199999 s
+  Winner for typeinst32.fut: Old Futhark
+
+Benchmarking [180/397]: ../../futhark-benchmarks/misc/ocean-sim/typeinst64.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34416317687333325 s
+  Old Futhark mean time: 0.3485314558733334 s
+  Winner for typeinst64.fut: New Futhark
+
+Benchmarking [181/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4512201106133333 s
+  Old Futhark mean time: 0.4485616485466667 s
+  Winner for romu_tests.fut: Old Futhark
+
+Benchmarking [182/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4023410542266666 s
+  Old Futhark mean time: 0.40037544836000005 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [183/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40537645543999995 s
+  Old Futhark mean time: 0.4062822711733334 s
+  Winner for random_tests.fut: New Futhark
+
+Benchmarking [184/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4274240375466667 s
+  Old Futhark mean time: 0.4311392462133333 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [185/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3994520054733333 s
+  Old Futhark mean time: 0.39012841927333336 s
+  Winner for random.fut: Old Futhark
+
+Benchmarking [186/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40449113790666674 s
+  Old Futhark mean time: 0.40224690797333335 s
+  Winner for shuffle_tests.fut: Old Futhark
+
+Benchmarking [187/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/nmf_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4880081234533334 s
+  Old Futhark mean time: 0.49598589678666666 s
+  Winner for nmf_tests.fut: New Futhark
+
+Benchmarking [188/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/lu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45395627826666674 s
+  Old Futhark mean time: 0.45788169986666666 s
+  Winner for lu.fut: New Futhark
+
+Benchmarking [189/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/linalg_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42480237552666666 s
+  Old Futhark mean time: 0.42921210259333337 s
+  Winner for linalg_tests.fut: New Futhark
+
+Benchmarking [190/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/linalg.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41761965636666665 s
+  Old Futhark mean time: 0.42327383956666664 s
+  Winner for linalg.fut: New Futhark
+
+Benchmarking [191/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/qr.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45695786930666676 s
+  Old Futhark mean time: 0.4600276190400001 s
+  Winner for qr.fut: New Futhark
+
+Benchmarking [192/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/lu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45855699525333343 s
+  Old Futhark mean time: 0.45880009572 s
+  Winner for lu_tests.fut: New Futhark
+
+Benchmarking [193/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/nmf.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48183566078 s
+  Old Futhark mean time: 0.48962902424666677 s
+  Winner for nmf.fut: New Futhark
+
+Benchmarking [194/397]: ../../futhark-benchmarks/misc/bfast/lib/github.com/diku-dk/linalg/qr_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4576725549600001 s
+  Old Futhark mean time: 0.4642013669600001 s
+  Winner for qr_tests.fut: New Futhark
+
+Benchmarking [195/397]: ../../futhark-benchmarks/misc/bfast/bfast-cloudy.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4100812612866667 s
+  Old Futhark mean time: 0.4136299570866667 s
+  Winner for bfast-cloudy.fut: New Futhark
+
+Benchmarking [196/397]: ../../futhark-benchmarks/misc/bfast/bfast.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45029651352666666 s
+  Old Futhark mean time: 0.45129082886000016 s
+  Winner for bfast.fut: New Futhark
+
+Benchmarking [197/397]: ../../futhark-benchmarks/misc/bfast/perf-calculator.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35999327446 s
+  Old Futhark mean time: 0.36017024319333335 s
+  Winner for perf-calculator.fut: New Futhark
+
+Benchmarking [198/397]: ../../futhark-benchmarks/misc/poseidon/poseidon.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5305405832266666 s
+  Old Futhark mean time: 0.5243971977599999 s
+  Winner for poseidon.fut: Old Futhark
+
+Benchmarking [199/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3686478405866666 s
+  Old Futhark mean time: 0.36541911018666673 s
+  Winner for vector_test.fut: Old Futhark
+
+Benchmarking [200/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3632575393600001 s
+  Old Futhark mean time: 0.3605766724933333 s
+  Winner for vector.fut: Old Futhark
+
+Benchmarking [201/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3868596438933333 s
+  Old Futhark mean time: 0.3888434310266666 s
+  Winner for vspace.fut: New Futhark
+
+Benchmarking [202/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39178145444666673 s
+  Old Futhark mean time: 0.3983501537800001 s
+  Winner for vspace_tests.fut: New Futhark
+
+Benchmarking [203/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/filecoin-project/fut-ff/field-test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45311425434 s
+  Old Futhark mean time: 0.45021585107333345 s
+  Winner for field-test.fut: Old Futhark
+
+Benchmarking [204/397]: ../../futhark-benchmarks/misc/poseidon/lib/github.com/filecoin-project/fut-ff/field.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4415443694533334 s
+  Old Futhark mean time: 0.43930370465333335 s
+  Winner for field.fut: Old Futhark
+
+Benchmarking [205/397]: ../../futhark-benchmarks/misc/poseidon/poseidon-bench.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5296110052133333 s
+  Old Futhark mean time: 0.5295110636133333 s
+  Winner for poseidon-bench.fut: Old Futhark
+
+Benchmarking [206/397]: ../../futhark-benchmarks/misc/heston/heston64.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5593008579800001 s
+  Old Futhark mean time: 0.5615147658466667 s
+  Winner for heston64.fut: New Futhark
+
+Benchmarking [207/397]: ../../futhark-benchmarks/misc/heston/distance.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34748453673999996 s
+  Old Futhark mean time: 0.3492435044733334 s
+  Winner for distance.fut: New Futhark
+
+Benchmarking [208/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45504716622666663 s
+  Old Futhark mean time: 0.4546241252266666 s
+  Winner for romu_tests.fut: Old Futhark
+
+Benchmarking [209/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4030972064333334 s
+  Old Futhark mean time: 0.40393665556666664 s
+  Winner for shuffle.fut: New Futhark
+
+Benchmarking [210/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4088920222733333 s
+  Old Futhark mean time: 0.40623094113999997 s
+  Winner for random_tests.fut: Old Futhark
+
+Benchmarking [211/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.43145723272666675 s
+  Old Futhark mean time: 0.4313022495266667 s
+  Winner for romu.fut: Old Futhark
+
+Benchmarking [212/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3881080005466667 s
+  Old Futhark mean time: 0.39050630248000007 s
+  Winner for random.fut: New Futhark
+
+Benchmarking [213/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3998329282866668 s
+  Old Futhark mean time: 0.4049736989533334 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [214/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/date/date.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3706514051466667 s
+  Old Futhark mean time: 0.37057316488 s
+  Winner for date.fut: Old Futhark
+
+Benchmarking [215/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/date/date_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37251535708000005 s
+  Old Futhark mean time: 0.36972947648000004 s
+  Winner for date_tests.fut: Old Futhark
+
+Benchmarking [216/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36556956544 s
+  Old Futhark mean time: 0.3643490266400001 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [217/397]: ../../futhark-benchmarks/misc/heston/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37520848070666674 s
+  Old Futhark mean time: 0.37699259524 s
+  Winner for complex_tests.fut: New Futhark
+
+Benchmarking [218/397]: ../../futhark-benchmarks/misc/heston/price_european_calls.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4538297918466668 s
+  Old Futhark mean time: 0.45503735498 s
+  Winner for price_european_calls.fut: New Futhark
+
+Benchmarking [219/397]: ../../futhark-benchmarks/misc/heston/heston.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5570468565333334 s
+  Old Futhark mean time: 0.5593690640666668 s
+  Winner for heston.fut: New Futhark
+
+Benchmarking [220/397]: ../../futhark-benchmarks/misc/heston/least_squares.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42370156498000006 s
+  Old Futhark mean time: 0.42859695718 s
+  Winner for least_squares.fut: New Futhark
+
+Benchmarking [221/397]: ../../futhark-benchmarks/misc/heston/heston32.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5601854719800001 s
+  Old Futhark mean time: 0.5653315680466667 s
+  Winner for heston32.fut: New Futhark
+
+Benchmarking [222/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3635327011000001 s
+  Old Futhark mean time: 0.35819545869999997 s
+  Winner for segmented.fut: Old Futhark
+
+Benchmarking [223/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36659374137333334 s
+  Old Futhark mean time: 0.3626941797733334 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [224/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35396702414000003 s
+  Old Futhark mean time: 0.3492778138733333 s
+  Winner for insertion_sort.fut: Old Futhark
+
+Benchmarking [225/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3835084602266667 s
+  Old Futhark mean time: 0.3833044608933333 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [226/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3512125973133334 s
+  Old Futhark mean time: 0.35368993538 s
+  Winner for bubble_sort.fut: New Futhark
+
+Benchmarking [227/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3788206275400002 s
+  Old Futhark mean time: 0.3771513672733334 s
+  Winner for quick_sort.fut: Old Futhark
+
+Benchmarking [228/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3555936440066667 s
+  Old Futhark mean time: 0.35723072013999996 s
+  Winner for bubble_sort_tests.fut: New Futhark
+
+Benchmarking [229/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3829481425733334 s
+  Old Futhark mean time: 0.37838628003999997 s
+  Winner for merge_sort.fut: Old Futhark
+
+Benchmarking [230/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3980581935333333 s
+  Old Futhark mean time: 0.39716607506666673 s
+  Winner for radix_sort.fut: Old Futhark
+
+Benchmarking [231/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38810107766666674 s
+  Old Futhark mean time: 0.38917087746666673 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [232/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41675025454666675 s
+  Old Futhark mean time: 0.41850588001333333 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [233/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35729165902666676 s
+  Old Futhark mean time: 0.35648763002666667 s
+  Winner for insertion_sort_tests.fut: Old Futhark
+
+Benchmarking [234/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3547611841066668 s
+  Old Futhark mean time: 0.3564180158400001 s
+  Winner for bitonic_sort.fut: New Futhark
+
+Benchmarking [235/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35931892472666666 s
+  Old Futhark mean time: 0.35912992786 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [236/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/knn-iteration.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4423245454666666 s
+  Old Futhark mean time: 0.44372142853333335 s
+  Winner for knn-iteration.fut: New Futhark
+
+Benchmarking [237/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/buildKDtree.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4386561345333332 s
+  Old Futhark mean time: 0.44191566100000007 s
+  Winner for buildKDtree.fut: New Futhark
+
+Benchmarking [238/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/kd-traverse.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37142209354 s
+  Old Futhark mean time: 0.37636683534000004 s
+  Winner for kd-traverse.fut: New Futhark
+
+Benchmarking [239/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/driver-knn.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48338196040666664 s
+  Old Futhark mean time: 0.4858998946066667 s
+  Winner for driver-knn.fut: New Futhark
+
+Benchmarking [240/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/brute-force.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34788317270666663 s
+  Old Futhark mean time: 0.35086535064 s
+  Winner for brute-force.fut: New Futhark
+
+Benchmarking [241/397]: ../../futhark-benchmarks/misc/knn-by-kdtree/util.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3618221742066667 s
+  Old Futhark mean time: 0.36048693780666674 s
+  Winner for util.fut: Old Futhark
+
+Benchmarking [242/397]: ../../futhark-benchmarks/jgf/crypt/crypt.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35859289065999994 s
+  Old Futhark mean time: 0.3591726103933333 s
+  Winner for crypt.fut: New Futhark
+
+Benchmarking [243/397]: ../../futhark-benchmarks/jgf/crypt/keys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36378937125333344 s
+  Old Futhark mean time: 0.3683057791866667 s
+  Winner for keys.fut: New Futhark
+
+Benchmarking [244/397]: ../../futhark-benchmarks/jgf/series/series.fut
+  New Futhark mean time (CUR_TIME for this file): 0.34991488651999997 s
+  Old Futhark mean time: 0.3550377458533333 s
+  Winner for series.fut: New Futhark
+
+Benchmarking [245/397]: ../../futhark-benchmarks/adbench/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3728292414466666 s
+  Old Futhark mean time: 0.36791198551333326 s
+  Winner for vector_test.fut: Old Futhark
+
+Benchmarking [246/397]: ../../futhark-benchmarks/adbench/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36111153269333335 s
+  Old Futhark mean time: 0.3637426862933334 s
+  Winner for vector.fut: New Futhark
+
+Benchmarking [247/397]: ../../futhark-benchmarks/adbench/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38803606428666665 s
+  Old Futhark mean time: 0.3883805248866667 s
+  Winner for vspace.fut: New Futhark
+
+Benchmarking [248/397]: ../../futhark-benchmarks/adbench/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39268308934666674 s
+  Old Futhark mean time: 0.39057583748 s
+  Winner for vspace_tests.fut: Old Futhark
+
+Benchmarking [249/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45145537997333346 s
+  Old Futhark mean time: 0.45271921464 s
+  Winner for romu_tests.fut: New Futhark
+
+Benchmarking [250/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40136962562000006 s
+  Old Futhark mean time: 0.40068707968666667 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [251/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4062648840666666 s
+  Old Futhark mean time: 0.4053953494666666 s
+  Winner for random_tests.fut: Old Futhark
+
+Benchmarking [252/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4303017768866667 s
+  Old Futhark mean time: 0.4283376799533334 s
+  Winner for romu.fut: Old Futhark
+
+Benchmarking [253/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3943505442266667 s
+  Old Futhark mean time: 0.3959670524933333 s
+  Winner for random.fut: New Futhark
+
+Benchmarking [254/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3989892723933333 s
+  Old Futhark mean time: 0.4055440249933334 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [255/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/autodiff/onehot_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36287075868666674 s
+  Old Futhark mean time: 0.3657497179533334 s
+  Winner for onehot_tests.fut: New Futhark
+
+Benchmarking [256/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/autodiff/autodiff.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36116509294000004 s
+  Old Futhark mean time: 0.3617113634733334 s
+  Winner for autodiff.fut: New Futhark
+
+Benchmarking [257/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/autodiff/onehot.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3625678416 s
+  Old Futhark mean time: 0.3617125104666667 s
+  Winner for onehot.fut: Old Futhark
+
+Benchmarking [258/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/nmf_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48783826503333344 s
+  Old Futhark mean time: 0.49486510150000007 s
+  Winner for nmf_tests.fut: New Futhark
+
+Benchmarking [259/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/lu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4521077583533334 s
+  Old Futhark mean time: 0.45971850128666675 s
+  Winner for lu.fut: New Futhark
+
+Benchmarking [260/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/linalg_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42558772935333333 s
+  Old Futhark mean time: 0.4275789619533334 s
+  Winner for linalg_tests.fut: New Futhark
+
+Benchmarking [261/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/linalg.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4172760491266667 s
+  Old Futhark mean time: 0.42398360026 s
+  Winner for linalg.fut: New Futhark
+
+Benchmarking [262/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/qr.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45491186528 s
+  Old Futhark mean time: 0.46272241768 s
+  Winner for qr.fut: New Futhark
+
+Benchmarking [263/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/lu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.45476552252666663 s
+  Old Futhark mean time: 0.4614885551933333 s
+  Winner for lu_tests.fut: New Futhark
+
+Benchmarking [264/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/nmf.fut
+  New Futhark mean time (CUR_TIME for this file): 0.48297414045333337 s
+  Old Futhark mean time: 0.49373487298666674 s
+  Winner for nmf.fut: New Futhark
+
+Benchmarking [265/397]: ../../futhark-benchmarks/adbench/lib/github.com/diku-dk/linalg/qr_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4584960695333334 s
+  Old Futhark mean time: 0.4633606692666667 s
+  Winner for qr_tests.fut: New Futhark
+
+Benchmarking [266/397]: ../../futhark-benchmarks/adbench/gmm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4434955142133334 s
+  Old Futhark mean time: 0.44531850741333334 s
+  Winner for gmm.fut: New Futhark
+
+Benchmarking [267/397]: ../../futhark-benchmarks/adbench/lstm.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36693276776 s
+  Old Futhark mean time: 0.36741296202666673 s
+  Winner for lstm.fut: New Futhark
+
+Benchmarking [268/397]: ../../futhark-benchmarks/adbench/ba.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4201349804333334 s
+  Old Futhark mean time: 0.4245262763 s
+  Winner for ba.fut: New Futhark
+
+Benchmarking [269/397]: ../../futhark-benchmarks/adbench/hand.fut
+  New Futhark mean time (CUR_TIME for this file): 0.47725397382000007 s
+  Old Futhark mean time: 0.4780737123533333 s
+  Winner for hand.fut: New Futhark
+
+Benchmarking [270/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3666259191266667 s
+  Old Futhark mean time: 0.36384260646000005 s
+  Winner for colour.fut: Old Futhark
+
+Benchmarking [271/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3676290223400001 s
+  Old Futhark mean time: 0.3703859938066667 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [272/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38570544456000005 s
+  Old Futhark mean time: 0.38979124622666667 s
+  Winner for lys.fut: New Futhark
+
+Benchmarking [273/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3927222547533333 s
+  Old Futhark mean time: 0.3935779385533334 s
+  Winner for genlys.fut: New Futhark
+
+Benchmarking [274/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36266106558000005 s
+  Old Futhark mean time: 0.3615991148466667 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [275/397]: ../../futhark-benchmarks/accelerate/julia/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3749143580666667 s
+  Old Futhark mean time: 0.37714336186666664 s
+  Winner for complex_tests.fut: New Futhark
+
+Benchmarking [276/397]: ../../futhark-benchmarks/accelerate/julia/julia.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4517408022 s
+  Old Futhark mean time: 0.4496805439333333 s
+  Winner for julia.fut: Old Futhark
+
+Benchmarking [277/397]: ../../futhark-benchmarks/accelerate/nbody/radixtree.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3628070854933334 s
+  Old Futhark mean time: 0.36413290122666664 s
+  Winner for radixtree.fut: New Futhark
+
+Benchmarking [278/397]: ../../futhark-benchmarks/accelerate/nbody/nbody-gui.fut
+  New Futhark mean time (CUR_TIME for this file): 0.7141479878933334 s
+  Old Futhark mean time: 0.7111671047600001 s
+  Winner for nbody-gui.fut: Old Futhark
+
+Benchmarking [279/397]: ../../futhark-benchmarks/accelerate/nbody/physics.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39195551928666666 s
+  Old Futhark mean time: 0.3918793239533334 s
+  Winner for physics.fut: Old Futhark
+
+Benchmarking [280/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36817439576666666 s
+  Old Futhark mean time: 0.3663854769 s
+  Winner for colour.fut: Old Futhark
+
+Benchmarking [281/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3679545074400001 s
+  Old Futhark mean time: 0.3665860886400001 s
+  Winner for colour_test.fut: Old Futhark
+
+Benchmarking [282/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36541545742 s
+  Old Futhark mean time: 0.36566628602000006 s
+  Winner for vector_test.fut: New Futhark
+
+Benchmarking [283/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36132779302 s
+  Old Futhark mean time: 0.36094996481999997 s
+  Winner for vector.fut: Old Futhark
+
+Benchmarking [284/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3891029744533333 s
+  Old Futhark mean time: 0.4113297890533333 s
+  Winner for vspace.fut: New Futhark
+
+Benchmarking [285/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39300482342666676 s
+  Old Futhark mean time: 0.39379177616 s
+  Winner for vspace_tests.fut: New Futhark
+
+Benchmarking [286/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36112559934000005 s
+  Old Futhark mean time: 0.36636071914000007 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [287/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3931634279666667 s
+  Old Futhark mean time: 0.37010425123333335 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [288/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4664097341466667 s
+  Old Futhark mean time: 0.4563356816133334 s
+  Winner for romu_tests.fut: Old Futhark
+
+Benchmarking [289/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40612593873999997 s
+  Old Futhark mean time: 0.40530691327333324 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [290/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41310871013333345 s
+  Old Futhark mean time: 0.40972202706666677 s
+  Winner for random_tests.fut: Old Futhark
+
+Benchmarking [291/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4296898755466667 s
+  Old Futhark mean time: 0.4349377337466667 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [292/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3961090682666667 s
+  Old Futhark mean time: 0.3955564152666667 s
+  Winner for random.fut: Old Futhark
+
+Benchmarking [293/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4063957484533333 s
+  Old Futhark mean time: 0.40225947998666667 s
+  Winner for shuffle_tests.fut: Old Futhark
+
+Benchmarking [294/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38934728334666674 s
+  Old Futhark mean time: 0.3887107301466667 s
+  Winner for lys.fut: Old Futhark
+
+Benchmarking [295/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39561944726000003 s
+  Old Futhark mean time: 0.39252709686 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [296/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3545089130000001 s
+  Old Futhark mean time: 0.3496135569333333 s
+  Winner for insertion_sort.fut: Old Futhark
+
+Benchmarking [297/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3906193361533334 s
+  Old Futhark mean time: 0.38699526355333336 s
+  Winner for quick_sort_test.fut: Old Futhark
+
+Benchmarking [298/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3537954535133334 s
+  Old Futhark mean time: 0.3602435872466667 s
+  Winner for bubble_sort.fut: New Futhark
+
+Benchmarking [299/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40546446865999997 s
+  Old Futhark mean time: 0.40700596159333347 s
+  Winner for quick_sort.fut: New Futhark
+
+Benchmarking [300/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37279575793333347 s
+  Old Futhark mean time: 0.3621976952 s
+  Winner for bubble_sort_tests.fut: Old Futhark
+
+Benchmarking [301/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38303506652666663 s
+  Old Futhark mean time: 0.38952049246000003 s
+  Winner for merge_sort.fut: New Futhark
+
+Benchmarking [302/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4066349208200001 s
+  Old Futhark mean time: 0.4051991414866667 s
+  Winner for radix_sort.fut: Old Futhark
+
+Benchmarking [303/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39622933124666665 s
+  Old Futhark mean time: 0.4334760173800001 s
+  Winner for merge_sort_tests.fut: New Futhark
+
+Benchmarking [304/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4402406931933333 s
+  Old Futhark mean time: 0.44712212659333345 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [305/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3709700896933334 s
+  Old Futhark mean time: 0.38338871436000005 s
+  Winner for insertion_sort_tests.fut: New Futhark
+
+Benchmarking [306/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38084286606 s
+  Old Futhark mean time: 0.3659900278599999 s
+  Winner for bitonic_sort.fut: Old Futhark
+
+Benchmarking [307/397]: ../../futhark-benchmarks/accelerate/nbody/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36365067412666663 s
+  Old Futhark mean time: 0.36262918106 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [308/397]: ../../futhark-benchmarks/accelerate/nbody/nbody-bh.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5251164291066667 s
+  Old Futhark mean time: 0.5320186379733334 s
+  Winner for nbody-bh.fut: New Futhark
+
+Benchmarking [309/397]: ../../futhark-benchmarks/accelerate/nbody/nbody.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40058263390000004 s
+  Old Futhark mean time: 0.40405081196666665 s
+  Winner for nbody.fut: New Futhark
+
+Benchmarking [310/397]: ../../futhark-benchmarks/accelerate/nbody/octree.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5244441954066666 s
+  Old Futhark mean time: 0.5081939770733334 s
+  Winner for octree.fut: Old Futhark
+
+Benchmarking [311/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3628576471066667 s
+  Old Futhark mean time: 0.36438831757333323 s
+  Winner for segmented.fut: New Futhark
+
+Benchmarking [312/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36672182089999994 s
+  Old Futhark mean time: 0.3683914360333334 s
+  Winner for segmented_tests.fut: New Futhark
+
+Benchmarking [313/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/insertion_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3566022183533334 s
+  Old Futhark mean time: 0.35107188202000006 s
+  Winner for insertion_sort.fut: Old Futhark
+
+Benchmarking [314/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/quick_sort_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3845140021600001 s
+  Old Futhark mean time: 0.3893752796933334 s
+  Winner for quick_sort_test.fut: New Futhark
+
+Benchmarking [315/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/bubble_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35664606792666664 s
+  Old Futhark mean time: 0.3524114879266667 s
+  Winner for bubble_sort.fut: Old Futhark
+
+Benchmarking [316/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/quick_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38067021726000017 s
+  Old Futhark mean time: 0.38245109786 s
+  Winner for quick_sort.fut: New Futhark
+
+Benchmarking [317/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/bubble_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3563345716133333 s
+  Old Futhark mean time: 0.3569626600133334 s
+  Winner for bubble_sort_tests.fut: New Futhark
+
+Benchmarking [318/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/merge_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3814358524933334 s
+  Old Futhark mean time: 0.37818909609333334 s
+  Winner for merge_sort.fut: Old Futhark
+
+Benchmarking [319/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/radix_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4011821355800001 s
+  Old Futhark mean time: 0.40163095924666675 s
+  Winner for radix_sort.fut: New Futhark
+
+Benchmarking [320/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/merge_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38910125208 s
+  Old Futhark mean time: 0.38619576781333337 s
+  Winner for merge_sort_tests.fut: Old Futhark
+
+Benchmarking [321/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/radix_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42087537252 s
+  Old Futhark mean time: 0.42118967372 s
+  Winner for radix_sort_tests.fut: New Futhark
+
+Benchmarking [322/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/insertion_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35572528090000005 s
+  Old Futhark mean time: 0.3562127041 s
+  Winner for insertion_sort_tests.fut: New Futhark
+
+Benchmarking [323/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/bitonic_sort.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35672558675333327 s
+  Old Futhark mean time: 0.3566972344866666 s
+  Winner for bitonic_sort.fut: Old Futhark
+
+Benchmarking [324/397]: ../../futhark-benchmarks/accelerate/pagerank/lib/github.com/diku-dk/sorts/bitonic_sort_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3623549366 s
+  Old Futhark mean time: 0.35664537386666667 s
+  Winner for bitonic_sort_tests.fut: Old Futhark
+
+Benchmarking [325/397]: ../../futhark-benchmarks/accelerate/pagerank/pagerank.fut
+  New Futhark mean time (CUR_TIME for this file): 0.43001722620666677 s
+  Old Futhark mean time: 0.42602498214 s
+  Winner for pagerank.fut: Old Futhark
+
+Benchmarking [326/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.368436862 s
+  Old Futhark mean time: 0.37025117500000004 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [327/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37178800085333336 s
+  Old Futhark mean time: 0.37054187578666675 s
+  Winner for colour_test.fut: Old Futhark
+
+Benchmarking [328/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/segmented/segmented.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3652257149666666 s
+  Old Futhark mean time: 0.3581081727 s
+  Winner for segmented.fut: Old Futhark
+
+Benchmarking [329/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/segmented/segmented_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37021627848000005 s
+  Old Futhark mean time: 0.36533719041333335 s
+  Winner for segmented_tests.fut: Old Futhark
+
+Benchmarking [330/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/romu_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4554573073333334 s
+  Old Futhark mean time: 0.4521755014000001 s
+  Winner for romu_tests.fut: Old Futhark
+
+Benchmarking [331/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/shuffle.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40657273134000005 s
+  Old Futhark mean time: 0.40011063607333336 s
+  Winner for shuffle.fut: Old Futhark
+
+Benchmarking [332/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/random_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4098122692 s
+  Old Futhark mean time: 0.4100595378000001 s
+  Winner for random_tests.fut: New Futhark
+
+Benchmarking [333/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/romu.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42667432398666677 s
+  Old Futhark mean time: 0.42825577232000006 s
+  Winner for romu.fut: New Futhark
+
+Benchmarking [334/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/random.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39515340254000003 s
+  Old Futhark mean time: 0.39539911213999995 s
+  Winner for random.fut: New Futhark
+
+Benchmarking [335/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/cpprandom/shuffle_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4052057492400001 s
+  Old Futhark mean time: 0.40635049904000003 s
+  Winner for shuffle_tests.fut: New Futhark
+
+Benchmarking [336/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38791813454666657 s
+  Old Futhark mean time: 0.3870894214799999 s
+  Winner for lys.fut: Old Futhark
+
+Benchmarking [337/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39440518067999997 s
+  Old Futhark mean time: 0.39237655767999996 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [338/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.35827768113999997 s
+  Old Futhark mean time: 0.35589858154 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [339/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3631410152133333 s
+  Old Futhark mean time: 0.3606411906133334 s
+  Winner for complex_tests.fut: Old Futhark
+
+Benchmarking [340/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/fft/stockham-radix-2.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3770001675133334 s
+  Old Futhark mean time: 0.37808201124666674 s
+  Winner for stockham-radix-2.fut: New Futhark
+
+Benchmarking [341/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/fft/fft.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3519146989933334 s
+  Old Futhark mean time: 0.3465010139266667 s
+  Winner for fft.fut: Old Futhark
+
+Benchmarking [342/397]: ../../futhark-benchmarks/accelerate/smoothlife/lib/github.com/diku-dk/fft/stockham-radix-2_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3819890257 s
+  Old Futhark mean time: 0.38060288216666666 s
+  Winner for stockham-radix-2_tests.fut: Old Futhark
+
+Benchmarking [343/397]: ../../futhark-benchmarks/accelerate/smoothlife/smoothlife.fut
+  New Futhark mean time (CUR_TIME for this file): 0.5639403761466667 s
+  Old Futhark mean time: 0.56601540748 s
+  Winner for smoothlife.fut: New Futhark
+
+Benchmarking [344/397]: ../../futhark-benchmarks/accelerate/canny/canny.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38865943337333336 s
+  Old Futhark mean time: 0.38646850917333336 s
+  Winner for canny.fut: Old Futhark
+
+Benchmarking [345/397]: ../../futhark-benchmarks/accelerate/ray/intersection.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42577673288 s
+  Old Futhark mean time: 0.42131138714666666 s
+  Winner for intersection.fut: Old Futhark
+
+Benchmarking [346/397]: ../../futhark-benchmarks/accelerate/ray/ray.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4842276908866667 s
+  Old Futhark mean time: 0.48526495855333335 s
+  Winner for ray.fut: New Futhark
+
+Benchmarking [347/397]: ../../futhark-benchmarks/accelerate/ray/trace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.44797538880666665 s
+  Old Futhark mean time: 0.45035790214000004 s
+  Winner for trace.fut: New Futhark
+
+Benchmarking [348/397]: ../../futhark-benchmarks/accelerate/ray/objects.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42188962663999996 s
+  Old Futhark mean time: 0.4186665693733334 s
+  Winner for objects.fut: Old Futhark
+
+Benchmarking [349/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36741174635333335 s
+  Old Futhark mean time: 0.36793612455333335 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [350/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3697624538133334 s
+  Old Futhark mean time: 0.3733887983466667 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [351/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37457727704666666 s
+  Old Futhark mean time: 0.37106181264666666 s
+  Winner for vector_test.fut: Old Futhark
+
+Benchmarking [352/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3727197446666667 s
+  Old Futhark mean time: 0.3762116282666667 s
+  Winner for vector.fut: New Futhark
+
+Benchmarking [353/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39288937032000004 s
+  Old Futhark mean time: 0.39220945985333344 s
+  Winner for vspace.fut: Old Futhark
+
+Benchmarking [354/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39666280840000007 s
+  Old Futhark mean time: 0.3945169818666666 s
+  Winner for vspace_tests.fut: Old Futhark
+
+Benchmarking [355/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3915004726733333 s
+  Old Futhark mean time: 0.3901234752733334 s
+  Winner for lys.fut: Old Futhark
+
+Benchmarking [356/397]: ../../futhark-benchmarks/accelerate/ray/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39332526489333336 s
+  Old Futhark mean time: 0.3890804010266667 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [357/397]: ../../futhark-benchmarks/accelerate/ray/types.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38947711833333337 s
+  Old Futhark mean time: 0.39049815773333335 s
+  Winner for types.fut: New Futhark
+
+Benchmarking [358/397]: ../../futhark-benchmarks/accelerate/ray/lights.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42461232781333336 s
+  Old Futhark mean time: 0.42837592574666666 s
+  Winner for lights.fut: New Futhark
+
+Benchmarking [359/397]: ../../futhark-benchmarks/accelerate/hashcat/hashcat.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36515378918666674 s
+  Old Futhark mean time: 0.3673864616533333 s
+  Winner for hashcat.fut: New Futhark
+
+Benchmarking [360/397]: ../../futhark-benchmarks/accelerate/crystal/crystal.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38168547876666664 s
+  Old Futhark mean time: 0.38113894810000004 s
+  Winner for crystal.fut: Old Futhark
+
+Benchmarking [361/397]: ../../futhark-benchmarks/accelerate/crystal/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36722127638666663 s
+  Old Futhark mean time: 0.37235912512 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [362/397]: ../../futhark-benchmarks/accelerate/crystal/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36708894258 s
+  Old Futhark mean time: 0.3697991357133333 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [363/397]: ../../futhark-benchmarks/accelerate/fluid/fluid.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4009390397 s
+  Old Futhark mean time: 0.3856820535666667 s
+  Winner for fluid.fut: Old Futhark
+
+Benchmarking [364/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36707040812 s
+  Old Futhark mean time: 0.37038932632 s
+  Winner for colour.fut: New Futhark
+
+Benchmarking [365/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3724597228066667 s
+  Old Futhark mean time: 0.36716096127333336 s
+  Winner for colour_test.fut: Old Futhark
+
+Benchmarking [366/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/vector/vector_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37337333520666666 s
+  Old Futhark mean time: 0.3689733796733333 s
+  Winner for vector_test.fut: Old Futhark
+
+Benchmarking [367/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/vector/vector.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36711838836000005 s
+  Old Futhark mean time: 0.36331210536 s
+  Winner for vector.fut: Old Futhark
+
+Benchmarking [368/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/vector/vspace.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39301108839333326 s
+  Old Futhark mean time: 0.38669959506 s
+  Winner for vspace.fut: Old Futhark
+
+Benchmarking [369/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/athas/vector/vspace_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3960434585933334 s
+  Old Futhark mean time: 0.39557052392666664 s
+  Winner for vspace_tests.fut: Old Futhark
+
+Benchmarking [370/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.38882718148 s
+  Old Futhark mean time: 0.3860908764133334 s
+  Winner for lys.fut: Old Futhark
+
+Benchmarking [371/397]: ../../futhark-benchmarks/accelerate/tunnel/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39747052766666674 s
+  Old Futhark mean time: 0.3945609770000001 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [372/397]: ../../futhark-benchmarks/accelerate/tunnel/tunnel.fut
+  New Futhark mean time (CUR_TIME for this file): 0.44937369765333346 s
+  Old Futhark mean time: 0.4449094818533334 s
+  Winner for tunnel.fut: Old Futhark
+
+Benchmarking [373/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3684356277666666 s
+  Old Futhark mean time: 0.36666853356666673 s
+  Winner for colour.fut: Old Futhark
+
+Benchmarking [374/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3678181519866667 s
+  Old Futhark mean time: 0.36805906932 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [375/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36342023098000004 s
+  Old Futhark mean time: 0.36888133151333335 s
+  Winner for complex.fut: New Futhark
+
+Benchmarking [376/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37775170587333345 s
+  Old Futhark mean time: 0.3754724589400001 s
+  Winner for complex_tests.fut: Old Futhark
+
+Benchmarking [377/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/diku-dk/fft/stockham-radix-2.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3939408354533334 s
+  Old Futhark mean time: 0.3866730934533334 s
+  Winner for stockham-radix-2.fut: Old Futhark
+
+Benchmarking [378/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/diku-dk/fft/fft.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3491292172866667 s
+  Old Futhark mean time: 0.3467092876200001 s
+  Winner for fft.fut: Old Futhark
+
+Benchmarking [379/397]: ../../futhark-benchmarks/accelerate/fft/lib/github.com/diku-dk/fft/stockham-radix-2_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39782433496666664 s
+  Old Futhark mean time: 0.3940794934333333 s
+  Winner for stockham-radix-2_tests.fut: Old Futhark
+
+Benchmarking [380/397]: ../../futhark-benchmarks/accelerate/fft/fft.fut
+  New Futhark mean time (CUR_TIME for this file): 0.42014318936666667 s
+  Old Futhark mean time: 0.42146862356666676 s
+  Winner for fft.fut: New Futhark
+
+Benchmarking [381/397]: ../../futhark-benchmarks/accelerate/mandelbrot/mandelbrot32.fut
+  New Futhark mean time (CUR_TIME for this file): 0.41120076302 s
+  Old Futhark mean time: 0.41239679242 s
+  Winner for mandelbrot32.fut: New Futhark
+
+Benchmarking [382/397]: ../../futhark-benchmarks/accelerate/mandelbrot/mandelbrot.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4115952664 s
+  Old Futhark mean time: 0.40959093266666663 s
+  Winner for mandelbrot.fut: Old Futhark
+
+Benchmarking [383/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/athas/matte/colour.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37004394579333333 s
+  Old Futhark mean time: 0.37002750226 s
+  Winner for colour.fut: Old Futhark
+
+Benchmarking [384/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/athas/matte/colour_test.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36730405198 s
+  Old Futhark mean time: 0.37146542438 s
+  Winner for colour_test.fut: New Futhark
+
+Benchmarking [385/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/diku-dk/lys/lys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3903391389266667 s
+  Old Futhark mean time: 0.3901885693933334 s
+  Winner for lys.fut: Old Futhark
+
+Benchmarking [386/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/diku-dk/lys/genlys.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39679772160666665 s
+  Old Futhark mean time: 0.3908734832066667 s
+  Winner for genlys.fut: Old Futhark
+
+Benchmarking [387/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/diku-dk/complex/complex.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36399698044 s
+  Old Futhark mean time: 0.36018895837333337 s
+  Winner for complex.fut: Old Futhark
+
+Benchmarking [388/397]: ../../futhark-benchmarks/accelerate/mandelbrot/lib/github.com/diku-dk/complex/complex_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37565317457999997 s
+  Old Futhark mean time: 0.3740748935133334 s
+  Winner for complex_tests.fut: Old Futhark
+
+Benchmarking [389/397]: ../../futhark-benchmarks/accelerate/mandelbrot/generic_mandelbrot.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40986060300666666 s
+  Old Futhark mean time: 0.4075201956733333 s
+  Winner for generic_mandelbrot.fut: Old Futhark
+
+Benchmarking [390/397]: ../../futhark-benchmarks/accelerate/mandelbrot/mandelbrot64.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4099858908466667 s
+  Old Futhark mean time: 0.40909935298000005 s
+  Winner for mandelbrot64.fut: Old Futhark
+
+Benchmarking [391/397]: ../../futhark-benchmarks/accelerate/mandelbrot/mandelbrot-gui.fut
+  New Futhark mean time (CUR_TIME for this file): 0.4553469416866667 s
+  Old Futhark mean time: 0.4500385676866668 s
+  Winner for mandelbrot-gui.fut: Old Futhark
+
+Benchmarking [392/397]: ../../futhark-benchmarks/accelerate/kmeans/kmeans.fut
+  New Futhark mean time (CUR_TIME for this file): 0.3618585964066666 s
+  Old Futhark mean time: 0.3584237414066667 s
+  Winner for kmeans.fut: Old Futhark
+
+Benchmarking [393/397]: ../../futhark-benchmarks/finpar/lib/github.com/diku-dk/date/date.fut
+  New Futhark mean time (CUR_TIME for this file): 0.37068858504 s
+  Old Futhark mean time: 0.37356552064000004 s
+  Winner for date.fut: New Futhark
+
+Benchmarking [394/397]: ../../futhark-benchmarks/finpar/lib/github.com/diku-dk/date/date_tests.fut
+  New Futhark mean time (CUR_TIME for this file): 0.36907331546000005 s
+  Old Futhark mean time: 0.37910319259333325 s
+  Winner for date_tests.fut: New Futhark
+
+Benchmarking [395/397]: ../../futhark-benchmarks/finpar/OptionPricing.fut
+  New Futhark mean time (CUR_TIME for this file): 0.39690595600666667 s
+  Old Futhark mean time: 0.39123283987333335 s
+  Winner for OptionPricing.fut: Old Futhark
+
+Benchmarking [396/397]: ../../futhark-benchmarks/finpar/InterestCalib.fut
+ERROR: Hyperfine failed for '../../futhark-benchmarks/finpar/InterestCalib.fut'.
+ERROR: Hyperfine stderr: [31mError:[0m Command terminated with non-zero exit code 2 in the first warmup run. Use the '-i'/'--ignore-failure' option if you want to ignore this. Alternatively, use the '--show-output' option to debug what went wrong.
+
+Benchmarking [397/397]: ../../futhark-benchmarks/finpar/LocVolCalib.fut
+  New Futhark mean time (CUR_TIME for this file): 0.40135147717333336 s
+  Old Futhark mean time: 0.4018300746400001 s
+  Winner for LocVolCalib.fut: New Futhark
+
+--- Benchmark Summary ---
+Total .fut files found: 397
+Total .fut files processed/attempted: 397
+Successfully benchmarked files (hyperfine completed and results parsed): 395
+Failed benchmarks (hyperfine error or result parsing issue): 2
+
+New Futhark wins: 209
+Old Futhark wins: 186
+Ties (or equal performance): 0
+
+Longest benchmark component time (MAX_TIME): 0.82024631484 s
+File associated with MAX_TIME: ../../futhark-benchmarks/rodinia/myocyte/myocyte.fut
+--- End of Summary ---
+Individual hyperfine JSON and Markdown reports are located in: ../hyperfine_benching_out/benchmark_out_20250508_133519
+This overall summary and detailed logs are in: ../hyperfine_benching_out/benchmark_out_20250508_133519/benchmark_result.log
+Benchmark script finished.

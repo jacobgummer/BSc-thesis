@@ -362,6 +362,7 @@ unifyUF (TArr arg1 ret1) (TArr arg2 ret2) uf =
 unifyUF t1 t2 _ = throwError $ UnificationFail t1 t2
 
 -- | Bind a type variable to a type.
+-- subTyVar in fut
 bindUF :: TVar -> Type -> UF s -> SolveST s (UF s)
 bindUF a t uf | t == TVar a     = return uf
               | occursCheck a t = throwError $ InfiniteType a t
@@ -371,6 +372,7 @@ bindUF a t uf | t == TVar a     = return uf
                         return uf
 
 -- | Unify two type variables.
+-- unionTyVars in fut
 unifyVars :: TVar -> TVar -> UF s -> SolveST s (UF s)
 unifyVars v1 v2 uf = do
     n1 <- lookupUF v1 uf

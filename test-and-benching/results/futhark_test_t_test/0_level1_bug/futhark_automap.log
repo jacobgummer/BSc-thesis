@@ -1,0 +1,254 @@
+tests/issue1926.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/issue1926.fut':
+Expected error:
+  cannot match value
+Got error:
+  Error at tests/issue1926.fut:6:1-11:7:
+  Rank ILP cannot be solved.
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/shapes/error7.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/shapes/error7.fut':
+Expected error:
+  Ambiguous.*anonymous size in type expression
+Got error:
+  Warning at tests/shapes/error7.fut:8:7-8:
+  Unused name "v".
+
+  Error at tests/shapes/error7.fut:8:17-24:
+  Ambiguous size "dv₁" arising from replaceTyVars.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/shapes/error10.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/shapes/error10.fut':
+Expected error:
+  Causality check
+Got error:
+  Warning at tests/shapes/error10.fut:4:11-12:
+  Unused name "b".
+
+  Error at tests/shapes/error10.fut:5:16-23:
+  Ambiguous size "d₂" arising from anonymous size in type expression.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/modules/module-spec-error2.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/modules/module-spec-error2.fut':
+Expected error:
+  M1.M.t.*M0.M.t
+Got error:
+  Defaulting ambiguous type to i32.
+
+  Error at tests/modules/module-spec-error2.fut:19:21-29:
+  Cannot apply "M1.M.f" to "(M0.M.x)" (invalid type).
+  Expected: t
+  Actual:   t
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/sumtypes/sumtype52.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/sumtypes/sumtype52.fut':
+Expected error:
+  Causality check
+Got error:
+  Error at tests/sumtypes/sumtype52.fut:14:17-22:
+  Ambiguous size "dv₃" arising from replaceTyVars.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/sumtypes/sumtype51.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/sumtypes/sumtype51.fut':
+Expected error:
+  Causality check
+Got error:
+  Error at tests/sumtypes/sumtype51.fut:13:8-13:
+  Ambiguous size "dv₁" arising from replaceTyVars.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/holes/simple4.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/holes/simple4.fut':
+Expected error:
+  Ambiguous size.*instantiated size parameter of "f32.sum"
+Got error:
+  Error at tests/holes/simple4.fut:4:20-23:
+  Ambiguous size "dv₁" arising from replaceTyVars.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/holes/simple3.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/holes/simple3.fut':
+Expected error:
+  causality
+Got error:
+  Error at tests/holes/simple3.fut:5:32-35:
+  Ambiguous size "dv₄" arising from replaceTyVars.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+tests/holes/hof3.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/holes/hof3.fut':
+Error at tests/holes/hof3.fut:3:29-32:
+Ambiguous size "dv₁" arising from replaceTyVars.
+
+For more information, see:
+  https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/issue1168.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/issue1168.fut':
+Error at tests/issue1168.fut:216:3-222:53:
+Function body does not have expected type.
+Expected: {add: () -> () -> (), parameter: (), propagation: () -> i -> (o, o -> (i, ())), scale: f32 -> () -> (), sum: (k: i64) -> [k]() -> (), zero: ()}
+Actual:   {add: () -> () -> (), parameter: (), propagation: () -> (i: i) -> (o, (x: o) -> (i, ())), scale: f32 -> () -> (), sum: i64 -> [dv₅₆]() -> (), zero: ()}
+
+Sizes "dv₅₆" and "k" do not match.
+When matching parameter types.
+When matching return types.
+When matching types of record field "sum".
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/issue1843.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/issue1843.fut':
+Error at tests/issue1843.fut:11:5-16:25:
+Function body does not have expected type.
+Expected: #Absorbing | #AntiReflective | #Mirror | #PhaseGradient_IdealFocus {f: f64, lam: f64} | #PhaseGradient_RotSym_Dispersive {GD: [N_coating_coefs]f64, GDD: [N_coating_coefs]f64, lam_d: f64, phi0: [N_coating_coefs]f64}
+Actual:   #Absorbing | #AntiReflective | #Mirror | #PhaseGradient_IdealFocus {f: f64, lam: f64} | #PhaseGradient_RotSym_Dispersive {GD: [differ₁₀]f64, GDD: [differ₁₁]f64, lam_d: f64, phi0: [differ₁₂]f64}
+
+Sizes "N_coating_coefs" and "differ₁₀" do not match.
+When matching types of record field "GD".
+When matching types of constructor "PhaseGradient_RotSym_Dispersive".
+
+Note: "differ₁₀" is unknown due to conditional expression at 13:8-14:25.
+      One branch returns array of type: #Absorbing | #AntiReflective | #Mirror | #PhaseGradient_IdealFocus {f: f64, lam: f64} | #PhaseGradient_RotSym_Dispersive {GD: [dv₄]f64, GDD: [dv₅]f64, lam_d: f64, phi0: [dv₆]f64}
+      The other an array of type:       #Absorbing | #AntiReflective | #Mirror | #PhaseGradient_IdealFocus {f: f64, lam: f64} | #PhaseGradient_RotSym_Dispersive {GD: [dv₇]f64, GDD: [dv₈]f64, lam_d: f64, phi0: [dv₉]f64}
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/issue1824.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/issue1824.fut':
+Type is ambiguous (could be one of bool).
+Add a type annotation to disambiguate the type.
+
+For more information, see:
+  https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-type
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/project.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/project.fut':
+Error at tests/automap/project.fut:6:1-8:22:
+Rank ILP cannot be solved.
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/pagerank.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/pagerank.fut':
+Error at tests/automap/pagerank.fut:13:33-35:
+Ambiguous size "dv₂" arising from replaceTyVars.
+
+For more information, see:
+  https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/sgemm.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/sgemm.fut':
+Error at tests/automap/sgemm.fut:30:1-32:81:
+Rank ILP is ambiguous.
+Choices:
+and (and (main_orig ass bss css alpha beta == main_am ass bss css alpha beta))
+and (and (main_orig ass bss css alpha beta == main_am ass bss css alpha beta))
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/mri-q.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/mri-q.fut':
+Error at tests/automap/mri-q.fut:41:6-9:
+Ambiguous size "n₄" arising from instantiated size parameter of "and".
+
+For more information, see:
+  https://futhark.readthedocs.io/en/latest/error-index.html#ambiguous-size
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/optionpricing.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/optionpricing.fut':
+Warning at tests/automap/optionpricing.fut:34:39-40:
+Unused name "i".
+
+Error at tests/automap/optionpricing.fut:71:1-72:57:
+Rank ILP is ambiguous.
+Choices:
+and (sobolIndR_orig dir_vs n == sobolIndR_am dir_vs n)
+and (sobolIndR_orig dir_vs n == sobolIndR_am dir_vs n)
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/simple5.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/simple5.fut':
+Error at tests/automap/simple5.fut:5:1-6:23:
+Rank ILP is ambiguous.
+Choices:
+(\(x: t₀) (y: t₁) ->
+  x + y) xs y
+(\(x: t₀) (y: t₁) ->
+  x + y) xs y
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/automap/leetcode.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/automap/leetcode.fut':
+Error at tests/automap/leetcode.fut:4:1-70:
+Rank ILP is ambiguous.
+Choices:
+xmat A == (A != 0) |> flatten |> and
+xmat A == (A != 0) |> flatten |> and
+xmat A == (A != 0) |> flatten |> and
+xmat A == (A != 0) |> flatten |> and
+xmat A == (A != 0) |> flatten |> and
+If you find this error message confusing, uninformative, or wrong, please open an issue:
+  https://github.com/diku-dk/futhark/issues
+
+tests/types/function-error2.fut:
+Type-checking with '/home/laust/repos/futhark-bachelor/.misc/binaries/futhark-automap check tests/types/function-error2.fut':
+Expected error:
+  Cannot apply "reverse" to "x"
+Got error:
+  Error at tests/types/function-error2.fut:7:1-32:
+  Entry point functions must not be size-polymorphic in their return type.
+
+  For more information, see:
+    https://futhark.readthedocs.io/en/latest/error-index.html#size-polymorphic-entry
+  If you find this error message confusing, uninformative, or wrong, please open an issue:
+    https://github.com/diku-dk/futhark/issues
+
+┌──────────┬────────┬────────┬───────────┐
+│          │ passed │ failed │ remaining │
+├──────────┼────────┼────────┼───────────┤
+│ programs │ 2344   │ 20     │ 0/2364    │
+├──────────┼────────┼────────┼───────────┤
+│ runs     │ 3311   │ 15     │ 0/3326    │
+└──────────┴────────┴────────┴───────────┘
