@@ -1,5 +1,5 @@
 # futhark-automap
-## futhark-automap 
+## futhark-automap (DELETED)
 Repo: jakobgummer/futhark
 
 Branch: automap-tysolve-optim 
@@ -7,8 +7,29 @@ Branch: automap-tysolve-optim
 Commit: 63894b7
 ### Notes
 Not sure why this was chosen?
-Must be because of the (re)naming of the files resulting in the original automap implementaion being used.
+Might be because of the (re)naming of the files resulting in the original automap implementaion NOT being used.
 
+Deleted, since it was faulty.
+
+## futhark-automap-commit
+Repo: jakobgummer/futhark
+
+Branch: automap-tysolve-optim 
+
+Commit: 63894b7
+
+### Notes
+Renaming done correctly, yielding improved result over `futhark-automap`.
+
+## futhark-automap-branch
+Repo: jakobgummer/futhark
+
+Branch: automap
+
+Commit: cf552f9
+
+### Notes
+Compiled directly from `automap` branch thereby ensuring original implementation is used.
 
 # futhark-new
 ## futhark-new-0.0
