@@ -1,0 +1,49 @@
+Benchmark Run Log - 2025-05-15T09:33:36 CEST
+==================================================
+Starting benchmark script...
+--- Configuration ---
+NUM_DRY_RUNS: 3
+NUM_ACTUAL_RUNS: 15
+NEW_FUTHARK_LOC: /home/laust/repos/BSc-thesis/test-and-benching/binaries/futhark-new-2.1
+OLD_FUTHARK_LOC: /home/laust/repos/BSc-thesis/test-and-benching/binaries/futhark-automap-commit
+HYPERFINE_LOC: hyperfine
+TEST_FILES_DIR: /home/laust/repos/BSc-thesis/test-and-benching/scripts/hyperfine_benching_in
+USER_SPECIFIED_OUTPUT_DIR_PREFIX: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out
+OUTPUT_DIR: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out/benchmark_out_20250515_093335
+OUTPUT_LOG: /home/laust/repos/BSc-thesis/test-and-benching/results/hyperfine_benching_out/benchmark_out_20250515_093335/benchmark_result.log
+----------------------
+Found hyperfine: /usr/bin/hyperfine
+Found jq: /usr/bin/jq
+Setup complete. All checks passed and environment is ready.
+==================================================
+Found 1 .fut files to benchmark in './hyperfine_benching_in'.
+
+Benchmarking [1/1]: ./hyperfine_benching_in/myocyte.fut
+  New Futhark 'check' mean time: 0.6193837616000001 s
+  Old Futhark 'check' mean time: 0.6247467192666666 s
+  Benchmarking 'futhark check-syntax' for myocyte.fut...
+  New Futhark 'check-syntax' mean time: 0.04489436122 s
+  Old Futhark 'check-syntax' mean time: 0.04207556868666666 s
+  Adjusted New Futhark mean time (typechecking): .5744894003800001 s
+  Adjusted Old Futhark mean time (typechecking): .58267115057999994 s
+  Adjusted JSON results (typechecking focus) saved to: ../results/hyperfine_benching_out/benchmark_out_20250515_093335/myocyte.adjusted.hyperfine.json
+  Winner for myocyte.fut (based on adjusted typechecking times): New Futhark (adjusted)
+  Adjusted Markdown report (typechecking focus) saved to: ../results/hyperfine_benching_out/benchmark_out_20250515_093335/myocyte.adjusted.hyperfine.md
+  New overall MAX_TIME (adjusted for typechecking): .58267115057999994 s (from file ./hyperfine_benching_in/myocyte.fut)
+
+--- Benchmark Summary ---
+Total .fut files found: 1
+Total .fut files processed/attempted: 1
+Successfully benchmarked files (hyperfine completed and results parsed): 1
+Failed benchmarks (hyperfine error or result parsing issue): 0
+
+New Futhark wins: 1
+Old Futhark wins: 0
+Ties (or equal performance): 0
+
+Longest benchmark component time (MAX_TIME): .58267115057999994 s
+File associated with MAX_TIME: ./hyperfine_benching_in/myocyte.fut
+--- End of Summary ---
+Individual hyperfine JSON and Markdown reports are located in: ../results/hyperfine_benching_out/benchmark_out_20250515_093335
+This overall summary and detailed logs are in: ../results/hyperfine_benching_out/benchmark_out_20250515_093335/benchmark_result.log
+Benchmark script finished.

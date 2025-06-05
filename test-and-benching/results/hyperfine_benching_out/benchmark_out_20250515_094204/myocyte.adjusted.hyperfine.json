@@ -1,0 +1,15 @@
+{
+  "file": "myocyte.fut",
+  "check_means": {
+    "new_futhark": 0.6873976915,
+    "old_futhark": 0.6834927598333332
+  },
+  "syntax_check_means": {
+    "new_futhark": 0.04642570872666667,
+    "old_futhark": 0.04514525126000001
+  },
+  "adjusted_means_typechecking": {
+    "new_futhark": 0.64097198277333333,
+    "old_futhark": 0.63834750857333319
+  }
+}
