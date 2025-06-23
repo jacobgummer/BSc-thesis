@@ -5,25 +5,19 @@ import numpy as np
 import os
 import argparse
 
-# Sentinel value for argparse when a flag is given without a number (meaning "all")
+
 PLOT_ALL_SENTINEL = "__PLOT_ALL__"
 
 # Custom type for argparse: allows an integer or the specific sentinel string
 def int_or_sentinel_type(value_str):
-    """
-    Custom type for argparse.
-    Allows an integer or the PLOT_ALL_SENTINEL string.
-    Argparse calls this with the string from the command line or the `const` value.
-    """
     if value_str == PLOT_ALL_SENTINEL:
         return PLOT_ALL_SENTINEL
     try:
         return int(value_str)
-    except ValueError:
-        # This message will be shown by argparse if conversion fails
+    except:
         raise argparse.ArgumentTypeError(f"invalid integer value: '{value_str}'. Must be an integer.")
 
-# Helper function to extract the (Cons: <X>) value from the 'Name' column.
+# Helper function to extract the cons value from the 'Name' column.
 def extract_cons_value(name_str):
     match = re.search(r'\(Cons: (\d+)\)', name_str)
     if match:
@@ -48,9 +42,6 @@ def extract_benchmark_name(name_str):
 def load_data(csv_path):
     try:
         df = pd.read_csv(csv_path)
-    except FileNotFoundError:
-        print(f"Error: The file {csv_path} was not found. Please check the path.")
-        return None
     except Exception as e:
         print(f"Error reading or parsing CSV file {csv_path}: {e}")
         return None
@@ -78,7 +69,8 @@ def load_data(csv_path):
 
 # Function to create the 'Cons vs. Mean Time' plot.
 def plot_cons_vs_mean(df_old, df_new, max_cons_filter, plot_title, output_path):
-    plt.figure(figsize=(12, 8))
+    fig, ax1 = plt.subplots(figsize=(9, 6))
+    ax2 = ax1.twinx()
     
     df_old_plot = df_old.copy().dropna(subset=['Cons', 'Mean'])
     df_new_plot = df_new.copy().dropna(subset=['Cons', 'Mean'])
@@ -89,23 +81,61 @@ def plot_cons_vs_mean(df_old, df_new, max_cons_filter, plot_title, output_path):
 
     df_old_plot = df_old_plot.sort_values(by='Cons')
     df_new_plot = df_new_plot.sort_values(by='Cons')
+    df_relative_plot = (df_old_plot['Mean'] - df_new_plot['Mean']) / df_new_plot['Mean']
 
     if df_old_plot.empty and df_new_plot.empty:
         print(f"No data available for '{plot_title}' plot after filtering. Skipping plot generation: {output_path}")
         plt.close()
         return
 
-    if not df_old_plot.empty:
-        plt.plot(df_old_plot['Cons'], df_old_plot['Mean'], marker='o', linestyle='-', label='solveOld', alpha=0.8)
-    if not df_new_plot.empty:
-        plt.plot(df_new_plot['Cons'], df_new_plot['Mean'], marker='s', linestyle='-', label='solveNew', alpha=0.8)
+    size=3
+    alpha = 0.55
+    solve_old_handle, = ax1.plot(df_old_plot['Cons'], df_old_plot['Mean'], marker='o', markersize=size, linestyle='-', label='solveOld', alpha=alpha, color='tab:orange')
+    solve_new_handle, = ax1.plot(df_new_plot['Cons'], df_new_plot['Mean'], marker='s', markersize=size, linestyle='-', label='solveNew', alpha=alpha, color='tab:blue')
+    relative_handle, = ax2.plot(df_new_plot['Cons'], df_relative_plot, marker='x', markersize=size, linestyle='-', label='relative', alpha=alpha, color='tab:green')
+    ax1.set_ylim(0,11000)
+    if max_cons_filter:
+        ax1.set_xlim(0, max_cons_filter)
+    else:
+        ax1.set_xlim(0, 2600)
+    ax2.set_ylim(-1,1)
 
-    plt.xlabel('Number of constraints')
-    plt.ylabel('Mean Time (nanoseconds)')
-    plt.title(plot_title)
-    if not df_old_plot.empty or not df_new_plot.empty:
-        plt.legend()
-    plt.grid(True, linestyle='--', alpha=0.7)
+    ax1.set_xlabel('Number of constraints', fontsize=16)
+    ax1.set_ylabel('Mean Execution Time (ns)', fontsize=16)
+    ax2.set_ylabel('Relative performance', fontsize=16)
+
+    for dataset in [(df_old_plot['Mean'], "old"), (df_new_plot['Mean'], "new"), (df_relative_plot, "relative")]:
+        mean = dataset[0].mean()
+        median = dataset[0].median()
+        std = dataset[0].std()
+        print(f'Mean {dataset[1]}: {mean}')
+        print(f'Median {dataset[1]}: {median}')
+        print(f'Std {dataset[1]}: {std}')
+
+    plt.title(plot_title, fontsize=16)
+
+    ax1.set_yticks(list(range(0, 11001, 1000)))
+    if max_cons_filter:
+        end = int(max_cons_filter+1)
+        step = int(round(max_cons_filter/10, -1))
+        ax1.set_xticks(list(range(0, end, step)))
+    else:
+        ax1.set_xticks(list(range(0, 2601, 200)))
+    ax2.set_yticks(np.arange(-1, 1.1, 0.1))
+
+    y1_ticks = ax1.get_yticks()[:-1]
+    y1_min, y1_max = ax1.get_ylim()
+    y2_min, y2_max = ax2.get_ylim()
+
+    y2_ticks = (y1_ticks - y1_min) / (y1_max - y1_min) * (y2_max - y2_min) + y2_min
+    y2_ticks = np.append(y2_ticks, [0, 1])
+    ax2.set_yticks(y2_ticks)
+
+    plt.legend(handles=[solve_old_handle, solve_new_handle, relative_handle])
+    ax1.grid(True, linestyle='--', alpha=0.7)
+    ax2.grid(True, linestyle='-')
+
+
     plt.tight_layout()
     
     try:
@@ -115,7 +145,61 @@ def plot_cons_vs_mean(df_old, df_new, max_cons_filter, plot_title, output_path):
         print(f"Error saving plot {output_path}: {e}")
     plt.close()
 
-# Function to create the comparison bar chart.
+def plot_relative(df_old_raw, df_new_raw, max_cons_val, plot_title, x_axis_title, y_axis_title, output_path):
+    old_means = df_old_raw['Mean'] 
+    new_means = df_new_raw['Mean']
+    old_faster = 0
+    new_faster = 0
+
+    for old, new in zip(old_means, new_means):
+        if old > new:
+            new_faster += 1
+        else:
+            old_faster += 1
+
+    old_mean = df_old_raw['Mean'].mean()
+    old_median = df_old_raw['Mean'].median()
+    old_std = df_old_raw['Mean'].std()
+    new_mean = df_new_raw['Mean'].mean()
+    new_median = df_new_raw['Mean'].median()
+    new_std = df_new_raw['Mean'].std()
+
+    print(f'Old mean: {old_mean}')
+    print(f'Old median: {old_median}')
+    print(f'Old std: {old_std}')
+    print(f'New mean: {new_mean}')
+    print(f'New median: {new_median}')
+    print(f'New std: {new_std}')
+    print(f'Old faster: {old_faster}')
+    print(f'New faster: {new_faster}')
+
+    plt.figure(figsize=(9, 6))
+    plt.scatter(old_means, new_means, marker='o', label='old_vs_new', alpha=0.3, s=40, color='tab:blue')
+
+    # m, b = np.polyfit(old_means, new_means, 1)
+    # plt.plot(old_means, m*old_means+b, color='tab:green')
+
+    x_y_values = [0, 20000]
+    plt.plot(x_y_values, x_y_values, linestyle='--', color='tab:red')
+
+    plt.xlim(0, 8500)
+    plt.ylim(0, 8500)
+
+    plt.xlabel(x_axis_title, fontsize=16)
+    plt.ylabel(y_axis_title, fontsize=16)
+    plt.title(plot_title, fontsize=16)
+
+    plt.grid(True)
+    plt.tight_layout()
+    
+    try:
+        plt.savefig(output_path)
+        print(f"Successfully saved '{plot_title}' plot to: {output_path}")
+    except Exception as e:
+        print(f"Error saving plot {output_path}: {e}")
+    plt.close()
+
+# Function to create comparison bar chart.
 def plot_comparison_bar_chart(display_df, plot_title, output_path):
     if display_df.empty:
         print(f"No data to display for '{plot_title}'. Skipping bar chart generation: {output_path}")
@@ -132,11 +216,11 @@ def plot_comparison_bar_chart(display_df, plot_title, output_path):
     ax.barh(y_pos - bar_height/2, display_df['Mean_old'], bar_height, label='solveOld', color='tab:orange', alpha=0.8)
     ax.barh(y_pos + bar_height/2, display_df['Mean_new'], bar_height, label='solveNew', color='tab:blue', alpha=0.8)
 
-    ax.set_ylabel(f'Benchmark Identifier ({len(display_df)})')
-    ax.set_xlabel('Mean Time (nanoseconds)')
-    ax.set_title(plot_title)
+    ax.set_ylabel(f'Benchmark Identifier ({len(display_df)})', fontsize=16)
+    ax.set_xlabel('Mean Time (nanoseconds)', fontsize=16)
+    ax.set_title(plot_title, fontsize=16)
     ax.set_yticks(y_pos) 
-    ax.set_yticklabels(display_df['BenchmarkName'], fontsize=9) 
+    ax.set_yticklabels(display_df['BenchmarkName'], fontsize=12) 
     ax.legend() 
     ax.xaxis.grid(True, linestyle='--', alpha=0.7) 
     ax.invert_yaxis() 
@@ -173,7 +257,7 @@ def main():
         "--cons",
         action='append',
         nargs='?',
-        type=int_or_sentinel_type, # MODIFIED: Use custom type
+        type=int_or_sentinel_type,
         const=PLOT_ALL_SENTINEL,
         metavar="MAX_CONS",
         help=(
@@ -183,10 +267,23 @@ def main():
         )
     )
     parser.add_argument(
+        "--relative",
+        action='append',
+        nargs='?',
+        type=int_or_sentinel_type,
+        const=PLOT_ALL_SENTINEL,
+        metavar="MAX_CONS",
+        help=(
+            "Generate 'Old vs. New Time' plot.\n"
+            "If set without a number, all benchmarks are included.\n"
+            "If a MAX_CONS number is given, only benchmarks with Cons < MAX_CONS are included."
+        )
+    )
+    parser.add_argument(
         "--slowest-old",
         action='append',
         nargs='?',
-        type=int_or_sentinel_type, # MODIFIED: Use custom type
+        type=int_or_sentinel_type,
         const=PLOT_ALL_SENTINEL,
         metavar="N",
         help=(
@@ -198,7 +295,7 @@ def main():
         "--slowest-new",
         action='append',
         nargs='?',
-        type=int_or_sentinel_type, # MODIFIED: Use custom type
+        type=int_or_sentinel_type,
         const=PLOT_ALL_SENTINEL,
         metavar="N",
         help=(
@@ -210,7 +307,7 @@ def main():
         "--filter-old-faster",
         action='append',
         nargs='?',
-        type=int_or_sentinel_type, # MODIFIED: Use custom type
+        type=int_or_sentinel_type,
         const=PLOT_ALL_SENTINEL,
         metavar="N",
         help=(
@@ -222,7 +319,7 @@ def main():
         "--filter-new-faster",
         action='append',
         nargs='?',
-        type=int_or_sentinel_type, # MODIFIED: Use custom type
+        type=int_or_sentinel_type,
         const=PLOT_ALL_SENTINEL,
         metavar="N",
         help=(
@@ -241,7 +338,7 @@ def main():
     try:
         os.makedirs(args.output_dir, exist_ok=True)
         print(f"Output directory: {os.path.abspath(args.output_dir)}")
-    except OSError as e:
+    except Exception as e:
         print(f"Error creating output directory {args.output_dir}: {e}")
         return
 
@@ -258,24 +355,53 @@ def main():
     sort_ascending = args.ascending
     sort_order_str = "ascending" if sort_ascending else "descending"
 
-    # --- Generate '--cons' plots ---
-    if args.cons:
-        for cons_limit_arg_val in args.cons: # cons_limit_arg_val is int or PLOT_ALL_SENTINEL
+    if args.relative:
+        for cons_limit_arg_val in args.relative:
             max_cons_val = None
             limit_str = "all"
             
             if cons_limit_arg_val == PLOT_ALL_SENTINEL:
-                pass # max_cons_val remains None, limit_str remains "all"
+                pass
             elif isinstance(cons_limit_arg_val, int):
                 if cons_limit_arg_val <= 0:
-                    print(f"Warning: --cons value {cons_limit_arg_val} is not positive. Interpreting as all constraints for this plot instance.")
+                    print(f"Warning: --relative value {cons_limit_arg_val} is not positive. Interpreting as all constraints for this plot instance.")
                 else:
                     max_cons_val = cons_limit_arg_val
                     limit_str = f"lt_{max_cons_val}"
-            # No 'else' needed here as custom type converter handles bad user input.
+
+            plot_title = input("Input plot title: ")
+            x_axis_title = input("Input x-axis title: ")
+            y_axis_title = input("Input y-axis title: ")
+
+            filename = f"{plot_title.lower().replace(' ','_').replace('/','_')}.png"
+            output_path = os.path.join(args.output_dir, filename)
+
+            print(f"\nGenerating: {plot_title}")
+            plot_relative(df_old_raw, df_new_raw, max_cons_val, plot_title, x_axis_title, y_axis_title, output_path)
+
+
+    if args.cons:
+        for cons_limit_arg_val in args.cons:
+            max_cons_val = None
+            limit_str = "all"
+            plot_title = ''
+            filename = ''
             
-            plot_title = f"Number of Constraints vs. Mean Time (Max Cons: {limit_str.replace('_', ' ')})"
-            filename = f"cons_vs_mean_max_cons_{limit_str}.png"
+            if cons_limit_arg_val == PLOT_ALL_SENTINEL:
+                plot_title = "Number of Constraints vs. Mean Execution Time"
+                filename = "cons_vs_mean_max_cons_all.png"
+                pass
+            elif isinstance(cons_limit_arg_val, int):
+                if cons_limit_arg_val <= 0:
+                    print(f"Warning: --cons value {cons_limit_arg_val} is not positive. Interpreting as all constraints for this plot instance.")
+                    plot_title = "Number of Constraints vs. Mean Execution Time"
+                    filename = "cons_vs_mean_max_cons_all.png"
+                else:
+                    max_cons_val = cons_limit_arg_val
+                    limit_str = f"lt_{max_cons_val}"
+                    plot_title = f"Number of Constraints vs. Mean Execution Time (Max Cons: {limit_str.replace('_', ' ')})"
+                    filename = f"cons_vs_mean_max_cons_{limit_str}.png"
+
             output_path = os.path.join(args.output_dir, filename)
             
             print(f"\nGenerating: {plot_title}")
@@ -288,16 +414,16 @@ def main():
     if merged_df_base.empty and (args.slowest_old or args.slowest_new or args.filter_old_faster or args.filter_new_faster):
         print("\nNo common benchmarks found. Bar charts requiring merged data cannot be generated.")
     
-    # --- Generate '--slowest-old' plots ---
+
     if args.slowest_old and not merged_df_base.empty:
-        for n_val_arg in args.slowest_old: # n_val_arg is int or PLOT_ALL_SENTINEL
+        for n_val_arg in args.slowest_old:
             display_df = merged_df_base.copy()
             top_n_str = "all"
             
             display_df = display_df.sort_values(by='Mean_old', ascending=sort_ascending)
             
             if n_val_arg == PLOT_ALL_SENTINEL:
-                pass # Show all (already sorted)
+                pass
             elif isinstance(n_val_arg, int):
                 if n_val_arg <= 0:
                     print(f"Warning: --slowest-old value {n_val_arg} must be positive. Showing all benchmarks for this plot instance.")
@@ -313,7 +439,6 @@ def main():
             print(f"\nGenerating: {plot_title}")
             plot_comparison_bar_chart(display_df, plot_title, output_path)
 
-    # --- Generate '--slowest-new' plots ---
     if args.slowest_new and not merged_df_base.empty:
         for n_val_arg in args.slowest_new:
             display_df = merged_df_base.copy()
@@ -338,7 +463,6 @@ def main():
             print(f"\nGenerating: {plot_title}")
             plot_comparison_bar_chart(display_df, plot_title, output_path)
 
-    # --- Generate '--filter-old-faster' plots ---
     if args.filter_old_faster and not merged_df_base.empty:
         for n_val_arg in args.filter_old_faster:
             display_df = merged_df_base[merged_df_base['Mean_old'] < merged_df_base['Mean_new']].copy()
@@ -367,7 +491,6 @@ def main():
             print(f"\nGenerating: {plot_title}")
             plot_comparison_bar_chart(display_df, plot_title, output_path)
 
-    # --- Generate '--filter-new-faster' plots ---
     if args.filter_new_faster and not merged_df_base.empty:
         for n_val_arg in args.filter_new_faster:
             display_df = merged_df_base[merged_df_base['Mean_new'] < merged_df_base['Mean_old']].copy()

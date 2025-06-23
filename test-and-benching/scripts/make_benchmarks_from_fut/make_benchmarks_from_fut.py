@@ -6,7 +6,7 @@ import pathlib
 import re
 import subprocess
 import sys
-import traceback # For detailed error reporting
+import traceback
 
 try:
     import futhark_log_parser 
@@ -120,9 +120,8 @@ def main():
             relative_fut_path = fut_file_path.relative_to(args.input_dir)
             print(f"\nProcessing: {relative_fut_path}")
 
-            # Initialize variables for this file processing iteration
             futhark_log_output = "" 
-            haskell_data_tuple_strings_list = None # Initialize to None
+            haskell_data_tuple_strings_list = None
 
             # 1. Run FUTHARK_LOG_TYSOLVE=0 futhark check <FILE>
             env = os.environ.copy()
@@ -137,10 +136,6 @@ def main():
 
                 if process.returncode != 0:
                     print(f"  Error: 'futhark check {relative_fut_path}' failed (exit code {process.returncode}).", file=sys.stderr)
-                    # if futhark_stdout_for_error_check.strip():
-                    #      print(f"  Stdout from futhark check:\n{futhark_stdout_for_error_check}", file=sys.stderr)
-                    # if futhark_log_output.strip():
-                    #      print(f"  Stderr from futhark check (potentially the log or error):\n{futhark_log_output}", file=sys.stderr)
                     if not futhark_stdout_for_error_check.strip() and not futhark_log_output.strip():
                          print(f"  (futhark check produced no output on stdout or stderr)", file=sys.stderr)
                     if args.stop_on_err: sys.exit(1)
@@ -149,36 +144,25 @@ def main():
                 if not futhark_log_output.strip() and process.returncode == 0:
                     print(f"  Warning: 'futhark check {relative_fut_path}' succeeded but produced no log output on stderr. Skipping.", file=sys.stderr)
                     continue
-            except subprocess.TimeoutExpired:
-                print(f"  Error: 'futhark check {relative_fut_path}' timed out.", file=sys.stderr)
-                if args.stop_on_err: sys.exit(1)
-                continue
-            except Exception as e: # Catches other errors like Futhark not found
+
+            except Exception as e:
                 print(f"  Error running 'futhark check {relative_fut_path}': {e}", file=sys.stderr)
-                traceback.print_exc() # Print full traceback for this error
+                traceback.print_exc()
                 if args.stop_on_err: sys.exit(1)
                 continue
             
             # 2. Parse the output
             try:
-                # futhark_log_output should be defined and non-empty if we reached here
                 haskell_data_tuple_strings_list = futhark_log_parser.parse_log_to_haskell_tuples_list(futhark_log_output, args.min_n_cons, args.top_n_cons)
 
-                # Check if parsing returned None (should not happen if parser is correct) or an empty list
                 if haskell_data_tuple_strings_list is None or not haskell_data_tuple_strings_list:
                     print(f"  Warning: Log parser returned no data blocks for {relative_fut_path}. Log output might be empty or malformed or --min-n-cons/--top-n-cons have sorted all problems away. Skipping.", file=sys.stderr)
-                    # For debugging, you might want to print futhark_log_output here
-                    # print(f"--- Log Output for {relative_fut_path} that yielded no blocks ---")
-                    # print(futhark_log_output)
-                    # print(f"--- End Log Output ---")
                     continue
             except Exception as e:
                 print(f"  Error parsing log for {relative_fut_path} with futhark_log_parser: {e}", file=sys.stderr)
-                traceback.print_exc() # Print full traceback for parsing errors
+                traceback.print_exc()
                 if args.stop_on_err: sys.exit(1)
                 continue
-            
-            # If we reach here, haskell_data_tuple_strings_list should be a non-empty list.
             
             # 3. Determine Haskell module name and path
             hs_module_qualifier = fut_filepath_to_haskell_module_qualifier(relative_fut_path, generated_base_module_name)
@@ -221,9 +205,9 @@ def main():
         alias = "".join(part for part in alias_parts if part) 
         imports_block_lines.append(f"import qualified Generated.{hs_module_qualifier} as {alias}")
         
-        if num_blocks == 0: # Should have been skipped, but as a safeguard
+        if num_blocks == 0: # Should not be possible
             continue
-        # benchmarkDataList is guaranteed to be non-empty here because num_blocks >= 1
+
         for i in range(num_blocks):
             bench_name = f"{fut_file_display_name} (Block {i+1}/{num_blocks}) (Cons: {num_cons[i]})" if num_blocks > 1 else f"{fut_file_display_name} (Cons: {num_cons[i]})"
             entries_block_lines.append(f"  (\"{bench_name}\", {alias}.benchmarkDataList !! {i})")
